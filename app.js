@@ -6,7 +6,7 @@ const PORT = 7000;
 
 app.use(express.json())
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
+// app.use(cookieParser());
 
 async function connected() {
   try {
