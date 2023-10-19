@@ -18,33 +18,28 @@ const usersSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
+    unique: true,
   },
   role: {
     type: String,
   },
   user_name: {
     type: String,
+    unique: true,
   },
   password: {
     type: String,
     required: true,
   },
-  creation_date: {
-    type: Number,
-    timestamps: true,
-  },
   last_login: {
-    type: Number,
-    timestamps: true,
-  },
-  last_update: {
-    type: Number,
+    type: Date,
     timestamps: true,
   },
   active: {
     type: Boolean,
   },
-});
+  refreshTokens:[{refreshTkn :{type: String}}]
+},{timestamps: true});
 
 const users = mongoose.model("Users", usersSchema);
 
