@@ -1,11 +1,12 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require('body-parser');
-const customers = require("./routes/Customers/CustomerRoutes");
-const cookieParser = require('cookie-parser')
-
 const app = express();
-const PORT = 3000;
+const PORT = 7000;
+
+app.use(express.json())
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
 
 async function connected() {
   try {
@@ -18,10 +19,11 @@ async function connected() {
 }
 connected();
 
-app.use(express.json())
-app.use(bodyParser.urlencoded({ extended: false }));
+
+
+
+const customers = require("./routes/Customers/CustomerRoutes");
 app.use("/customers", customers);
-app.use(cookieParser());
 
 mongoose.connection.on("connected", () => {
   console.log("connected");
