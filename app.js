@@ -1,6 +1,11 @@
 const express = require("express");
-const PORT = 3000;
+const mongoose = require("mongoose");
+const bodyParser = require('body-parser');
+const customers = require("./routes/Customers/CustomerRoutes");
+const cookieParser = require('cookie-parser')
+
 const app = express();
+const PORT = 3000;
 
 async function connected() {
   try {
@@ -12,6 +17,11 @@ async function connected() {
   }
 }
 connected();
+
+app.use(express.json())
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use("/customers", customers);
+app.use(cookieParser());
 
 mongoose.connection.on("connected", () => {
   console.log("connected");

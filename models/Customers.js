@@ -4,6 +4,8 @@ const mongoose = require("mongoose");
 const customerSchema = new mongoose.Schema({
   id: {
     type: String,
+    index: true,
+    unique: true,
   },
   first_name: {
     type: String,
@@ -15,6 +17,7 @@ const customerSchema = new mongoose.Schema({
   },
   email: {
     type: String,
+    unique: true,
     required: true,
   },
   password: {
@@ -35,6 +38,9 @@ const customerSchema = new mongoose.Schema({
   active: {
     type: Boolean,
   },
+  refreshToken: [
+    {refreshTkn : {type: String}}
+  ]
 });
 
 const customers = mongoose.model("Customers", customerSchema);
