@@ -20,7 +20,7 @@ const customerSchema = new mongoose.Schema({
     required: true,
   },
   last_login: {
-    type: Number,
+    type: Date,
     timestamps: true,
   },
   valid_account: {
@@ -29,8 +29,9 @@ const customerSchema = new mongoose.Schema({
   },
   active: {
     type: Boolean,
-  },
-},{timestamps: true});
+    default: false,
+  }
+}, {timestamps: true});
 
 const customers = mongoose.model("Customers", customerSchema);
 
