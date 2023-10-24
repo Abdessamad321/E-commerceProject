@@ -2,7 +2,7 @@
 const nodemailer = require('nodemailer')
 require('dotenv').config();
 const passwordKey = process.env.PASS_KEY;
-function sendWelcomeEmail(email, userName, password) {
+function sendWelcomeEmailToUser(email, userName, password) {
 const transporter = nodemailer.createTransport({
     service: 'Gmail',
     auth:{
@@ -13,9 +13,9 @@ const transporter = nodemailer.createTransport({
 const mailContent = {
     from: 'balstore.info@gmail.com',
     to: email,
-    subject: ' welcome to our website hero',
+    subject: 'Welcome to our website hero',
     text: 
-        `thank you for signing up, your account has been created successfully and now you can login into your account using your credentials
+        `Thank you for signing up, your account has been created successfully and now you can login into your account using your credentials
         your userName: ${userName}
         your Password: ${password}
         Don't share your infos with no one.`      
@@ -28,4 +28,7 @@ transporter.sendMail(mailContent, (err, info) => {
     }
 })
 }
-module.exports = sendWelcomeEmail;
+module.exports = {
+    sendWelcomeEmailToUser,
+    // sendWelcomeEmail
+};

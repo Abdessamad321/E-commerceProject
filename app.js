@@ -31,8 +31,12 @@ connected();
 
 const customers = require("./routes/Customers/CustomerRoutes");
 app.use("/customers", customers);
+
 const user = require("./routes/Users/usersRoutes");
 app.use("/users", user);
+
+const subcategories = require("./routes/Subcategories/SubcategoryRouter");
+app.use('/subcategories', subcategories)
 
 
 

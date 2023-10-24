@@ -1,12 +1,8 @@
 const mongoose = require("mongoose");
+const { v4: uuidv4 } = require('uuid');
 // users schema ======================================================
 
 const usersSchema = new mongoose.Schema({
-  id: {
-    type: String,
-    index: true,
-    unique: true,
-  },
   first_name: {
     type: String,
     required: true,
@@ -37,8 +33,12 @@ const usersSchema = new mongoose.Schema({
   },
   active: {
     type: Boolean,
+    default:true
   },
-  refreshTokens:[{refreshTkn :{type: String}}]
+  isDeleted:{
+    type: Boolean,
+    default: false
+  }
 },{timestamps: true});
 
 const users = mongoose.model("Users", usersSchema);
