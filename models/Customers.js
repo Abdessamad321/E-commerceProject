@@ -24,24 +24,19 @@ const customerSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  creation_date: {
-    type: Number,
-    timestamps: true,
-  },
   last_login: {
-    type: Number,
+    type: Date,
     timestamps: true,
   },
   valid_account: {
     type: Boolean,
+    default: false,
   },
   active: {
     type: Boolean,
-  },
-  refreshToken: [
-    {refreshTkn : {type: String}}
-  ]
-});
+    default: false,
+  }
+}, {timestamps: true});
 
 const customers = mongoose.model("Customers", customerSchema);
 

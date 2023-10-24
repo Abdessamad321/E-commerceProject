@@ -4,7 +4,11 @@ const { v4: uuidv4 } = require("uuid");
 const xss = require("xss");
 const bcrypt = require("bcrypt");
 const validationCustomer = require("../middlewares/ValidationMiddleware");
+const sendEmail = require("../middlewares/EmailSender");
 const jwt = require("jsonwebtoken");
+
+const secretKey = process.env.TOKEN_KEY;
+const refreshKey = process.env.REFRESH_KEY;
 
 async function createCustomer(req, res) {
   const { first_name, last_name, email, password } = req.body;
@@ -13,7 +17,7 @@ async function createCustomer(req, res) {
   const realEmail = xss(email);
   const realPass = xss(password);
 
-  const validationErrors = validationCustomer(
+  const validationErrors = validationCustomer.validatecustomer(
     firstName,
     lastName,
     realEmail,
@@ -48,11 +52,11 @@ async function createCustomer(req, res) {
                 last_name: lastName,
                 email: realEmail,
                 password: hash,
-                creation_date: new Date(),
-                last_login: new Date(),
-                valid_account: true,
               });
               const savedCustomer = await newCustomer.save();
+              sendEmail(newCustomer._id, email, first_name, password);
+              
+              res.status(200).json("Customer created success");
               console.log("Customer created success", savedCustomer);
             }
           }
@@ -78,22 +82,181 @@ async function loginCustumer(req, res) {
     if (!data || !(await bcrypt.compare(realPass, data.password))) {
       return res.status(401).json({ error: "Invalid credentials" });
     }
-
+    
+    const updatedData = await Customer.updateOne(data, {last_login: new Date()})
     // GENERATING A TOKEN
-    const token = jwt.sign({ id: data.id }, tokenKey, {
-      expiresIn: "30s",
+    const token = jwt.sign({ customerid: data._id }, secretKey, {
+      expiresIn: "1h",
     });
-    res.cookie("token", token);
     const refreshToken = jwt.sign({ id: data.id }, refreshKey, {
       expiresIn: "60s",
     });
-    data.refreshToken.push({ refreshTkn: refreshToken });
-    data.save();
     console.log(token);
-    console.log(refreshToken)
-    return res.status(200).json({ token });
+    console.log(refreshToken);
+    return res.status(200).json({
+      access_token: token,
+      token_type: "jwt",
+      expires_in: "1h",
+      refresh_token: refreshToken,
+    });
   } catch (error) {
     console.error(error);
+    res.status(500).json({ error: error });
+  }
+}
+
+// async function allCustomers(req, res) {
+//   const page = req.query.page || 1;
+//   const sort = req.query.sort === "DESC" ? -1 : 1;
+
+//   const customers = await Customer.find()
+//     .skip((page - 1) * 3)
+//     .limit(3)
+//     .sort({ creation_date: sort });
+
+//   res.json(customers);
+// }
+
+async function searchCustomer(req, res) {
+  const page = req.query.page || 1;
+  const singlePage = req.query.size || 10;
+  const sort = req.query.sort === "DESC" ? -1 : 1;
+  const query = req.query.query || '';
+  try {
+    const customers = await Customer.find({ first_name: new RegExp(query, 'i')})
+      .skip((page - 1) * singlePage)
+      .limit(singlePage)
+      .sort({ creation_date: sort });
+    res.json(customers);
+  } catch (error) {
+    res.status(500).json({ error: error });
+  }
+}
+
+async function retrieveCustomer(req, res) {
+  try {
+    const customers = await Customer.findById(req.params.id);
+    res.json(customers);
+  } catch (error) {
+    res.status(500).json({ error: error });
+  }
+}
+async function validateCustomer(req, res) {
+  const customerid = req.params.id;
+  console.log(customerid)
+  try {
+    const customers = await Customer.findById(customerid);
+    if (!customers) {
+      throw new Error("No such Customer");
+    } else {
+      if (customers._id) {
+        customers.valid_account = true;
+        customers.save();
+        res.json("email validate successfully");
+      }
+    }
+  } catch (error) {
+    res.status(500).json({ error: error });
+  }
+}
+
+async function updateCustomer(req, res) {
+  const customerid = req.params.id;
+  const { first_name, last_name, email } = req.body;
+
+  try {
+    const customers = await Customer.findByIdAndUpdate(customerid, {
+      first_name,
+      last_name,
+      email,
+    });
+
+    if (!customers) {
+      throw new Error("No such Customer");
+    } else {
+      customers.active = true;
+      customers.save();
+      res.json("Customer updated successfully");
+    }
+  } catch (error) {
+    res.status(500).json({ error: error });
+  }
+}
+
+async function deleteCustomer(req, res) {
+    const token = req.headers.authorization.split(" ")[1];
+    try {
+      const decodedToken = jwt.verify(token, secretKey);
+      const customerId = decodedToken.id;
+      const deletedCustomer = await Customer.findByIdAndRemove(customerId);
+      if (deletedCustomer) {
+        res.json(`Customer with ID ${customerId} deleted successfully`);
+      } else {
+        res.status(404).json(`Customer with ID ${customerId} not found`);
+      }
+    } catch (error) {
+      res.status(500).json({ error: error });
+    }
+}
+
+async function profileCustomer(req, res) {
+  const token =
+    req.headers.authorization && req.headers.authorization.split(" ")[1];
+  console.log(token);
+  try {
+    jwt.verify(token, secretKey, async (err, decoded) => {
+      if (err) {
+        return res.send("Invalid Token");
+      } else {
+        const customerId = decoded.customerid;
+        console.log(customerId);
+        const customers = await Customer.findById(customerId, {password: 0, valid_account: 0});
+        console.log(customers);
+        if (customers) {
+          customers.valid_account = true;
+          res.json(customers);
+        } else {
+          res.status(404).json({ error: "Customer not found" });
+        }
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ error: error });
+  }
+}
+
+async function updateIdCustomer(req, res) {
+  const token =
+    req.headers.authorization && req.headers.authorization.split(" ")[1];
+
+  const { first_name, last_name, email, password} = req.body;
+  console.log(token);
+  try {
+    jwt.verify(token, secretKey, async (err, decoded) => {
+      if (err) {
+        return res.send("Invalid Token");
+      } else {
+        const customerId = decoded.customerid;
+        console.log(customerId);
+
+        const customers = await Customer.findByIdAndUpdate(customerId, {
+          first_name,
+          last_name,
+          email,
+          password,
+        });
+        if (customers) {
+          customers.valid_account = true;
+          customers.active = true;
+          customers.save();
+          res.json(customers);
+          console.log(customers)
+        } else {
+          res.status(404).json({ error: "Customer not found" });
+        }
+      }
+    });
+  } catch (error) {
     res.status(500).json({ error: error });
   }
 }
@@ -101,4 +264,42 @@ async function loginCustumer(req, res) {
 module.exports = {
   createCustomer: createCustomer,
   loginCustumer: loginCustumer,
+  //allCustomers: allCustomers,
+  searchCustomer: searchCustomer,
+  retrieveCustomer: retrieveCustomer,
+  validateCustomer: validateCustomer,
+  updateCustomer: updateCustomer,
+  deleteCustomer: deleteCustomer,
+  profileCustomer: profileCustomer,
+  updateIdCustomer: updateIdCustomer,
 };
+
+// const customerId = req.params.customerId;
+//   try {
+//     const customers = await Customer.findByIdAndRemove(customerId);
+//     if (customers) {
+//     res.json("Customer deleted successfully");
+//     }else{
+//       res.status(404).json(`Customer with id ${customerId} not found`);
+//     }
+//   }
+
+// const token = req.headers.authorization.split(" ")[1];
+// try {
+//   const decodedToken = jwt.verify(token, secretKey);
+//   const customerId = decodedToken.id;
+//   const customerProfile = await Customer.findOne({ _id: customerId });
+//   if (customerProfile) {
+//     res.json(customerProfile);
+//     } else {
+//       res.status(404).send('User Not Found');
+//       }
+//       } catch (err) {
+//         console.log(err);
+//         return res.status(500).json({
+//           success: false,
+//           message: 'Error retrieving user',
+//           })
+//           }
+//           }
+
