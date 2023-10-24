@@ -1,10 +1,10 @@
 const express = require("express");
 const Customer = require("../models/Customers");
-const { v4: uuidv4 } = require("uuid");
 const xss = require("xss");
 const bcrypt = require("bcrypt");
 const validationCustomer = require("../middlewares/ValidationMiddleware");
 const jwt = require("jsonwebtoken");
+// const sendEmail = require('../middlewares/EmailSender');
 
 async function createCustomer(req, res) {
   const { first_name, last_name, email, password } = req.body;
@@ -13,7 +13,7 @@ async function createCustomer(req, res) {
   const realEmail = xss(email);
   const realPass = xss(password);
 
-  const validationErrors = validationCustomer(
+  const validationErrors = validationCustomer.validatecustomer(
     firstName,
     lastName,
     realEmail,
@@ -43,16 +43,15 @@ async function createCustomer(req, res) {
                 .json({ err: "Email is already in use, try something else" });
             } else {
               const newCustomer = new Customer({
-                id: uuidv4(),
                 first_name: firstName,
                 last_name: lastName,
                 email: realEmail,
                 password: hash,
                 creation_date: new Date(),
                 last_login: new Date(),
-                valid_account: true,
               });
               const savedCustomer = await newCustomer.save();
+              // sendEmail( email,first_name, password);
               console.log("Customer created success", savedCustomer);
             }
           }

@@ -2,11 +2,6 @@ const mongoose = require("mongoose");
 // Customer =============================================
 
 const customerSchema = new mongoose.Schema({
-  id: {
-    type: String,
-    index: true,
-    unique: true,
-  },
   first_name: {
     type: String,
     required: true,
@@ -24,24 +19,18 @@ const customerSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  creation_date: {
-    type: Number,
-    timestamps: true,
-  },
   last_login: {
     type: Number,
     timestamps: true,
   },
   valid_account: {
     type: Boolean,
+    default: false,
   },
   active: {
     type: Boolean,
   },
-  refreshToken: [
-    {refreshTkn : {type: String}}
-  ]
-});
+},{timestamps: true});
 
 const customers = mongoose.model("Customers", customerSchema);
 

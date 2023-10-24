@@ -6,13 +6,7 @@ router.post("/", customerRoute.createCustomer);
 
 router.post("/login", customerRoute.loginCustumer);
 
-router.get('/', )
-// router.get("", (req, res) => {
-//   console.log("User is successfully authenticated");
-// });
+// router.get('/', customerRoute)
 
-// router.get("", (req, res) => {
-//   console.log("User is successfully authenticated");
-// });
 
 module.exports = router;

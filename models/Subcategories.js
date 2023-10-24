@@ -2,19 +2,18 @@ const mongoose = require("mongoose");
 //Subcategories schema =========================================
 
 const subcategoriesSchema = new mongoose.Schema({
-  id: {
-    type: String,
-    index: true,
-    unique: true,
-  },
   subcategory_name: {
     type: String,
+    unique: true,
   },
   category_id: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "categories",
+    required: true,
   },
   active: {
     type: Boolean,
+    default: false,
   },
 });
 
