@@ -26,6 +26,9 @@ const user = require("./routes/Users/usersRoutes");
 app.use("/users", user);
 const categories = require("./routes/Categories/categoriesRoutes")
 app.use("/v1", categories)
+const subcategories = require("./routes/Subcategories/SubcategoryRouter");
+app.use('/subcategories', subcategories)
+
 
 
 mongoose.connection.on("connected", () => {

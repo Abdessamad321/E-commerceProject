@@ -6,14 +6,6 @@ router.post("/customers", customerRoute.createCustomer);
 
 router.post("/customers/login", customerRoute.loginCustumer);
 
-// router.get("/customers", (req, res, next) => {
-//   if (Object.keys(req.query).length > 2) {
-//     customerRoute.searchCustomer(req, res, next);
-//   } else {
-//     customerRoute.allCustomers(req, res, next);
-//   }
-// });
-
 router.get('/customers', customerRoute.searchCustomer)
 
 router.get('/customers/profile', customerRoute.profileCustomer);

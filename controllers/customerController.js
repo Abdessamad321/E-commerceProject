@@ -1,11 +1,11 @@
 const express = require("express");
 const Customer = require("../models/Customers");
-const { v4: uuidv4 } = require("uuid");
 const xss = require("xss");
 const bcrypt = require("bcrypt");
 const validationCustomer = require("../middlewares/ValidationMiddleware");
 const sendEmail = require("../middlewares/EmailSender");
 const jwt = require("jsonwebtoken");
+// const sendEmail = require('../middlewares/EmailSender');
 
 const secretKey = process.env.TOKEN_KEY;
 const refreshKey = process.env.REFRESH_KEY;
@@ -47,7 +47,6 @@ async function createCustomer(req, res) {
                 .json({ err: "Email is already in use, try something else" });
             } else {
               const newCustomer = new Customer({
-                id: uuidv4(),
                 first_name: firstName,
                 last_name: lastName,
                 email: realEmail,
@@ -57,7 +56,6 @@ async function createCustomer(req, res) {
               sendEmail(newCustomer._id, email, first_name, password);
               
               res.status(200).json("Customer created success");
-              console.log("Customer created success", savedCustomer);
             }
           }
         });

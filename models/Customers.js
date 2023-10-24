@@ -2,11 +2,6 @@ const mongoose = require("mongoose");
 // Customer =============================================
 
 const customerSchema = new mongoose.Schema({
-  id: {
-    type: String,
-    index: true,
-    unique: true,
-  },
   first_name: {
     type: String,
     required: true,
