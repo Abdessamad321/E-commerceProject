@@ -5,7 +5,7 @@ const bcrypt = require("bcrypt");
 const validationCustomer = require("../middlewares/ValidationMiddleware");
 const sendEmail = require("../middlewares/EmailSender");
 const jwt = require("jsonwebtoken");
-// const sendEmail = require('../middlewares/EmailSender');
+
 
 const secretKey = process.env.TOKEN_KEY;
 const refreshKey = process.env.REFRESH_KEY;
@@ -52,8 +52,8 @@ async function createCustomer(req, res) {
                 email: realEmail,
                 password: hash,
               });
-              const savedCustomer = await newCustomer.save();
-              sendEmail(newCustomer._id, email, first_name, password);
+              await newCustomer.save();
+              sendEmail.sendWelcomeEmail(newCustomer._id, email, first_name, password);
               
               res.status(200).json("Customer created success");
             }
@@ -103,17 +103,6 @@ async function loginCustumer(req, res) {
   }
 }
 
-// async function allCustomers(req, res) {
-//   const page = req.query.page || 1;
-//   const sort = req.query.sort === "DESC" ? -1 : 1;
-
-//   const customers = await Customer.find()
-//     .skip((page - 1) * 3)
-//     .limit(3)
-//     .sort({ creation_date: sort });
-
-//   res.json(customers);
-// }
 
 async function searchCustomer(req, res) {
   const page = req.query.page || 1;
