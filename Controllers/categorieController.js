@@ -2,9 +2,6 @@ const express = require("express");
 const Categorie = require("../models/Categories");
 const Subcategories = require("../models/Subcategories");
 
-const { v4: uuidv4 } = require("uuid");
-// const jwt = require("jsonwebtoken");
-
 async function createCategories(req, res) {
   try {
     const { category_name } = req.body;
@@ -23,25 +20,11 @@ async function createCategories(req, res) {
       const savedCategory = await newCategory.save();
       return res.status(200).json("category created successfully");
     }
+    
   } catch (error) {
     res.status(500).json({ error: error });
   }
 }
-
-// async function allCategories(req, res) {
-//   try {
-//     const page = req.query.page || 1;
-
-//     const categories = await Categorie.find()
-//       .skip((page - 1) * 3)
-//       .limit(3)
-
-//     res.json(categories);
-
-//   } catch (err) {
-//     res.status(500).json({ error: "Something went wrong" });
-//   }
-// }
 
 async function searchCategories(req, res) {
   const page = req.query.page || 1;
@@ -121,7 +104,6 @@ async function deleteCategorie(req, res) {
 
 module.exports = {
   createCategories: createCategories,
-  // allCategories: allCategories,
   searchCategories: searchCategories,
   retrieveIdCategorie: retrieveIdCategorie,
   updateCategorie: updateCategorie,
