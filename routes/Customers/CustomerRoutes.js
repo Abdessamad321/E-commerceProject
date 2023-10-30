@@ -3,7 +3,7 @@ const customerRoute = require("../../controllers/customerController");
 const router = express.Router();
 const AMauthorization = require('../../middlewares/AuthAM')
 
-router.post("/customers", customerRoute.createCustomer);
+router.post("/customers", customerRoute.createCustomer); 
 
 router.post("/customers/login", customerRoute.loginCustumer);
 

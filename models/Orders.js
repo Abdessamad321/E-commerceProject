@@ -2,13 +2,9 @@ const mongoose = require("mongoose");
 // ORDERS schema ======================================================
 
 const ordersSchema = new mongoose.Schema({
-  id: {
-    type: String,
-    index: true,
-    unique: true,
-  },
   customer_id: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Customers",
     required: true,
   },
   order_items: {
@@ -16,11 +12,12 @@ const ordersSchema = new mongoose.Schema({
     required: true,
   },
   order_date: {
-    type: Number,
+    type: Date,
     required: true,
   },
   cart_total_price: {
     type: Number,
+    min: 0,
   },
   status: {
     type: String,

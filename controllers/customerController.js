@@ -3,9 +3,8 @@ const Customer = require("../models/Customers");
 const xss = require("xss");
 const bcrypt = require("bcrypt");
 const validationCustomer = require("../middlewares/ValidationMiddleware");
-const sendEmail = require("../middlewares/EmailSender");
 const jwt = require("jsonwebtoken");
-
+const sendEmail = require("../middlewares/EmailSender");
 
 const secretKey = process.env.TOKEN_KEY;
 const refreshKey = process.env.REFRESH_KEY;
@@ -54,7 +53,6 @@ async function createCustomer(req, res) {
               });
               await newCustomer.save();
               sendEmail.sendWelcomeEmail(newCustomer._id, email, first_name, password);
-              
               res.status(200).json("Customer created success");
             }
           }
@@ -62,7 +60,7 @@ async function createCustomer(req, res) {
       }
     });
   } catch (error) {
-    res.status(500).json({ error: "Something went wrong" });
+    res.status(500).json({ error: error });
   }
 }
 
@@ -80,12 +78,18 @@ async function loginCustumer(req, res) {
     if (!data || !(await bcrypt.compare(realPass, data.password))) {
       return res.status(401).json({ error: "Invalid credentials" });
     }
-    
-    const updatedData = await Customer.updateOne(data, {last_login: new Date()})
-    // GENERATING A TOKEN
-    const token = jwt.sign({ customerid: data._id }, secretKey, {
-      expiresIn: "1h",
+
+    const updatedData = await Customer.updateOne(data, {
+      last_login: new Date(),
     });
+    // GENERATING A TOKEN
+    const token = jwt.sign(
+      { customerid: data._id, isDeleted: data.isDeleted },
+      secretKey,
+      {
+        expiresIn: "1h",
+      }
+    );
     const refreshToken = jwt.sign({ id: data.id }, refreshKey, {
       expiresIn: "60s",
     });
@@ -103,14 +107,15 @@ async function loginCustumer(req, res) {
   }
 }
 
-
 async function searchCustomer(req, res) {
   const page = req.query.page || 1;
   const singlePage = req.query.size || 10;
   const sort = req.query.sort === "DESC" ? -1 : 1;
-  const query = req.query.query || '';
+  const query = req.query.query || "";
   try {
-    const customers = await Customer.find({ first_name: new RegExp(query, 'i')})
+    const customers = await Customer.find({
+      first_name: new RegExp(query, "i"),
+    })
       .skip((page - 1) * singlePage)
       .limit(singlePage)
       .sort({ creation_date: sort });
@@ -130,7 +135,7 @@ async function retrieveCustomer(req, res) {
 }
 async function validateCustomer(req, res) {
   const customerid = req.params.id;
-  console.log(customerid)
+  console.log(customerid);
   try {
     const customers = await Customer.findById(customerid);
     if (!customers) {
@@ -171,19 +176,19 @@ async function updateCustomer(req, res) {
 }
 
 async function deleteCustomer(req, res) {
-    const token = req.headers.authorization.split(" ")[1];
-    try {
-      const decodedToken = jwt.verify(token, secretKey);
-      const customerId = decodedToken.id;
-      const deletedCustomer = await Customer.findByIdAndRemove(customerId);
-      if (deletedCustomer) {
-        res.json(`Customer with ID ${customerId} deleted successfully`);
-      } else {
-        res.status(404).json(`Customer with ID ${customerId} not found`);
-      }
-    } catch (error) {
-      res.status(500).json({ error: error });
+  const token = req.headers.authorization.split(" ")[1];
+  try {
+    const decodedToken = jwt.verify(token, secretKey);
+    const customerId = decodedToken.id;
+    const deletedCustomer = await Customer.findByIdAndRemove(customerId);
+    if (deletedCustomer) {
+      res.json(`Customer with ID ${customerId} deleted successfully`);
+    } else {
+      res.status(404).json(`Customer with ID ${customerId} not found`);
     }
+  } catch (error) {
+    res.status(500).json({ error: error });
+  }
 }
 
 async function profileCustomer(req, res) {
@@ -197,7 +202,10 @@ async function profileCustomer(req, res) {
       } else {
         const customerId = decoded.customerid;
         console.log(customerId);
-        const customers = await Customer.findById(customerId, {password: 0, valid_account: 0});
+        const customers = await Customer.findById(customerId, {
+          password: 0,
+          valid_account: 0,
+        });
         console.log(customers);
         if (customers) {
           customers.valid_account = true;
@@ -216,7 +224,7 @@ async function updateIdCustomer(req, res) {
   const token =
     req.headers.authorization && req.headers.authorization.split(" ")[1];
 
-  const { first_name, last_name, email, password} = req.body;
+  const { first_name, last_name, email, password } = req.body;
   console.log(token);
   try {
     jwt.verify(token, secretKey, async (err, decoded) => {
@@ -237,7 +245,7 @@ async function updateIdCustomer(req, res) {
           customers.active = true;
           customers.save();
           res.json(customers);
-          console.log(customers)
+          console.log(customers);
         } else {
           res.status(404).json({ error: "Customer not found" });
         }
@@ -251,7 +259,6 @@ async function updateIdCustomer(req, res) {
 module.exports = {
   createCustomer: createCustomer,
   loginCustumer: loginCustumer,
-  //allCustomers: allCustomers,
   searchCustomer: searchCustomer,
   retrieveCustomer: retrieveCustomer,
   validateCustomer: validateCustomer,
@@ -260,33 +267,4 @@ module.exports = {
   profileCustomer: profileCustomer,
   updateIdCustomer: updateIdCustomer,
 };
-
-// const customerId = req.params.customerId;
-//   try {
-//     const customers = await Customer.findByIdAndRemove(customerId);
-//     if (customers) {
-//     res.json("Customer deleted successfully");
-//     }else{
-//       res.status(404).json(`Customer with id ${customerId} not found`);
-//     }
-//   }
-
-// const token = req.headers.authorization.split(" ")[1];
-// try {
-//   const decodedToken = jwt.verify(token, secretKey);
-//   const customerId = decodedToken.id;
-//   const customerProfile = await Customer.findOne({ _id: customerId });
-//   if (customerProfile) {
-//     res.json(customerProfile);
-//     } else {
-//       res.status(404).send('User Not Found');
-//       }
-//       } catch (err) {
-//         console.log(err);
-//         return res.status(500).json({
-//           success: false,
-//           message: 'Error retrieving user',
-//           })
-//           }
-//           }
 

@@ -64,10 +64,6 @@ function sendWelcomeEmailForUser(email, userName, password) {
     })
     }
 
-
-
-
-
 module.exports = {
     sendWelcomeEmail:sendWelcomeEmail,
     sendWelcomeEmailForUser:sendWelcomeEmailForUser
