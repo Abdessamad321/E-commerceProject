@@ -25,13 +25,16 @@ connected();
 const customers = require("./routes/Customers/CustomerRoutes");
 app.use("/v1", customers);
 const user = require("./routes/Users/usersRoutes");
-app.use("/users", user);
+app.use("/v1", user);
 const categories = require("./routes/Categories/categoriesRoutes");
 app.use("/v1", categories);
 const subcategories = require("./routes/Subcategories/SubcategoryRouter");
-app.use("/subcategories", subcategories);
+app.use("/v1", subcategories);
 const orders = require("./routes/Orders/OrdersRoutes");
 app.use("/v1", orders);
+
+const products = require('./routes/Products/ProductsRouter')
+app.use('/v1', products)
 
 mongoose.connection.on("connected", () => {
   console.log("connected");

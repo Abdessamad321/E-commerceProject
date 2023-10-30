@@ -30,10 +30,12 @@ transporter.sendMail(mailContent, (err, info) => {
         console.log('Email sent:', info.response);
     }
 })
-}
+};
 
 
-function sendWelcomeEmailForUser(id, email, userName, password) {
+
+
+function sendWelcomeEmailForUser(email, userName, password) {
     const transporter = nodemailer.createTransport({
         service: 'Gmail',
         auth:{
@@ -50,6 +52,7 @@ function sendWelcomeEmailForUser(id, email, userName, password) {
         <p><strong>Username:</strong> ${userName}</p>
         <p><strong>Password:</strong> ${password}</p>
         <p>Please do not share your login information with anyone.</p>`
+        
     };
     transporter.sendMail(mailContent, (err, info) => {
         if (err) {
@@ -60,10 +63,6 @@ function sendWelcomeEmailForUser(id, email, userName, password) {
         }
     })
     }
-
-
-
-
 
 module.exports = {
     sendWelcomeEmail:sendWelcomeEmail,

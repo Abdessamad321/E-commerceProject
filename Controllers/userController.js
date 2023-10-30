@@ -20,7 +20,7 @@ async function createUser(req, res) {
     const userName = xss(user_name);
     const realPass = xss(password);
 
-    const validationErrors = validateUserInput.validateInput(firstName,lastName, realEmail, realPass, userName );
+    const validationErrors = validateUserInput.validateInput(firstName,lastName, realEmail, userName, realPass );
     if (validationErrors.length > 0) {
         return res.status(400).json({ err: validationErrors });
     }
@@ -50,7 +50,7 @@ try {
                 });
                 
                 res.status(201).json(`signed in ${newUser}`)
-                sendEmail.sendWelcomeEmail(email, userName, password);
+                sendEmail.sendWelcomeEmailForUser(email, userName, password);
                 }
             }
             });

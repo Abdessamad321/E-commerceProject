@@ -52,12 +52,7 @@ async function createCustomer(req, res) {
                 password: hash,
               });
               await newCustomer.save();
-              sendEmail.sendWelcomeEmail(
-                newCustomer._id,
-                email,
-                first_name,
-                password
-              );
+              sendEmail.sendWelcomeEmail(newCustomer._id, email, first_name, password);
               res.status(200).json("Customer created success");
             }
           }
@@ -273,31 +268,3 @@ module.exports = {
   updateIdCustomer: updateIdCustomer,
 };
 
-// const customerId = req.params.customerId;
-//   try {
-//     const customers = await Customer.findByIdAndRemove(customerId);
-//     if (customers) {
-//     res.json("Customer deleted successfully");
-//     }else{
-//       res.status(404).json(`Customer with id ${customerId} not found`);
-//     }
-//   }
-
-// const token = req.headers.authorization.split(" ")[1];
-// try {
-//   const decodedToken = jwt.verify(token, secretKey);
-//   const customerId = decodedToken.id;
-//   const customerProfile = await Customer.findOne({ _id: customerId });
-//   if (customerProfile) {
-//     res.json(customerProfile);
-//     } else {
-//       res.status(404).send('User Not Found');
-//       }
-//       } catch (err) {
-//         console.log(err);
-//         return res.status(500).json({
-//           success: false,
-//           message: 'Error retrieving user',
-//           })
-//           }
-//           }
