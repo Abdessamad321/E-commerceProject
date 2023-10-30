@@ -3,9 +3,8 @@ const mongoose = require("mongoose");
 // products schema ======================================================
 
 const productsSchema = new mongoose.Schema({
-  id: {
+  sku: {
     type: String,
-    index: true,
     unique: true,
   },
   product_image: {
@@ -15,9 +14,11 @@ const productsSchema = new mongoose.Schema({
   product_name: {
     type: String,
     required: true,
+    unique: true,
   },
   subcategory_id: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref:"subcategories",
     required: true,
   },
   short_description: {
@@ -30,20 +31,15 @@ const productsSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  creation_date: {
-    type: Number,
-    timestamps: true,
-  },
   discount_price: {
     type: Number,
-    timestamps: true,
   },
   options: {
     type: Array,
-    timestamps: true,
   },
   active: {
     type: Boolean,
+    default: false,
   },
 });
 

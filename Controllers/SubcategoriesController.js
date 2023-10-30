@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 
 const subcategories = require("../models/Subcategories");
 const categories = require("../models/Categories");
-
+const products = require("../models/Products")
 require("dotenv").config();
 const secretKey = process.env.TOKEN_KEY;
 const refreshKey = process.env.REFRESH_KEY;
@@ -44,7 +44,6 @@ async function searchForSubcategory(req, res) {
     const findSubcategoreis = await subcategories
       .aggregate([
         { $skip: (page - 1) * forPage },
-        { $limit: forPage },
         {
           $match: {
             subcategory_name: { $regex: query, $options: "i" },
@@ -68,6 +67,7 @@ async function searchForSubcategory(req, res) {
             categoryName: "$category.category_name",
           },
         },
+        { $limit: forPage },
       ])
       .exec();
 
@@ -137,9 +137,32 @@ async function updateSubcategory (req, res){
   }
 }
 
+
+//delete subcategoreis by ID ============================
+
+
+async function deleteSub (req, res){
+  try {
+    const suId = req.params.id
+    const isThere = await subcategories.findById(suId)
+    if (!isThere) {
+      res.status(404).json('this subcategory is not exicte')
+    }
+    const findProd = await products.find({subcategory_id: suId})
+    if (findProd.length>0) {
+      res.status(400).json("products attached, cannot delete this subcategory")
+    }else{
+      await isThere.deleteOne();
+      res.status(200).json("subcategory deleted successfully");
+    }
+  } catch (error) {
+    
+  }
+}
 module.exports = {
   creatSubcategory: creatSubcategory,
   searchForSubcategory: searchForSubcategory,
   getById: getById,
-  updateSubcategory:updateSubcategory
+  updateSubcategory:updateSubcategory,
+  deleteSub:deleteSub
 };

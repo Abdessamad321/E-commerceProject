@@ -20,7 +20,7 @@ async function createUser(req, res) {
     const userName = xss(user_name);
     const realPass = xss(password);
 
-    const validationErrors = validateUserInput.validateInput(firstName,lastName, realEmail, realPass, userName );
+    const validationErrors = validateUserInput.validateInput(firstName,lastName, realEmail, userName, realPass );
     if (validationErrors.length > 0) {
         return res.status(400).json({ err: validationErrors });
     }
@@ -50,7 +50,7 @@ try {
                 });
                 
                 res.status(201).json(`signed in ${newUser}`)
-                sendEmail.sendWelcomeEmailToUser(email, userName, password);
+                sendEmail.sendWelcomeEmailForUser(email, userName, password);
                 }
             }
             });
@@ -98,20 +98,6 @@ async function loginUser (req, res){
     }
     
 }
-
-// get all users ====================================
-
-// async function getAllUsers (req, res){
-//     const page = req.query.page ;
-//     const singlePage = 3;
-//     const sort = req.query.sort === 'DESC' ? -1 : 1 ;
-//     try {
-//         const users = await users.find().skip((page - 1) * singlePage).limit(singlePage).sort({createdAt: sort});
-//         res.json(users);
-//     } catch (error) {
-//         res.status(500).json({ error: error });
-//     }
-// }
 
 // get user by id ============================================
 
@@ -185,7 +171,6 @@ async function deleteUser(req, res){
 module.exports = {
     createUser: createUser,
     loginUser: loginUser,
-    // getAllUsers: getAllUsers,
     getUsersId: getUsersId,
     searchForUsers: searchForUsers,
     updateUser: updateUser,

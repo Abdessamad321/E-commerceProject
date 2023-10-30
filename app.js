@@ -28,8 +28,8 @@ const categories = require("./routes/Categories/categoriesRoutes")
 app.use("/v1", categories)
 const subcategories = require("./routes/Subcategories/SubcategoryRouter");
 app.use('/subcategories', subcategories)
-
-
+const products = require('./routes/Products/ProductsRouter')
+app.use('/products', products)
 
 mongoose.connection.on("connected", () => {
   console.log("connected");
