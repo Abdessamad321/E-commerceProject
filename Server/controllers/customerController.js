@@ -127,6 +127,8 @@ async function searchCustomer(req, res) {
 
 async function retrieveCustomer(req, res) {
   try {
+    console.log('Test')
+    console.log(req.params)
     const customers = await Customer.findById(req.params.id);
     res.json(customers);
   } catch (error) {
@@ -256,45 +258,16 @@ async function updateIdCustomer(req, res) {
   }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//daylllyyyyy custommers ============================
-
-
-async function getcustommersss(req, res) {
+async function allCustomer(req,res){
   try {
-    const data = await Customer.aggregate([
-      {
-        $group: {
-          _id: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } },
-          count: { $sum: 1 },
-        },
-      },
-    ]).sort('_id');
-    
-    res.json(data);
+    const customer = await Customer.countDocuments({});
+    res.json({ count: customer });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch data' });
-  }
+    console.error(error);
+    res.status(500).json(error);
+  } 
 }
+
 module.exports = {
   createCustomer: createCustomer,
   loginCustumer: loginCustumer,
@@ -305,6 +278,6 @@ module.exports = {
   deleteCustomer: deleteCustomer,
   profileCustomer: profileCustomer,
   updateIdCustomer: updateIdCustomer,
-  getcustommersss: getcustommersss
+  allCustomer: allCustomer,
 };
 

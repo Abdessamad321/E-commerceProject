@@ -1,0 +1,107 @@
+:root {
+  --background: #f8e4af;
+  --background1:#590404;
+  --background2: #080708;
+  --background3: white;
+  --background4: white;
+  --background5: #080708;
+  --background6: #590404;
+}
+.isLightMode {
+  --background: #590404;
+  --background1:#f8e4af;
+  --background2: white;
+  --background3: #f8e4af;
+  --background4: #000000;
+  --background5: #fdca40;
+  --background6: #080708;
+}
+/* #fdca40-#f8e4af-#c2c3c6-#590404-#f8b930-#080708 */
+.dash {
+  color: var(--text1);
+  text-align: center;
+  background-color: var(--background);
+  display: grid;
+  padding: 0px 40px;
+  grid-gap: 20px;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: 45% 45%;
+  grid-template-areas:
+    " chart1 chart1 chart2"
+    " chart3 chart4 chart4";
+}
+.chart1 {
+  grid-area: chart1;
+  background-color: var(--background3);
+  border-radius: 10px;
+}
+.chart-title{
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-size: 28px;
+  color: #080708;
+}
+.barchart {
+  fill: var(--background);
+}
+.scatterchart{
+  fill: var(--background2);
+  stroke: var(--background2);
+}
+
+.chart2 {
+  grid-area: chart2;
+  background-color: var(--background5);
+  border-radius: 10px;
+}
+/* #fdca40-#f8e4af-#c2c3c6-#590404-#f8b930-#080708-#a80b0b */
+.chart2-title{
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--background4);
+}
+.counter {
+  display: flex;
+  padding: 5%;
+  font-weight: 600;
+  font-size: 60px;
+  text-align: center;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+.chart3 {
+  grid-area: chart3;
+  background-color: var(--background3);
+  border-radius: 10px;
+}
+.chart3-parent{
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-around;
+  height: 80%;
+}
+
+.chart3-counter{
+  font-weight: 600;
+  font-size: 60px;
+  color: var(--background6);
+
+}
+.chart3-courbe{
+  left: 0;
+}
+.txt{
+  font-size: 18px;
+}
+.chart4 {
+  grid-area: chart4;
+  background-color: var(--background6);
+  border-radius: 10px;
+}
+.chart4-title{
+  font-size: 28px;
+  font-weight: 600;
+  color: white;
+}

@@ -4,7 +4,8 @@ const userControllers = require('../../controllers/userController')
 const adminAuthorization = require('../../middlewares/Auth')
 const AMauthorization = require('../../middlewares/AuthAM')
 
-router.post ('/users',adminAuthorization, userControllers.createUser)
+
+router.post ('/users', adminAuthorization, userControllers.createUser)
 
 router.post ('/users/login', userControllers.loginUser)
 

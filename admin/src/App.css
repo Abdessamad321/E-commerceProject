@@ -1,18 +1,11 @@
-:root {
-  --background-color: #242529 ;
-  --text-color: #ffffff;
-  --secondary:#333;
-}
 
 #root {
-  max-width: 100%;
-  height: 100vh;
-  color: var(--text-color);
-  background-color: var(--background-color);
-  display: grid;
-  grid-template-columns: 20% 1fr; 
+ display: grid;
+ background-color: var(--background);
+ top: 0;
+  grid-template-columns: 260px 1fr; 
   grid-template-rows: 15% 1fr; 
   grid-template-areas:
-    "sidebar navbar"
-    "sidebar body";
+    "Menu Navbar"
+    "Menu body";
 }
