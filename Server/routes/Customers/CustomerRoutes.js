@@ -11,7 +11,7 @@ router.get('/customers',AMauthorization, customerRoute.searchCustomer)
 
 router.get('/customers/profile', customerRoute.profileCustomer);
 
-router.get('/customers/:id',AMauthorization, customerRoute.retrieveCustomer);
+router.get('/customers/:id', AMauthorization,customerRoute.retrieveCustomer);
 
 router.get('/customers/validate/:id', customerRoute.validateCustomer);
 
@@ -21,6 +21,10 @@ router.delete('/customers/delete', customerRoute.deleteCustomer);
 
 router.patch('/customers/profile/update', customerRoute.updateIdCustomer);
 
+<<<<<<< HEAD
 router.get('/AllCustomer', customerRoute.getcustommersss)
+=======
+router.get('/allcustomers/all', customerRoute.allCustomer);
+>>>>>>> 58a4105f2fcefae24726d265e05aaa24d5be88da
 
 module.exports = router;

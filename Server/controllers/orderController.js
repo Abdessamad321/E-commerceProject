@@ -149,6 +149,7 @@ async function updateOrder(req, res){
   }
 }
 
+<<<<<<< HEAD
 
 
 // count orders ----------------------------------------------
@@ -163,10 +164,45 @@ async function countOrders(req, res) {
     res.status(500).json({ error: 'An error occurred while counting orders.' });
   }
 }
+=======
+async function getorders(req, res) {
+  try {
+    const data = await Order.aggregate([
+      {
+        $group: {
+          _id: { $dateToString: { format: '%Y-%m-%d', date: '$order_date' } },
+          count: { $sum: 1 },
+        },
+      },
+    ]).sort('_id');
+
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch data' });
+  }
+}
+
+
+async function getallorders(req,res){
+  try {
+    const order = await Order.countDocuments({});
+    res.json({ count: order });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json(error);
+  } 
+}
+
+>>>>>>> 58a4105f2fcefae24726d265e05aaa24d5be88da
 module.exports = {
   createOrder: createOrder,
   allOrder: allOrder,
   OrderById: OrderById,
   updateOrder:updateOrder,
+<<<<<<< HEAD
   countOrders:countOrders
+=======
+  getorders:getorders,
+  getallorders:getallorders,
+>>>>>>> 58a4105f2fcefae24726d265e05aaa24d5be88da
 };

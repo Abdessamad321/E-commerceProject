@@ -127,6 +127,8 @@ async function searchCustomer(req, res) {
 
 async function retrieveCustomer(req, res) {
   try {
+    console.log('Test')
+    console.log(req.params)
     const customers = await Customer.findById(req.params.id);
     res.json(customers);
   } catch (error) {
@@ -256,6 +258,7 @@ async function updateIdCustomer(req, res) {
   }
 }
 
+<<<<<<< HEAD
 
 
 
@@ -295,6 +298,18 @@ async function getcustommersss(req, res) {
     res.status(500).json({ error: 'Failed to fetch data' });
   }
 }
+=======
+async function allCustomer(req,res){
+  try {
+    const customer = await Customer.countDocuments({});
+    res.json({ count: customer });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json(error);
+  } 
+}
+
+>>>>>>> 58a4105f2fcefae24726d265e05aaa24d5be88da
 module.exports = {
   createCustomer: createCustomer,
   loginCustumer: loginCustumer,
@@ -305,6 +320,10 @@ module.exports = {
   deleteCustomer: deleteCustomer,
   profileCustomer: profileCustomer,
   updateIdCustomer: updateIdCustomer,
+<<<<<<< HEAD
   getcustommersss: getcustommersss
+=======
+  allCustomer: allCustomer,
+>>>>>>> 58a4105f2fcefae24726d265e05aaa24d5be88da
 };
 

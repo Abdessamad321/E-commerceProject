@@ -137,9 +137,9 @@ async function searchForUsers (req, res){
 
 async function updateUser(req, res){
     const userId = req.params.id;
-    const {first_name, last_name, email, role, active} = req.body;
+    const {first_name, last_name,user_name,password, email, role, active} = req.body;
     try {
-        const user = await users.findByIdAndUpdate(userId, {first_name, last_name, email, role, active});
+        const user = await users.findByIdAndUpdate(userId, {first_name, last_name,user_name,password, email, role, active});
         if (user) {
             res.status(200).json('User updated successfully');
         }else{
