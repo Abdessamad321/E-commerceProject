@@ -149,9 +149,24 @@ async function updateOrder(req, res){
   }
 }
 
+
+
+// count orders ----------------------------------------------
+
+
+async function countOrders(req, res) {
+  try {
+    const orderCount = await Order.countDocuments({});
+    res.json({ count: orderCount });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'An error occurred while counting orders.' });
+  }
+}
 module.exports = {
   createOrder: createOrder,
   allOrder: allOrder,
   OrderById: OrderById,
-  updateOrder:updateOrder
+  updateOrder:updateOrder,
+  countOrders:countOrders
 };

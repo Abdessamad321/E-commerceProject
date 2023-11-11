@@ -10,4 +10,6 @@ router.get("/orders/:id", orderController.OrderById);
 
 router.put("/orders/:id", orderController.updateOrder); 
 
+router.get("/AllOrder/all", orderController.countOrders)
+
 module.exports = router;

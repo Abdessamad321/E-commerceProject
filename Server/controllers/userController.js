@@ -19,7 +19,6 @@ async function createUser(req, res) {
     const realEmail = xss(email);
     const userName = xss(user_name);
     const realPass = xss(password);
-
     const validationErrors = validateUserInput.validateInput(firstName,lastName, realEmail, userName, realPass );
     if (validationErrors.length > 0) {
         return res.status(400).json({ err: validationErrors });
@@ -89,7 +88,7 @@ async function loginUser (req, res){
                             "access_token": token,
                             "token_type": "jwt",
                             "expires_in": "30s",
-                            "refresh_token": refreshToken 
+                            "refresh_token": refreshToken,
                         })
                 }    
         }
@@ -105,7 +104,7 @@ async function getUsersId (req, res){
     const idd = req.params.id;
     console.log(idd);
     try {
-        const userId = await users.findById(idd);
+        const userId = await users.findById(idd)
         if (userId) {
             res.status(200).json(userId);
         }else{
@@ -168,11 +167,60 @@ async function deleteUser(req, res){
     }
 }
 
+
+//====================== refreshtokennnnnnnnnnnnnnnnnnnnnnnnnnn
+
+
+async function refreshTokens(req, res) {
+    try {
+        const refreshToken = req.headers['authorization'].split('Bearer ')[1];
+    
+        if (!refreshToken) {
+            return res.status(401).json('No refresh token found in the headers');
+        }
+        const decodedRefreshToken = jwt.verify(refreshToken, refreshKey);
+        const checkUser = await users.findById({ _id: decodedRefreshToken.userId });
+    
+        if (!checkUser) {
+            return res.status(401).json('Invalid refresh token');
+        }
+    
+        const token = jwt.sign(
+        { userId: checkUser.id, userRole: checkUser.role },
+        secretKey,
+        { expiresIn: '30s' }
+        );
+        res.status(200).json({
+        access_token: token,
+        token_type: 'jwt',
+        expires_in: '30s',
+        });
+    } catch (error) {
+        res.status(500).json({ err: error.message });
+    }
+}
+
+
+//  get all users =============================
+async function getAllUsers(req, res) {
+    try {
+        let AllUsers = await users.find({});
+        if (!AllUsers) {
+            throw new Error('No Users Found')
+        } else {
+            res.status(200).json(AllUsers)
+        }
+    }catch(error){
+        res.status(500).json('something happened')
+    }
+}
 module.exports = {
     createUser: createUser,
     loginUser: loginUser,
     getUsersId: getUsersId,
     searchForUsers: searchForUsers,
     updateUser: updateUser,
-    deleteUser: deleteUser
+    deleteUser: deleteUser,
+    refreshTokens:refreshTokens,
+    getAllUsers:getAllUsers
 };

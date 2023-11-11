@@ -21,4 +21,6 @@ router.delete('/customers/delete', customerRoute.deleteCustomer);
 
 router.patch('/customers/profile/update', customerRoute.updateIdCustomer);
 
+router.get('/AllCustomer', customerRoute.getcustommersss)
+
 module.exports = router;

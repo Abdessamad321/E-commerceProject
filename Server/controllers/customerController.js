@@ -256,6 +256,45 @@ async function updateIdCustomer(req, res) {
   }
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//daylllyyyyy custommers ============================
+
+
+async function getcustommersss(req, res) {
+  try {
+    const data = await Customer.aggregate([
+      {
+        $group: {
+          _id: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } },
+          count: { $sum: 1 },
+        },
+      },
+    ]).sort('_id');
+    
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch data' });
+  }
+}
 module.exports = {
   createCustomer: createCustomer,
   loginCustumer: loginCustumer,
@@ -266,5 +305,6 @@ module.exports = {
   deleteCustomer: deleteCustomer,
   profileCustomer: profileCustomer,
   updateIdCustomer: updateIdCustomer,
+  getcustommersss: getcustommersss
 };
 
