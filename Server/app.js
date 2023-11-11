@@ -1,10 +1,15 @@
 const express = require("express");
 const mongoose = require("mongoose");
 <<<<<<< HEAD
+<<<<<<< HEAD
 const cors = require('cors');
 =======
 const cors = require("cors");
 >>>>>>> 58a4105f2fcefae24726d265e05aaa24d5be88da
+=======
+
+const cors = require("cors");
+>>>>>>> 78bcb1ea89482d976ece0a6a09020566b587a4c9
 const app = express();
 
 const PORT = 7000;
@@ -13,19 +18,12 @@ const bodyParser = require("body-parser");
 require("dotenv").config();
 const MongoConnect = process.env.MONGO_CON;
 
-<<<<<<< HEAD
-app.use(cors({
-  origin: 'http://localhost:5173',
-  credentials: true
-}));
-=======
 app.use(
   cors({
     origin: "*",
   })
 );
 
->>>>>>> 58a4105f2fcefae24726d265e05aaa24d5be88da
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 async function connected() {

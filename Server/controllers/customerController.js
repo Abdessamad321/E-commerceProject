@@ -258,47 +258,6 @@ async function updateIdCustomer(req, res) {
   }
 }
 
-<<<<<<< HEAD
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//daylllyyyyy custommers ============================
-
-
-async function getcustommersss(req, res) {
-  try {
-    const data = await Customer.aggregate([
-      {
-        $group: {
-          _id: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } },
-          count: { $sum: 1 },
-        },
-      },
-    ]).sort('_id');
-    
-    res.json(data);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch data' });
-  }
-}
-=======
 async function allCustomer(req,res){
   try {
     const customer = await Customer.countDocuments({});
@@ -309,7 +268,6 @@ async function allCustomer(req,res){
   } 
 }
 
->>>>>>> 58a4105f2fcefae24726d265e05aaa24d5be88da
 module.exports = {
   createCustomer: createCustomer,
   loginCustumer: loginCustumer,
@@ -320,10 +278,7 @@ module.exports = {
   deleteCustomer: deleteCustomer,
   profileCustomer: profileCustomer,
   updateIdCustomer: updateIdCustomer,
-<<<<<<< HEAD
-  getcustommersss: getcustommersss
-=======
   allCustomer: allCustomer,
->>>>>>> 58a4105f2fcefae24726d265e05aaa24d5be88da
+
 };
 

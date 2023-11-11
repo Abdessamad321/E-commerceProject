@@ -1,11 +1,5 @@
-<<<<<<< HEAD
 
-import React from "react";
-import "./App.css";
-function App() {
-  return (
-  
-=======
+
 import React from "react";
 import "./App.css";
 import Menu from "./Partials/Menu/Menu";
@@ -33,7 +27,6 @@ function App() {
         <Route path="/Payement" element={<Payement />} />
       </Routes>
     </BrowserRouter>
->>>>>>> 58a4105f2fcefae24726d265e05aaa24d5be88da
   );
 }
 
