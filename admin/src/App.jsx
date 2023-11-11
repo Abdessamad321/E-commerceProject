@@ -2,7 +2,8 @@
 
 import React from "react";
 import "./App.css";
-import Menu from "./Partials/Menu/Menu";
+// import Menu from "./Partials/Menu/Menu";
+import Menu from './Partials/'
 import Navbar from "./Partials/Navbar/Navbar";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Edit from "./Pages/Edit/Edit.jsx";
