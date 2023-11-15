@@ -1,13 +1,16 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const app = express();
-
+const cors = require('cors');
 const PORT = 7000;
 
 const bodyParser = require("body-parser");
 require("dotenv").config();
 const MongoConnect = process.env.MONGO_CON;
-
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials : true
+}));
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 async function connected() {
@@ -35,6 +38,7 @@ app.use("/v1", orders);
 
 const products = require('./routes/Products/ProductsRouter')
 app.use('/v1', products)
+
 
 mongoose.connection.on("connected", () => {
   console.log("connected");

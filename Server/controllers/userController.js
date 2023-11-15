@@ -168,11 +168,41 @@ async function deleteUser(req, res){
     }
 }
 
+async function refreshTokens(req, res) {
+    try {
+        const refreshToken = req.headers['authorization'].split('Bearer ')[1];
+    
+        if (!refreshToken) {
+            return res.status(401).json('No refresh token found in the headers');
+        }
+        const decodedRefreshToken = jwt.verify(refreshToken, refreshKey);
+        const checkUser = await users.findById({ _id: decodedRefreshToken.userId });
+    
+        if (!checkUser) {
+            return res.status(401).json('Invalid refresh token');
+        }
+    
+        const token = jwt.sign(
+        { userId: checkUser.id, userRole: checkUser.role },
+        secretKey,
+        { expiresIn: '30s' }
+        );
+        res.status(200).json({
+        access_token: token,
+        token_type: 'jwt',
+        expires_in: '30s',
+        });
+    } catch (error) {
+        res.status(500).json({ err: error.message });
+    }
+}
+
 module.exports = {
     createUser: createUser,
     loginUser: loginUser,
     getUsersId: getUsersId,
     searchForUsers: searchForUsers,
     updateUser: updateUser,
-    deleteUser: deleteUser
+    deleteUser: deleteUser,
+    refreshTokens:refreshTokens
 };
