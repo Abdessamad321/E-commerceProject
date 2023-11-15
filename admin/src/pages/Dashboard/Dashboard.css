@@ -22,7 +22,7 @@
   text-align: center;
   background-color: var(--background);
   display: grid;
-  padding: 0px 40px;
+  padding: 0px 2rem;
   grid-gap: 20px;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: 45% 45%;

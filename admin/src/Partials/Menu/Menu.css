@@ -64,6 +64,7 @@
   background-color: var(--background);
   border-right: 1px solid var(--background3); /* Set the border style, width, and color */
   float: left;
+  grid-area: Menu;
 }
 
 .SideBar {
@@ -85,7 +86,11 @@
   gap: 5px;
   font-size: 18px;
 }
-
+.list ul{
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
 .list ul li a {
   text-decoration: none;
   display: flex;

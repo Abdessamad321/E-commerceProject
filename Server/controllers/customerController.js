@@ -279,5 +279,6 @@ module.exports = {
   profileCustomer: profileCustomer,
   updateIdCustomer: updateIdCustomer,
   allCustomer: allCustomer,
+
 };
 

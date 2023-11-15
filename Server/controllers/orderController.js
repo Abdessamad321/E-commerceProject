@@ -149,6 +149,7 @@ async function updateOrder(req, res){
   }
 }
 
+
 async function getorders(req, res) {
   try {
     const data = await Order.aggregate([
@@ -176,7 +177,6 @@ async function getallorders(req,res){
     res.status(500).json(error);
   } 
 }
-
 
 module.exports = {
   createOrder: createOrder,

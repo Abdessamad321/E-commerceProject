@@ -22,10 +22,10 @@
   /* #fdca40-#f8e4af-#c2c3c6-#590404-#f8b930-#080708 */.navbar{
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-content: center;
     grid-area: Navbar;
     background-color: var(--background);
-    padding: 40px;
+    padding: 0 2rem !important;
 }
 .title{
     font-size: 38px;  
