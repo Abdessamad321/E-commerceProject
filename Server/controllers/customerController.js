@@ -127,6 +127,8 @@ async function searchCustomer(req, res) {
 
 async function retrieveCustomer(req, res) {
   try {
+    console.log('Test')
+    console.log(req.params)
     const customers = await Customer.findById(req.params.id);
     res.json(customers);
   } catch (error) {
@@ -256,6 +258,17 @@ async function updateIdCustomer(req, res) {
   }
 }
 
+
+async function allCustomer(req,res){
+  try {
+    const customer = await Customer.countDocuments({});
+    res.json({ count: customer });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json(error);
+  } 
+}
+
 module.exports = {
   createCustomer: createCustomer,
   loginCustumer: loginCustumer,
@@ -266,5 +279,6 @@ module.exports = {
   deleteCustomer: deleteCustomer,
   profileCustomer: profileCustomer,
   updateIdCustomer: updateIdCustomer,
+  allCustomer: allCustomer,
 };
 

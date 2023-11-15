@@ -12,14 +12,13 @@ const refreshKey = process.env.REFRESH_KEY;
 //create user logic ==============================
 
 async function createUser(req, res) {
-
     const { first_name, last_name, role, email, user_name, password} = req.body;
     const firstName = xss(first_name);
     const lastName = xss(last_name);
     const realEmail = xss(email);
     const userName = xss(user_name);
     const realPass = xss(password);
-
+  
     const validationErrors = validateUserInput.validateInput(firstName,lastName, realEmail, userName, realPass );
     if (validationErrors.length > 0) {
         return res.status(400).json({ err: validationErrors });
@@ -89,7 +88,7 @@ async function loginUser (req, res){
                             "access_token": token,
                             "token_type": "jwt",
                             "expires_in": "30s",
-                            "refresh_token": refreshToken 
+                            "refresh_token": refreshToken,
                         })
                 }    
         }
@@ -105,7 +104,7 @@ async function getUsersId (req, res){
     const idd = req.params.id;
     console.log(idd);
     try {
-        const userId = await users.findById(idd);
+        const userId = await users.findById(idd)
         if (userId) {
             res.status(200).json(userId);
         }else{
@@ -122,12 +121,22 @@ async function getUsersId (req, res){
 
 async function searchForUsers (req, res){
     const page = req.query.page || 1 ;
-    const singlePage = 3 ;
-    const sort = req.query.sort === 'DESC' ? -1 : 1 ;
+    const singlePage = 3 || '';
     const query = req.query.query
     try {
-        const user = await users.find({ first_name: { $regex: new RegExp(query, 'i') } }).skip((page - 1) * singlePage).limit(singlePage).sort({createdAt: sort});
+        const user = await users.find({ first_name: { $regex: new RegExp(query, 'i') } }).skip((page - 1) * singlePage).limit(singlePage);
         res.json(user);
+    } catch (error) {
+        res.status(500).json({ error: error });
+    }
+}
+
+// Sort users
+async function sortUsers(req, res) {
+    const sort = req.query.sort === 'DESC' ? -1 : 1;
+    try {
+        const usersList = await users.find().sort({ createdAt: sort });
+        res.json(usersList);
     } catch (error) {
         res.status(500).json({ error: error });
     }
@@ -141,6 +150,9 @@ async function updateUser(req, res){
     const {first_name, last_name, email, role, active} = req.body;
     try {
         const user = await users.findByIdAndUpdate(userId, {first_name, last_name, email, role, active});
+    const {first_name, last_name,user_name,password, email, role, active} = req.body;
+    try {
+        const user = await users.findByIdAndUpdate(userId, {first_name, last_name,user_name,password, email, role, active});
         if (user) {
             res.status(200).json('User updated successfully');
         }else{
@@ -167,6 +179,9 @@ async function deleteUser(req, res){
         res.json(error)
     }
 }
+
+
+//====================== refreshtokennnnnnnnnnnnnnnnnnnnnnnnnnn
 
 async function refreshTokens(req, res) {
     try {
@@ -197,12 +212,29 @@ async function refreshTokens(req, res) {
     }
 }
 
+
+//  get all users =============================
+async function getAllUsers(req, res) {
+    try {
+        let AllUsers = await users.find({});
+        if (!AllUsers) {
+            throw new Error('No Users Found')
+        } else {
+            res.status(200).json(AllUsers)
+        }
+    }catch(error){
+        res.status(500).json('something happened')
+    }
+}
+
 module.exports = {
     createUser: createUser,
     loginUser: loginUser,
     getUsersId: getUsersId,
     searchForUsers: searchForUsers,
+    sortUsers:sortUsers,
     updateUser: updateUser,
     deleteUser: deleteUser,
-    refreshTokens:refreshTokens
+    refreshTokens:refreshTokens,
+    getAllUsers:getAllUsers
 };

@@ -4,18 +4,25 @@ const userControllers = require('../../controllers/userController')
 const adminAuthorization = require('../../middlewares/Auth')
 const AMauthorization = require('../../middlewares/AuthAM')
 
-router.post ('/', adminAuthorization, userControllers.createUser)
+
+
+router.post ('/users', userControllers.createUser)
 
 router.post ('/users/login', userControllers.loginUser)
 
-router.get('/', userControllers.searchForUsers)
+router.get('/use', userControllers.searchForUsers)
 
-router.get('/:id', AMauthorization, userControllers.getUsersId)
+router.get('/users/sortedBy', userControllers.sortUsers)
 
-router.put('/:id', adminAuthorization, userControllers.updateUser)
+router.get('/users/:id', userControllers.getUsersId)
 
-router.delete('/:id', adminAuthorization, userControllers.deleteUser)
+router.put('/users/:id', userControllers.updateUser)
 
-router.post("/refresh/token", userControllers.refreshTokens)
+router.delete('/users/:id', userControllers.deleteUser)
+
+router.post('/refresh/token', userControllers.refreshTokens)
+
+router.get('/allUsers', userControllers.getAllUsers)
+
 
 module.exports = router
