@@ -18,6 +18,7 @@ async function createUser(req, res) {
     const realEmail = xss(email);
     const userName = xss(user_name);
     const realPass = xss(password);
+  
     const validationErrors = validateUserInput.validateInput(firstName,lastName, realEmail, userName, realPass );
     if (validationErrors.length > 0) {
         return res.status(400).json({ err: validationErrors });
@@ -130,7 +131,6 @@ async function searchForUsers (req, res){
     }
 }
 
-
 // Sort users
 async function sortUsers(req, res) {
     const sort = req.query.sort === 'DESC' ? -1 : 1;
@@ -147,6 +147,9 @@ async function sortUsers(req, res) {
 
 async function updateUser(req, res){
     const userId = req.params.id;
+    const {first_name, last_name, email, role, active} = req.body;
+    try {
+        const user = await users.findByIdAndUpdate(userId, {first_name, last_name, email, role, active});
     const {first_name, last_name,user_name,password, email, role, active} = req.body;
     try {
         const user = await users.findByIdAndUpdate(userId, {first_name, last_name,user_name,password, email, role, active});
@@ -179,7 +182,6 @@ async function deleteUser(req, res){
 
 
 //====================== refreshtokennnnnnnnnnnnnnnnnnnnnnnnnnn
-
 
 async function refreshTokens(req, res) {
     try {
@@ -224,6 +226,7 @@ async function getAllUsers(req, res) {
         res.status(500).json('something happened')
     }
 }
+
 module.exports = {
     createUser: createUser,
     loginUser: loginUser,

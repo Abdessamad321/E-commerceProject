@@ -1,8 +1,10 @@
 const express = require("express");
 const mongoose = require("mongoose");
+
 const cors = require('cors');
 
 const app = express();
+
 
 const PORT = 7000;
 
@@ -32,6 +34,7 @@ connected();
 
 const customers = require("./routes/Customers/CustomerRoutes");
 app.use("/v1", customers);
+
 
 const user = require("./routes/Users/usersRoutes");
 app.use("/v1", user);

@@ -258,6 +258,7 @@ async function updateIdCustomer(req, res) {
   }
 }
 
+
 async function allCustomer(req,res){
   try {
     const customer = await Customer.countDocuments({});
@@ -279,6 +280,5 @@ module.exports = {
   profileCustomer: profileCustomer,
   updateIdCustomer: updateIdCustomer,
   allCustomer: allCustomer,
-
 };
 

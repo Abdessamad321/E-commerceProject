@@ -23,4 +23,5 @@ router.patch('/customers/profile/update', customerRoute.updateIdCustomer);
 
 router.get('/allcustomers/all', customerRoute.allCustomer);
 
+
 module.exports = router;

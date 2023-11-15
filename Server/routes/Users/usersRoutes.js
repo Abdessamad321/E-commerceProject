@@ -5,6 +5,7 @@ const adminAuthorization = require('../../middlewares/Auth')
 const AMauthorization = require('../../middlewares/AuthAM')
 
 
+
 router.post ('/users', userControllers.createUser)
 
 router.post ('/users/login', userControllers.loginUser)
