@@ -183,7 +183,6 @@ module.exports = {
   allOrder: allOrder,
   OrderById: OrderById,
   updateOrder:updateOrder,
-  getallorders:getallorders,
   getorders:getorders,
   getallorders:getallorders,
 };

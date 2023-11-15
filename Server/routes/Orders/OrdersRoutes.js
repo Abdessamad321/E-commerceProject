@@ -14,6 +14,5 @@ router.get("/order/allorders", orderController.getorders);
 
 router.get("/order/getallorders", orderController.getallorders);
 
-router.get("/AllOrder/all", orderController.countOrders)
 
 module.exports = router;

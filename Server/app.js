@@ -1,15 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
-<<<<<<< HEAD
-<<<<<<< HEAD
 const cors = require('cors');
-=======
-const cors = require("cors");
->>>>>>> 58a4105f2fcefae24726d265e05aaa24d5be88da
-=======
 
-const cors = require("cors");
->>>>>>> 78bcb1ea89482d976ece0a6a09020566b587a4c9
 const app = express();
 
 const PORT = 7000;

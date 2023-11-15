@@ -1,4 +1,14 @@
+:root {
+  --background: #590404;
+  --background: #f8e4af;
+  --background1: #590404;
 
+  --background2: #080708;
+  --background3: white;
+  --background4: white;
+  --background5: #080708;
+  --background6: #590404;
+}
 #root {
  display: grid;
  background-color: var(--background);

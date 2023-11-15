@@ -1,0 +1,75 @@
+:root {
+    --background: #590404;
+    --background: #f8e4af;
+    --background1: #590404;
+
+    --background2: #080708;
+    --background3: white;
+    --background4: white;
+    --background5: #080708;
+    --background6: #590404;
+  }
+  .isLightMode {
+    --background: #590404;
+    --background1: #f8e4af;
+
+    --background2: white;
+    --background3: #f8e4af;
+    --background4: #000000;
+    --background5: #fdca40;
+    --background6: #080708;
+  }
+  /* #fdca40-#f8e4af-#c2c3c6-#590404-#f8b930-#080708 */.navbar{
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    grid-area: Navbar;
+    background-color: var(--background);
+    padding: 0 2rem !important;
+}
+.title{
+    font-size: 38px;  
+    color: var(--background2);
+
+}
+.search{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #c2c3c644;
+    border-radius: 100px;
+}
+.search-icon{
+    color: #c2c3c6;
+    margin: 10px 0px 10px 10px ;
+}
+.search-input{
+    margin: 5px;
+    padding: 5px;
+    font-style: none;
+    border: none;
+    background: transparent;
+    width: 20vw;
+    border-radius: 0px 100px 100px 0px;
+    outline: none;
+    font-size: 14px;
+}
+.right-buttons{
+    align-items: center;
+}
+.notifications{
+    padding: 5px 10px ;
+    margin: 5px;
+    border: 2px solid;
+    border-radius: 10px;
+    background: transparent;
+    color: var(--background2);
+}
+.logout{
+    padding: 5px 10px;
+    border: 2px solid var(--background4);
+    color: var(--background4);
+    border-radius: 10px;
+    background-color: var(--background1);
+/* #fdca40-#d9bd76-#c2c3c644-#c2c3c6-#f8e4af-#c2c3c6-#590404-#f8b930-#080708-#a80b0b */
+}

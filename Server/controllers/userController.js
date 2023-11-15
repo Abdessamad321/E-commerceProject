@@ -12,7 +12,6 @@ const refreshKey = process.env.REFRESH_KEY;
 //create user logic ==============================
 
 async function createUser(req, res) {
-
     const { first_name, last_name, role, email, user_name, password} = req.body;
     const firstName = xss(first_name);
     const lastName = xss(last_name);
@@ -121,12 +120,23 @@ async function getUsersId (req, res){
 
 async function searchForUsers (req, res){
     const page = req.query.page || 1 ;
-    const singlePage = 3 ;
-    const sort = req.query.sort === 'DESC' ? -1 : 1 ;
+    const singlePage = 3 || '';
     const query = req.query.query
     try {
-        const user = await users.find({ first_name: { $regex: new RegExp(query, 'i') } }).skip((page - 1) * singlePage).limit(singlePage).sort({createdAt: sort});
+        const user = await users.find({ first_name: { $regex: new RegExp(query, 'i') } }).skip((page - 1) * singlePage).limit(singlePage);
         res.json(user);
+    } catch (error) {
+        res.status(500).json({ error: error });
+    }
+}
+
+
+// Sort users
+async function sortUsers(req, res) {
+    const sort = req.query.sort === 'DESC' ? -1 : 1;
+    try {
+        const usersList = await users.find().sort({ createdAt: sort });
+        res.json(usersList);
     } catch (error) {
         res.status(500).json({ error: error });
     }
@@ -219,6 +229,7 @@ module.exports = {
     loginUser: loginUser,
     getUsersId: getUsersId,
     searchForUsers: searchForUsers,
+    sortUsers:sortUsers,
     updateUser: updateUser,
     deleteUser: deleteUser,
     refreshTokens:refreshTokens,
