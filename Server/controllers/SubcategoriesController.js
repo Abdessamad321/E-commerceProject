@@ -38,12 +38,12 @@ async function creatSubcategory(req, res) {
 
 async function searchForSubcategory(req, res) {
   try {
-    const page = req.query.page || 1;
-    const forPage = 10;
+    // const page = req.query.page || 1;
+    // const forPage = 10;
     const query = req.query.query || "";
     const findSubcategoreis = await subcategories
       .aggregate([
-        { $skip: (page - 1) * forPage },
+        // { $skip: (page - 1) * forPage },
         {
           $match: {
             subcategory_name: { $regex: query, $options: "i" },
@@ -67,11 +67,10 @@ async function searchForSubcategory(req, res) {
             categoryName: "$category.category_name",
           },
         },
-        { $limit: forPage },
+        // { $limit: forPage },
       ])
       .exec();
-
-    if (!findSubcategoreis) {
+    if (!findSubcategoreis || findSubcategoreis.length === 0) {
       return res.status(404).json("No subcategories with that name found");
     } else {
       return res.status(200).json(findSubcategoreis);
@@ -121,19 +120,34 @@ async function getById(req, res) {
 
 //update subcategoreis by ID ============================
 
-async function updateSubcategory (req, res){
+async function updateSubcategory(req, res) {
   try {
-    const idSub = req.params.id
-    const {subcategoryName, categoryId, Active} = req.body
-    const dinfSubs = await subcategories.findByIdAndUpdate(idSub,{subcategory_name:subcategoryName, category_id:categoryId, active: Active})
-    if(!dinfSubs){
-      res.status(404).json('No subcategory with that ID found')
-    }else{
-      await dinfSubs.save()
-      res.status(200).json('the subcategory has updated secssessfully')
+    const idSub = req.params.id;
+    const { subcategoryName, categoryId, Active } = req.body;
+
+    const categoryExists = await categories.findById(categoryId);
+    if (!categoryExists) {
+      return res.status(404).json('No category with that ID found');
+    }
+
+    const updatedSubcategory = await subcategories.findByIdAndUpdate(
+      idSub,
+      {
+        subcategory_name: subcategoryName,
+        category_id: categoryId,
+        active: Active,
+      },
+      { new: true } // This option ensures that the updated document is returned
+    );
+
+    if (!updatedSubcategory) {
+      return res.status(404).json('No subcategory with that ID found');
+    } else {
+      res.status(200).json('The subcategory has been updated successfully');
     }
   } catch (error) {
-    res.status(500).json(error)
+    console.error(error);
+    res.status(500).json(error);
   }
 }
 
@@ -141,24 +155,31 @@ async function updateSubcategory (req, res){
 //delete subcategoreis by ID ============================
 
 
-async function deleteSub (req, res){
+// const Subcategory = require('../models/subcategory');
+// const Product = require('../models/product');
+
+async function deleteSub(req, res) {
   try {
-    const suId = req.params.id
-    const isThere = await subcategories.findById(suId)
-    if (!isThere) {
-      res.status(404).json('this subcategory is not exicte')
+    const subcategoryId = req.params.id;
+    const subcategory = await subcategories.findById(subcategoryId);
+    if (!subcategory) {
+      return res.status(404).json('This subcategory does not exist');
     }
-    const findProd = await products.find({subcategory_id: suId})
-    if (findProd.length>0) {
-      res.status(400).json("products attached, cannot delete this subcategory")
-    }else{
-      await isThere.deleteOne();
-      res.status(200).json("subcategory deleted successfully");
+
+    const productsAttached = await products.find({ subcategory_id: subcategoryId });
+
+    if (productsAttached.length > 0) {
+      return res.status(400).json("Products are attached, cannot delete this subcategory");
     }
-  } catch (error) {
+    await subcategories.findByIdAndRemove(subcategoryId);
     
+    res.status(200).json("Subcategory deleted successfully");
+  } catch (error) {
+    console.error(error);
+    res.status(500).json(error);
   }
 }
+
 module.exports = {
   creatSubcategory: creatSubcategory,
   searchForSubcategory: searchForSubcategory,

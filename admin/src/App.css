@@ -1,38 +1,42 @@
-.App {
-  text-align: center;
+/* #root {
+ display: grid;
+ background-color: var(--background);
+ top: 0;
+  grid-template-columns: 260px 1fr; 
+  grid-template-rows: 15% 1fr; 
+  grid-template-areas:
+    "Menu Navbar"
+    "Menu body";
+} */
+:root {
+  --chart2: #f8e4af;
+  --chart3: #ffffff;
+  --chart4: #590404;
+  --chart4-txt: #ffffff;
+  --background: #e7e7e7;
+  --background1:#590404;
+  --background2: #000000;
+  --background3: #080708;
+  --background4: white;
+  --background5: #590404;
+  --background6: #080708;
+  --background7: #f8e4af;
+  --active:#c2c3c644;
 }
+/* E6E5DE */
+.isLightMode {
+  --chart2: #fdca40;
+  --chart3: #f8e4af;
+  --chart4: #080708;
+  --chart4-txt: #E6E5DE;
+  --background: #212121;
+  --background1:#f8e4af;
+  --background2: white;
+  --background3: #f8e4af;
+  --background4: #000000;
+  --background5: #fdca40;
+  --background6: #080708;
+  --background7: #E6E5DE;
+  --active:#c2c3c644
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
 }

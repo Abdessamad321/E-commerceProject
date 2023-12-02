@@ -17,7 +17,7 @@ async function createCategories(req, res) {
       let newCategory = new Categorie({
         category_name: category_name,
       });
-      const savedCategory = await newCategory.save();
+      newCategory.save();
       return res.status(200).json("category created successfully");
     }
     
@@ -27,15 +27,15 @@ async function createCategories(req, res) {
 }
 
 async function searchCategories(req, res) {
-  const page = req.query.page || 1;
-  const singlePage = req.query.size || 10;
+  // const page = req.query.page || 1;
+  // const singlePage = req.query.size || 10;
   const query = req.query.query || "";
   try {
     const categories = await Categorie.find({
       category_name: new RegExp(query, "i"),
     })
-      .skip((page - 1) * singlePage)
-      .limit(singlePage);
+      // .skip((page - 1) * singlePage)
+      // .limit(singlePage);
 
     res.json(categories);
   } catch (error) {
@@ -76,18 +76,16 @@ async function deleteCategorie(req, res) {
   const categoryId = req.params.id;
   try {
     const category = await Categorie.findById(categoryId);
-    console.log(category)
     if (!category) {
-      return res.status(404).json({ status: 404, message: 'ID de catégorie invalide' });
+      return res.status(404).json({ status: 404, message: 'the catégorie ID is invalide' });
     }
 
- 
     const subcategories = await Subcategories.find({category_id: categoryId});
     console.log(subcategories)
     if (subcategories.length > 0) {
       return res.status(400).json({
         status: 400,
-        message: 'Impossible de supprimer cette catégorie, des sous-catégories y sont attachées',
+        message: 'Unable to delete this category, subcategories are attached to it',
       });
     }else {
 

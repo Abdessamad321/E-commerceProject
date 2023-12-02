@@ -4,14 +4,18 @@ const productsController = require('../../Controllers/productsController')
 const AMauthorization = require('../../middlewares/AuthAM')
 const upload = require('../../middlewares/Cloudinary')
 
-router.post('/',upload.single('product_image'), productsController.createProduct)
+router.post('/products',upload.single('product_image'), productsController.createProduct)
 
-router.get('/', productsController.findProducts)
+router.get('/allproducts', productsController.findProducts)
 
-router.get('/:id', productsController.getProductById)
+// router.get('/produc', productsController.searchProducts)
 
-router.patch('/:id',AMauthorization, productsController.updateProduct)
+router.get('/products/:id', productsController.getProductById)
 
-router.delete('/:id',AMauthorization, productsController.removeProduct)
+router.patch('/products/:id',upload.single('productImage'), productsController.updateProduct)
+
+router.delete('/products/:id', productsController.removeProduct)
+
+// router.get('/products/sorts', productsController.sortProducts)
 
 module.exports = router

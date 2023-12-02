@@ -1,16 +1,16 @@
 const express = require('express');
 const router = express.Router();
-const subcategoryController = require('../../Controllers/SubcategoriesController')
+const subcategoryController = require('../../controllers/SubcategoriesController')
 const AMauthorization = require('../../middlewares/AuthAM')
 
-router.post('/',AMauthorization, subcategoryController.creatSubcategory)
+router.post('/Subcategories', subcategoryController.creatSubcategory)
 
-router.get('/', subcategoryController.searchForSubcategory)
+router.get('/Subcategories', subcategoryController.searchForSubcategory)
 
-router.get('/:id', subcategoryController.getById)
+router.get('/Subcategories/:id', subcategoryController.getById)
 
-router.put('/:id', AMauthorization, subcategoryController.updateSubcategory)
+router.put('/Subcategories/:id', subcategoryController.updateSubcategory)
 
-router.delete('/:id', AMauthorization, subcategoryController.deleteSub)
+router.delete('/Subcategories/:id', subcategoryController.deleteSub)
 
 module.exports = router
