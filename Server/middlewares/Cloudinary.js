@@ -20,8 +20,9 @@ const storage = new CloudinaryStorage({
     params: {
         folder: 'E-COMERCEimgs', 
         allowed_formats: ['jpg', 'png', 'jpeg'],
+        public_id: (req, file)=>`product-${Date.now()}`,
     },
 });
-const upload = multer({ storage: storage, limits: { fieldSize: 10 * 1024 * 1024 } }); 
+const upload = multer({ storage: storage, limits: { fieldSize: 1024 * 1024 * 10 } }); 
 
 module.exports = upload

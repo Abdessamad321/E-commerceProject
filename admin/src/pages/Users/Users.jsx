@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import axios from "axios";
 import { Form, Button, Modal, Table } from 'react-bootstrap';
-import FilterListIcon from '@mui/icons-material/FilterList';
+import SortByAlphaIcon from '@mui/icons-material/SortByAlpha';
 import { ClipLoader } from 'react-spinners';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined';
 import GroupAddOutlinedIcon from '@mui/icons-material/GroupAddOutlined';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Users.css';
-import PreviewIcon from '@mui/icons-material/Preview';
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import Navbar from '../../Partials/Navbar/Navbar';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 //for the regester form ======================================
@@ -258,8 +260,6 @@ const UpdateUserForm = ({ user, handleUpdate, show, handleClose }) => {
 function UsersList() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null);
   const [show, setShow] = useState(false);  
   const [isCreateModalVisible, setCreateModalVisible] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -270,16 +270,15 @@ function UsersList() {
   const views = () => setView(true);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(5);
+  const [itemsPerPage] = useState(6);
 
   const fetchData = async () => {
     try {
       const response = await axios.get(`http://localhost:7000/v1/allUsers?page=${currentPage}&perPage=${itemsPerPage}`);
       const data = response.data;
       setUsers(data);
-      setError(null);
     } catch (error) {
-      setError(error.message);
+      toast.error(error.message)
     } finally {
       setLoading(false);
     }
@@ -295,11 +294,6 @@ function UsersList() {
     setCurrentPage(pageNumber);
   };
 
-  // Render the list of users
-  // const renderUsers = users.map((user) => (
-  //   <div key={user.id}>{user.name}</div>
-  // ));
-
   // Calculate total number of pages
   const totalPages = Math.ceil(users.length / itemsPerPage);
 
@@ -309,43 +303,40 @@ function UsersList() {
     pageNumbers.push(i);
   }
 
+
+  // remove user ==================================
+
   const removeUser = async (userId) => {
     try {
       const response = await axios.delete(`http://localhost:7000/v1/users/${userId}`);
       if (response.status === 200) {
         const updatedUsers = users.filter((user) => user._id !== userId);
         setUsers(updatedUsers);
-        setSuccess('User deleted successfully');
+        toast.success('User deleted successfully')
       } else {
-        setError("Failed to delete user");
+        toast.warning('Failed to delete user')
       }
     } catch (error) {
-      setError("Error deleting user:", error);
-    } finally {
-      setTimeout(() => {
-        setSuccess(null);
-        setError(null);
-      }, 1000);
+      toast.error("Error deleting user:", error)
     }
   };
 
+//view details ===========================
 
   const viewUser = async (userId) => {
     try {
       const response = await axios.get(`http://localhost:7000/v1/users/${userId}`);
       if (response.status === 200) {
         const user = response.data;
-      setUserData(user); // Set user data in the state
+      setUserData(user); 
       views();
-      }// Show the modal
+      }
     } catch (error) {
-      setError("Error viewing user:", error);
-    }finally{
-      setTimeout(() => {
-        setError(null);
-      }, 2000);
+      toast.error("Error viewing user:", error)
     }
   };
+
+// update user ============================
 
   const handleUpdate = async (updatedData, userId) => {
     try {
@@ -356,23 +347,15 @@ function UsersList() {
           user._id === userId ? { ...user, ...updatedData } : user
         );
         setUsers(updatedUserList);
-        setSuccess('User updated successfully');
+        toast.success('User updated successfully')
       } else {
-        setError('Failed to update user');
+        toast.warning('Failed to update user')
       }
     } catch (error) {
-      setError('Error updating user:', error);
-    } finally {
+      toast.error('Error updating user:', error)
+    }finally {
       handleClose();
-      clearMessages();
     }
-  };
-
-  const clearMessages = () => {
-    setTimeout(() => {
-      setSuccess(null);
-      setError(null);
-    }, 2000);
   };
 
   const handleShow = (user) => {
@@ -391,16 +374,19 @@ function UsersList() {
     try {
       const response = await axios.post('http://localhost:7000/v1/users', newUser);
       if (response.status === 201) {
-        setSuccess('New User created successfully');
+        toast.success('New User created successfully')
         fetchData();  
-      } else {
-        setError(`Error creating a new user: ${response.data.err}`);
-      }
+      } 
     } catch (error) {
-      setError(`Error creating a new user: ${error.message}`);
+      if (error.response && error.response.status === 400) {
+        const validationErrors = error.response.data.err;
+        toast.warning([...validationErrors, 'Please check your input and try again.'].join('\n'));
+      } else {
+        const errorMessage = error.response.data.err || 'An error occurred';
+        toast.error(errorMessage);
+      }
     } finally {
       handleClose();
-      clearMessages();
     }
   };
   
@@ -433,7 +419,7 @@ function UsersList() {
       setSortOrder(newSortOrder);
   
     } catch (error) {
-      setError(`Error sorting users: ${error.message}`);
+      toast.error(`Error sorting users: ${error.message}`)
     }
   };
   // for searchingggggggggggg============================
@@ -457,20 +443,16 @@ function UsersList() {
       });
       const results = response.data;
       if (results.length === 0) {
-        setError('No users found with the given name.');
+        toast.warning('No users found with the given name.')
       } else {
         setSearchResults(results);
-        setError(null);
       }
     }
     
     } catch (error) {
-      setError(`Error searching users: ${error.message}`);
+      toast.error(`Error searching users: ${error.message}`)
     } finally {
       setLoading(false);
-      setTimeout(() => {
-      setError(null);
-    }, 2000);
     }
   };
   useEffect(() => {
@@ -482,9 +464,9 @@ function UsersList() {
       <div className="custom-table">
         <div className="top">
           <h1>Users List</h1>
-          <div style={{ display: 'flex', width: '80px', justifyContent: 'space-between' }}>
-            <GroupAddOutlinedIcon className='addUser' onClick={ShowCreate} style={{ cursor: 'pointer'}} />
-            <FilterListIcon onClick={handleSortClick} style={{ cursor: 'pointer'}}/>
+          <div style={{ display: 'flex', width: '23%', justifyContent: 'flex-end', gap: '10px' }}>
+            <Button className='addUser' onClick={ShowCreate} style={{ cursor: 'pointer',backgroundColor: "var(--background2)", color:"var(--background)", borderRadius: '15px'}}> Add <GroupAddOutlinedIcon  /></Button>
+            <Button onClick={handleSortClick} style={{ cursor: 'pointer', backgroundColor: "var(--background2)", color:"var(--background)", borderRadius: '15px'}}>Sort <SortByAlphaIcon /></Button>
           </div>
         </div>
         {loading && (
@@ -494,20 +476,7 @@ function UsersList() {
             </div>
           </div>
         )}
-          {success && (
-            <div className='success'>
-              <div className='successmsg' style={{ marginBottom: '20px', padding: '20px', borderRadius: '8px', background: 'green' }}>
-                {success}
-              </div>
-            </div>
-          )}
-        {error && (
-          <div className='errore'>
-            <div className='erroremsg' style={{ marginBottom: '20px', padding: '20px', borderRadius: '8px', background: 'red' }}>
-              {error}
-            </div>
-          </div>
-        )}
+        <ToastContainer/>
         <div className="ttable">
           <Table striped hover style={{border:'0px solid inherit'}}>
             <thead>
@@ -530,20 +499,14 @@ function UsersList() {
                     <td className="align-middle">{user.last_name}</td>
                     <td className="align-middle">{user.email}</td>
                     <td className="align-middle">{user.role}</td>
-                    <td>
-                      <Button onClick={() => handleShow(user)} className="update" style={{ width: '100%' }} variant="success">
-                        <ManageAccountsOutlinedIcon />
-                      </Button>
+                    <td className="update">
+                        <ManageAccountsOutlinedIcon onClick={() => handleShow(user)}  style={{ width: '100%', color:'blue' , cursor:'pointer' }} variant="success"/>
                     </td>
-                    <td>
-                      <Button className="remove" style={{ width: '100%' }} variant="danger" onClick={() => removeUser(user._id)}>
-                        <PersonRemoveIcon />
-                      </Button>
+                    <td className="remove">
+                        <PersonRemoveIcon style={{ width: '100%', color:'red', cursor:'pointer' }} variant="danger" onClick={() => removeUser(user._id)}/>
                     </td>
-                    <td>
-                      <Button className="align-middle" style={{ width: '100%' }} variant="secondary" onClick={() => viewUser(user._id)}>
-                        <PreviewIcon />
-                      </Button>
+                    <td className="align-middle">
+                        <VisibilityIcon  style={{ width: '100%', color:'green', cursor:'pointer'  }} variant="secondary" onClick={() => viewUser(user._id)}/>
                     </td>
                   </tr>
                 ))}
@@ -573,14 +536,14 @@ function UsersList() {
         <Modal.Body>
         {userData && (
           <div>
-            <p>firstName: {userData.first_name}</p>
-            <p>lastName: {userData.last_name}</p>
-            <p>userName: {userData.user_name}</p>
-            <p>Email: {userData.email}</p>
-            <p>Role: {userData.role}</p>
-            <p>active: {userData.active === true ? <span style={{color:'green'}}>true</span> : <span style={{color:'red'}}>false</span>}</p>
-            <p>create date: {(userData.createdAt).split('T')[0]}</p>
-            <p>updated date: {(userData.updatedAt).split('T')[0]}</p>
+            <p><span style={{fontWeight:'800'}}>FirstName:</span>  {userData.first_name}</p>
+            <p><span style={{fontWeight:'800'}}>LastName:</span> {userData.last_name}</p>
+            <p><span style={{fontWeight:'800'}}>UserName:</span> {userData.user_name}</p>
+            <p><span style={{fontWeight:'800'}}>Email:</span> {userData.email}</p>
+            <p><span style={{fontWeight:'800'}}>Role:</span> {userData.role}</p>
+            <p><span style={{fontWeight:'800'}}>Active:</span> {userData.active === true ? <span style={{color:'green'}}>true</span> : <span style={{color:'red'}}>false</span>}</p>
+            <p><span style={{fontWeight:'800'}}>Create Date:</span> {(userData.createdAt).split('T')[0]}</p>
+            <p><span style={{fontWeight:'800'}}>Update Date:</span> {(userData.updatedAt).split('T')[0]}</p>
           </div>
         )}
         </Modal.Body>
@@ -609,3 +572,4 @@ function UsersList() {
 }
 
 export default UsersList;
+

@@ -2,20 +2,20 @@ import React, { useEffect, useState } from "react";
 import "./Dashboard.css";
 import data from "./data";
 import axios from "axios";
+import EuroRoundedIcon from "@mui/icons-material/EuroRounded";
+import GroupRoundedIcon from '@mui/icons-material/GroupRounded';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import TrendingUpRoundedIcon from '@mui/icons-material/TrendingUpRounded';
 /* #fdca40-#d9bd76-#c2c3c644-#c2c3c6-#f8e4af-#c2c3c6-#590404-#f8b930-#080708-#a80b0b */
 import {
   LineChart,
-  ComposedChart,
   Line,
   AreaChart,
   Area,
-  Bar,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
-  Scatter,
   ResponsiveContainer,
 } from "recharts";
 
@@ -23,10 +23,10 @@ function Dashboard() {
   const [error, setError] = useState(null);
   const [customerCount, setCustomerCount] = useState(null);
   const [orderCount, setOrderCount] = useState(null);
-
   const [loading, setLoading] = useState(false);
   const [datas, setData] = useState(null);
-
+  const gradientColors = ["#000", "white"];
+  const gradientId = "colorGradient";
   useEffect(() => {
     setLoading(true);
     const fetchData = async () => {
@@ -53,7 +53,6 @@ function Dashboard() {
           "http://localhost:7000/v1/allcustomers/all"
         );
         const count = response.data.count;
-        console.log(count);
         setCustomerCount(count);
         setLoading(false);
         setError(null);
@@ -74,7 +73,6 @@ function Dashboard() {
           "http://localhost:7000/v1/order/getallorders"
         );
         const count = response.data.count;
-        console.log(count);
         setOrderCount(count);
         setLoading(false);
         setError(null);
@@ -90,101 +88,89 @@ function Dashboard() {
   return (
     <div className="dash">
       <div className="chart1">
-        <h2 className="chart-title">Numbre of sales </h2>
-        <ResponsiveContainer className="chart" width="100%" height="80%">
-          <ComposedChart width={300} height={200} data={data.data}>
-            <CartesianGrid className="CartesianGrid" stroke="#c2c3c6" />
-            <XAxis dataKey="name" scale="band" />
-            <YAxis />
+      <div className="chart1-title">
+        <div className="charts-title">Numbre of sales </div>
+        <div className="chart1-buttons">
+          <button className="sort" >Week</button>
+          <button className="sort" >Month</button>
+        </div>
+        </div>
+        <ResponsiveContainer width="100%" height="90%">
+          <AreaChart
+            width={500}
+            height={400}
+            data={data.data}
+            margin={{
+              top: 20,
+              right: 30,
+              left: 0,
+              bottom: 0,
+            }}
+          >
+            <defs>
+              <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+                {gradientColors.map((color, index) => (
+                  <stop
+                    key={index}
+                    offset={`${(index / (gradientColors.length - 1)) * 100}%`}
+                    stopColor={color}
+                  />
+                ))}
+              </linearGradient>
+            </defs>
+            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="black"/>
+            <XAxis dataKey="month" stroke="black"/>
+            <YAxis axisLine={false} stroke="black" fill="black"/>
             <Tooltip />
-            <Legend />
-            <Area
-              type="monotone"
-              dataKey="amt"
-              fill="#fdca40"
-              stroke="#590404"
-            />
-            <Bar dataKey="pv" barSize={20} fill="#590404" />
-            <Line type="monotone" dataKey="uv" stroke="#f8b930" />
-            <Scatter dataKey="cnt" fill="#d9bd76" />
-          </ComposedChart>
+            <Area type="monotone" strokeWidth={2} dataKey="sale" stroke="black" fill={`url(#${gradientId})`}/>
+          </AreaChart>
         </ResponsiveContainer>
       </div>
       <div className="chart2">
-        <h2 className="chart2-title">Total of registered customers</h2>
-        <div className="counter">
+        <div className="chart2-title">
+        <div className="charts-title">Total Customers</div>
+        <GroupRoundedIcon fontSize="large"/>
+        </div>
+        <div className="chart4-profit">
           {loading && <p className="txt">Loading...</p>}
           {error && <p className="txt">Error: {error}</p>}
           {customerCount !== null && <p>{`${customerCount}`}</p>}
         </div>
       </div>
       <div className="chart3">
-        <h2 className="chart-title">Last placed orders</h2>
+        <div className="chart3-title">
+        <div className="charts-title">Total Orders</div>
+        <LocalShippingIcon fontSize="large"/>
+        </div>
         <div className="chart3-parent">
-        <div className="chart3-counter">
-        {loading && <p className="txt">Loading...</p>}
-          {error && <p className="txt">Error: {error}</p>}
-          {orderCount !== null && <p>{`${orderCount}`}</p>}
+          <div className="chart3-counter">
+            {loading && <p className="txt">Loading...</p>}
+            {error && <p className="txt">Error: {error}</p>}
+            {orderCount !== null && <p>{`${orderCount}`}</p>}
+          </div>
+          <ResponsiveContainer width="50%" height="60%">
+            <LineChart width={300} height={100} data={datas}>
+              <Line
+                type="monotone"
+                dataKey="count"
+                stroke="#590404"
+                strokeWidth={2}
+              />
+              <Tooltip itemStyle={{ fontSize: '14px'}}/>
+            </LineChart>
+          </ResponsiveContainer>
         </div>
-        {/* <div className="chart3-courbe"> */}
-        <ResponsiveContainer width="50%" height="60%">
-          <LineChart width={300} height={100} data={datas}>
-            <Line
-              type="monotone"
-              dataKey="count"
-              stroke="#590404"
-              strokeWidth={2}
-            />
-          </LineChart>
-        </ResponsiveContainer>
-        {/* </div> */}
-        </div>
-        {/* <ResponsiveContainer width="100%" height="80%">
-          <PieChart width={400} height={400}>
-            <Pie
-              dataKey="value"
-              isAnimationActive={false}
-              data={data.data01}
-              cx="50%"
-              cy="50%"
-              outerRadius={60}
-              fill="#590404"
-              label
-            />
-            <Pie
-              dataKey="value"
-              data={data.data02}
-              cx={500}
-              cy={200}
-              innerRadius={40}
-              outerRadius={70}
-              fill="#82ca9d"
-            />
-            <Tooltip />
-          </PieChart>
-        </ResponsiveContainer> */}
       </div>
       <div className="chart4">
-        <h2 className="chart4-title">Total revenues</h2>
-        <ResponsiveContainer width="100%" height="80%">
-          <AreaChart
-            width={500}
-            height={400}
-            data={data.data}
-            margin={{
-              top: 10,
-              right: 30,
-              left: 0,
-              bottom: 0,
-            }}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="month" />
-            <YAxis />
-            <Tooltip />
-            <Area type="monotone" dataKey="uv" stroke="white" fill="white" />
-          </AreaChart>
-        </ResponsiveContainer>
+        <div className="chart4-title">
+          <div className="charts-title">Total Revenues</div>
+          <EuroRoundedIcon fontSize="large"/>
+        </div>
+        <div className="chart4-profit">
+          {loading && <p className="txt">Loading...</p>}
+          {error && <p className="txt">Error: {error}</p>}
+          {orderCount !== null && <p>${`${orderCount}`}</p>}
+        </div>
       </div>
     </div>
   );

@@ -18,6 +18,7 @@ async function createUser(req, res) {
     const realEmail = xss(email);
     const userName = xss(user_name);
     const realPass = xss(password);
+    const user_image = req.file ? req.file.path : null;
     const validationErrors = validateUserInput.validateInput(firstName,lastName, realEmail, userName, realPass );
     if (validationErrors.length > 0) {
         return res.status(400).json({ err: validationErrors });
@@ -40,6 +41,7 @@ try {
                 } else {
                 const newUser = await users.create({
                     first_name: firstName,
+                    user_image: user_image,
                     last_name: lastName,
                     role: role,
                     email: realEmail,
@@ -77,8 +79,8 @@ async function loginUser (req, res){
                 if (!passwordMatch ) {
                     return res.status(401).json('invalid credentials')
                 }else{
-                    const token = jwt.sign( {userId: checkUser.id, userRole: checkUser.role}, secretKey, {expiresIn: '30s'});
-                    const refreshToken = jwt.sign({userId: checkUser.id}, refreshKey, {expiresIn: '60s'});
+                    const token = jwt.sign( {userId: checkUser.id, userRole: checkUser.role, name: checkUser.user_name}, secretKey, {expiresIn: '24h'});
+                    const refreshToken = jwt.sign({userId: checkUser.id}, refreshKey, {expiresIn: '720h'});
                     const currentDate = new Date();
                     checkUser.last_login = currentDate;
                     await checkUser.save();
@@ -145,20 +147,26 @@ async function sortUsers(req, res) {
 // update the users =====================================
 
 
-async function updateUser(req, res){
+async function updateUser(req, res) {
     const userId = req.params.id;
-    const {first_name, last_name,user_name,password, email, role, active} = req.body;
+    const { first_name, last_name, user_name, password, email, role, active } = req.body;
+    let updateData = { first_name, last_name, user_name, password, email, role, active };
+    
+    if (req.file) {
+        updateData.user_image = req.file.path;
+    }
     try {
-        const user = await users.findByIdAndUpdate(userId, {first_name, last_name,user_name,password, email, role, active});
+        const user = await users.findByIdAndUpdate(userId, updateData);
         if (user) {
             res.status(200).json('User updated successfully');
-        }else{
-            res.status(404).json("no user found with the provided Id")
-        };
+        } else {
+            res.status(404).json('No user found with the provided Id');
+        }
     } catch (error) {
-        res.json(error)
+        res.json(error);
     }
 }
+
 
 // delete usesr ===================================
 
@@ -224,6 +232,74 @@ async function getAllUsers(req, res) {
         res.status(500).json('something happened')
     }
 }
+
+//reset passsssssssss================================
+
+async function resetRquist (req, res) {
+    const { user_name } = req.body;
+    try {
+    const user = await users.findOne({ user_name: user_name });
+    if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+    }
+    const resetToken = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    user.resetToken = resetToken;
+    user.resetTokenExpiration = Date.now() + 300000; 
+    await user.save();
+    sendEmail.sendResetEmail(user.email, resetToken);
+    return res.status(200).json({ message: 'Password reset email sent successfully' });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+}
+
+// Verify ttoken ================================
+async function verifyResetToken (req, res) {
+    const { token } = req.params;
+    try {
+        const user = await users.findOne({
+            resetToken: token,
+            resetTokenExpiration: { $gt: Date.now() },
+        });
+    if (!user) {
+        return res.status(400).json({ message: 'Invalid or expired token' });
+    }
+    return res.status(200).json({ message: 'Token is valid' });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+}
+
+// Set new Passssssssssssssssssssssss=========================
+async function setNewPass (req, res) {
+    const { token } = req.params;
+    const { newPassword } = req.body;
+
+    try {
+        const user = await users.findOne({
+        resetToken: token,
+        resetTokenExpiration: { $gt: Date.now() },
+        });
+        if (!user) {
+            return res.status(400).json({ message: 'Invalid or expired token' });
+        }
+        const hashedPass = await bcrypt.hash(newPassword, 10);
+        user.password = hashedPass;
+        user.resetToken = null;
+        user.resetTokenExpiration = null;
+        await user.save();
+
+        return res.status(200).json({ message: 'Password updated successfully' });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+
+
 module.exports = {
     createUser: createUser,
     loginUser: loginUser,
@@ -233,5 +309,8 @@ module.exports = {
     updateUser: updateUser,
     deleteUser: deleteUser,
     refreshTokens:refreshTokens,
-    getAllUsers:getAllUsers
+    getAllUsers:getAllUsers,
+    resetRquist:resetRquist,
+    verifyResetToken:verifyResetToken,
+    setNewPass:setNewPass
 };

@@ -52,7 +52,7 @@ async function createCustomer(req, res) {
                 password: hash,
               });
               await newCustomer.save();
-              sendEmail.sendWelcomeEmail(newCustomer._id, email, first_name, password);
+              sendEmail.sendWelcomeEmail(newCustomer._id, email, password);
               res.status(200).json("Customer created success");
             }
           }
@@ -108,17 +108,13 @@ async function loginCustumer(req, res) {
 }
 
 async function searchCustomer(req, res) {
-  const page = req.query.page || 1;
-  const singlePage = req.query.size || 10;
   const sort = req.query.sort === "DESC" ? -1 : 1;
   const query = req.query.query || "";
   try {
     const customers = await Customer.find({
       first_name: new RegExp(query, "i"),
     })
-      .skip((page - 1) * singlePage)
-      .limit(singlePage)
-      .sort({ creation_date: sort });
+      .sort({ createdAt: sort });
     res.json(customers);
   } catch (error) {
     res.status(500).json({ error: error });
@@ -127,8 +123,6 @@ async function searchCustomer(req, res) {
 
 async function retrieveCustomer(req, res) {
   try {
-    console.log('Test')
-    console.log(req.params)
     const customers = await Customer.findById(req.params.id);
     res.json(customers);
   } catch (error) {
@@ -146,7 +140,7 @@ async function validateCustomer(req, res) {
       if (customers._id) {
         customers.valid_account = true;
         customers.save();
-        res.json("email validate successfully");
+        res.redirect('http://localhost:5173/login')
       }
     }
   } catch (error) {
@@ -169,8 +163,7 @@ async function updateCustomer(req, res) {
       throw new Error("No such Customer");
     } else {
       customers.active = true;
-      customers.save();
-      res.json("Customer updated successfully");
+      res.status(200).json("Customer updated successfully");
     }
   } catch (error) {
     res.status(500).json({ error: error });

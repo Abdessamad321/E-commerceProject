@@ -1,104 +1,128 @@
-// import React, { useState } from "react";
-// import "./Navbar.css";
-// import SearchIcon from '@mui/icons-material/Search';
-// import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
-// import NotificationsNoneRoundedIcon from '@mui/icons-material/NotificationsNoneRounded';
-// const Navbar = () => {
-//   const [searchValue, setSearchValue] = useState('');
-//   const [isIconVisible, setIconVisibility] = useState(true);
-//   const titleChange = ()=>{
-    
-//   }
-//   const handleInputChange = (event) => {
-//     setSearchValue(event.target.value);
-//   };
-//   const handleIconClick = () => {
-//     console.log('Searching for:', searchValue);
-//     setIconVisibility(false);
-//   };
-//   const logOutHandler = (e) => {
-//     e.redirect('/logout')
-//   };
-//   return (
-//     <div className="navbar">
-//       <label onChange={titleChange} className="title" htmlFor="">Statistics</label>
-//       <div className="search">
-//       {isIconVisible && <SearchIcon onClick={handleIconClick} className="search-icon" />}
-//       <input
-//         type="text"
-//         placeholder="Search something..."
-//         className="search-input"
-//         value={searchValue}
-//         onChange={handleInputChange}
-//       />
-//     </div>
-//       <div className="right-buttons">
-//       <button className="notifications" type="button">
-//       <NotificationsNoneRoundedIcon/>
-//         </button>
-//       <button className="logout" type="Logout" onClick={(e) => logOutHandler(e)}>
-//         <LogoutRoundedIcon/>
-//       </button>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Navbar;
-
-
-
+import React, { useState, useContext } from "react";
 import "./Navbar.css";
 import SearchIcon from '@mui/icons-material/Search';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
-import NotificationsNoneRoundedIcon from '@mui/icons-material/NotificationsNoneRounded';
-import React, { useState } from "react";
+import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
+import { AuthContext } from "../../AuthContext";
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import { Button } from "react-bootstrap";
 
-
-const Navbar = ({ handleSearch }) => {
+const Navbar = ({handleSearch }) => {
   const [searchValue, setSearchValue] = useState('');
+  const [isIconVisible, setIconVisibility] = useState(true);
+  const authCtx = useContext(AuthContext);
 
   const handleInputChange = (event) => {
     setSearchValue(event.target.value);
   };
-
   const handleIconClick = () => {
     handleSearch(searchValue);
+    console.log('Searching for:', searchValue);
+    setIconVisibility(false);
   };
- 
   const handleInputKeyDown = (event) => {
-    if (event.key === 'Enter') {
+    if (event.key === "Enter") {
       handleSearch(searchValue);
     }
   };
   const logOutHandler = (e) => {
-        e.redirect('/logout')
-      };
+    authCtx.logout();
+  };
+
+
+  function getCurrentDate() {
+    const currentDate = new Date();
+  
+    const options = { day: 'numeric', month: 'long', year: 'numeric' };
+    const dateLocaleString = currentDate.toLocaleDateString(undefined, options);
+  
+    return dateLocaleString;
+  }
+  
   return (
-    <div className="navbar">
-      {/* <label className="title" htmlFor="">Statistics</label> */}
-      <form className="search" onSubmit={(e) => e.preventDefault()}>
-        <SearchIcon onClick={handleIconClick} className="search-icon" />
-        <input
-          type="text"
-          placeholder="Search something..."
-          className="search-input"
-          value={searchValue}
-          onChange={handleInputChange}
-          onKeyDown={handleInputKeyDown}
-        />
-      </form>
-    {/* </div> */}
+    <div className="navbars">
+      <div className="search" onSubmit={(e) => e.preventDefault()}>
+      {isIconVisible && <SearchIcon onClick={handleIconClick} className="search-icon" />}
+      <input
+        type="text"
+        placeholder="Search something..."
+        className="search-input"
+        value={searchValue}
+        onChange={handleInputChange}
+        onKeyDown={handleInputKeyDown}
+      />
+    </div>
       <div className="right-buttons">
-        <button className="notifications" type="button">
-          <NotificationsNoneRoundedIcon/>
+      <Button className="date" style={{backgroundColor: "var(--background2)", border:"var(--background2)", color:"var(--background)", padding: "9px", cursor:'inherit', borderRadius:'15px'}}>
+      <CalendarMonthIcon/> {getCurrentDate()}
+      </Button>
+      <button className="notifications" type="button">
+        <NotificationsRoundedIcon className="noti-img"/>
         </button>
-        <button className="logout" type="button" onClick={logOutHandler}>
-          <LogoutRoundedIcon/>
-        </button>
+      <button className="logout" type="Logout" onClick={logOutHandler}>
+        <LogoutRoundedIcon/>
+      </button>
       </div>
     </div>
   );
 };
 
 export default Navbar;
+
+
+// import "./Navbar.css";
+// import SearchIcon from "@mui/icons-material/Search";
+// import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
+// import NotificationsNoneRoundedIcon from "@mui/icons-material/NotificationsNoneRounded";
+// import React, { useContext, useState } from "react";
+// // import { useHistory } from "react-router-dom";
+// import { AuthContext } from "../../AuthContext";
+
+// const Navbar = ({ handleSearch }) => {
+//   const [searchValue, setSearchValue] = useState("");
+//   const authCtx = useContext(AuthContext);
+//   // const history = useHistory();
+
+//   const handleInputChange = (event) => {
+//     setSearchValue(event.target.value);
+//   };
+
+//   const handleIconClick = () => {
+//     handleSearch(searchValue);
+//   };
+
+//   const handleInputKeyDown = (event) => {
+//     if (event.key === "Enter") {
+//       handleSearch(searchValue);
+//     }
+//   };
+//   const logOutHandler = (e) => {
+//     authCtx.logout();
+//   };
+//   return (
+//     <div className="navbare">
+//       <form className="search" onSubmit={(e) => e.preventDefault()}>
+//         <SearchIcon onClick={handleIconClick} className="search-icon" />
+//         <input
+//           type="text"
+//           placeholder="Search something..."
+//           className="search-input"
+//           value={searchValue}
+//           onChange={handleInputChange}
+//           onKeyDown={handleInputKeyDown}
+//         />
+//       </form>
+//       {/* </div> */}
+//       <div className="right-buttons">
+//         <button className="notifications" type="button">
+//           <NotificationsNoneRoundedIcon />
+//         </button>
+//         <button className="logout" type="button" onClick={logOutHandler}>
+//           <LogoutRoundedIcon />
+//         </button>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default Navbar;

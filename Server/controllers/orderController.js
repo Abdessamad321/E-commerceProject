@@ -19,7 +19,6 @@ async function createOrder(req, res) {
         return res.status(401).json({ error: 'Token verification failed' });
       }
       const customer = await Customer.findById(decoded.customerid);
-      console.log(customer._id.toString());
 
        if (!customer) {
          return res.status(403).json({ error: 'Email validation required to create an order.' });
@@ -48,12 +47,12 @@ async function createOrder(req, res) {
 
 async function allOrder(req, res) {
   try {
-    const page = req.query.page || 1;
-    const forPage = 10;
+    // const page = req.query.page || 1;
+    // const forPage = 10;
     const findorders = await Order
       .aggregate([
-        { $skip: (page - 1) * forPage },
-        { $limit: forPage },
+        // { $skip: (page - 1) * forPage },
+        // { $limit: forPage },
         {
           $lookup: {
             from: "customers",
@@ -72,6 +71,7 @@ async function allOrder(req, res) {
             last_name: "$customer.last_name",
             order_items:1,
             order_date:1,
+            status:1,
             cart_total_price: 1,
           },
         },
@@ -117,6 +117,7 @@ async function OrderById(req, res) {
           last_name: "$customer.last_name",
           order_items:1,
           order_date:1,
+          status:1,
           cart_total_price: 1,
         },
       },
@@ -131,23 +132,23 @@ async function OrderById(req, res) {
 
 //update Order by ID ============================
 
-async function updateOrder(req, res){
+async function updateOrder(req, res) {
   try {
-    const orderid = req.params.id
-     const {statu}  = req.body
-    
-    const orders = await Order.findByIdAndUpdate(orderid,{ status : statu})
+    const orderId = req.params.id;
+    const { status } = req.body;
 
-    if(!orders){
-      res.status(404).json('No order with that ID found')
-    }else{
-      orders.save()
-      res.status(200).json('the order has updated successfully')
+    const updatedOrder = await Order.findByIdAndUpdate(orderId, { status }, { new: true });
+
+    if (!updatedOrder) {
+      return res.status(404).json('No order with that ID found');
     }
+
+    res.status(200).json(updatedOrder);
   } catch (error) {
-    res.status(500).json({error: error.message })
+    res.status(500).json({ error: error.message });
   }
 }
+
 
 
 async function getorders(req, res) {

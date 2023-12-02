@@ -1,150 +1,184 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import "./Edit.css";
-import profile from "../../Assets/MINE.jpeg";
 import axios from "axios";
-
+import {Button} from 'react-bootstrap'
+import upload from '../../Assets/upload.png'
+import { AuthContext } from "../../AuthContext";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Edit() {
-  const [firstname, setFirstname] = useState("");
-  const [lastname, setLastname] = useState("");
-  const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [role, setRole] = useState("");
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(false);
+  const authContext = useContext(AuthContext);
+  const [user, setUser] = useState({
+    first_name: "",
+    last_name: "",
+    email: "",
+    user_name: "",
+    role: "",
+    user_image: null,
+  });
 
+  const [userId, setUserId] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
+      const storedUserId = localStorage.getItem("userId");
+      setUserId(storedUserId);
       try {
         const response = await axios.get(
-          "http://localhost:7000/v1/users/654b513ee2ea3950e8b90e7a"
+          `http://localhost:7000/v1/users/${storedUserId}`
         );
         const userData = response.data;
-        console.log("user data", userData);
-        setFirstname(userData.first_name);
-        setLastname(userData.last_name);
-        setEmail(userData.email);
-        setUsername(userData.user_name);
-        setPassword(userData.password);
-        setRole(userData.role);
-        
+        setUser({
+          first_name: userData.first_name,
+          last_name: userData.last_name,
+          email: userData.email,
+          user_name: userData.user_name,
+          role: userData.role,
+          user_image: userData.user_image || null,
+        });
       } catch (error) {
-        setSuccess(false)
-        setError(error.message);
-        
+        toast.error(error)
       }
     };
 
     fetchData();
   }, []);
 
-  const saveChanges =async () => {
-        try {
-          const response = await axios.put(
-            `http://localhost:7000/v1/users/654b513ee2ea3950e8b90e7a`,
-            {
-              first_name: firstname,
-              last_name: lastname,
-              user_name: username,
-              password: password,
-              email: email,
-              role: role
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setUser((prevUser) => ({
+      ...prevUser,
+      user_image: file,
+    }));
+    authContext.setUserImage(file);
+  };
 
-            }
-            
-          );
-          setSuccess(true)
-          
-          setTimeout(() => {
-            setSuccess(false)
-          }, 2000);
-        } catch (error) {
-          setError(error.message);
-          setSuccess(false)
-          
+  const saveChanges = async () => {
+    try {
+      const formData = new FormData();
+      formData.append("first_name", user.first_name);
+      formData.append("last_name", user.last_name);
+      formData.append("user_name", user.user_name);
+      formData.append("email", user.email);
+      formData.append("role", user.role);
+      // formData.append("user_image", user.user_image || null);
+      if (user.user_image) {
+        formData.append("user_image", user.user_image);
+      }
+
+      const response = await axios.put(
+        `http://localhost:7000/v1/users/${userId}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
         }
-      };
-
-      
-    
+      );
+      toast.success(response.data)
+    } catch (error) {
+      toast.error("Couldnr't update user", {error})
+    }
+  };
   
 
   return (
     <div className="edit-profile">
-      
-      {/* <div className="background-img">
-
-      </div> */}
-      <div className="left">
+      <div className="image">
+      <div  style={{
+          border: ' solid var(--background2)',
+          margin: '2%',
+          width: '200px',
+          height: '200px',
+          borderRadius: '50%',
+          overflow: 'hidden',
+          backgroundColor: '#ccc',
+          position:'relative'
+        }}>
+          {user.user_image ? (
+          <img src={user.user_image instanceof File ? URL.createObjectURL(user.user_image) : (user.user_image) }
+        alt="" style={{
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          cursor: 'pointer',
+          position:'absolute'
+        }} onClick={() => document.getElementById('image-input').click()} />
+        ) : (
+          <img style={{ width: "100%" }} src={upload} alt="" />
+        )}
+          <input
+        type="file"
+        id="image-input"
+        style={{ display: 'none' }}
+        accept="image/*"
+        onChange={handleImageChange}
+      />
+        </div>
+      </div>
+      <div className="blank">
+        
+      </div>
+      <div className="middle">
         <div className="inputs">
-          <label>First Name</label>
+        <label>First Name</label>
           <input
             type="text"
-            value={firstname}
-            onChange={(e) => setFirstname(e.target.value)}
+            value={user.first_name}
+            onChange={(e) => setUser({ ...user, first_name: e.target.value })}
           />
         </div>
         <div className="inputs">
           <label>Last Name</label>
           <input
             type="text"
-            value={lastname}
-            onChange={(e) => setLastname(e.target.value)}
+            value={user.last_name}
+            onChange={(e) => setUser({ ...user, last_name: e.target.value })}
           />
         </div>
         <div className="inputs">
           <label>Role</label>
           <input
             type="text"
-            value={role}
-            onChange={(e) => setRole(e.target.value)}
+            value={user.role}
+            onChange={(e) => setUser({ ...user, role: e.target.value })}
           />
         </div>
-        <div className="inputs">
-          <label>Username</label>
+        
+      </div>
+      <div className="right">
+      <div className="inputs">
+      <label>Username</label>
           <input
             type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            value={user.user_name}
+            onChange={(e) => setUser({ ...user, user_name: e.target.value })}
           />
         </div>
         <div className="inputs">
           <label>Password</label>
           <input
             type="text"
-            placeholder="Enter Password"
-            onChange={(e) => setPassword(e.target.value)}
+            placeholder="#$*$#*$#$***$#"
+            className="blurred-input"
+            disabled
           />
         </div>
         <div className="inputs">
-          <label>Email</label>
+        <label>Email</label>
           <input
             type="text"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={user.email}
+            onChange={(e) => setUser({ ...user, email: e.target.value })}
           />
         </div>
         <div className="save-button">
-          <button type="submit" onClick={saveChanges}>Save</button>
+          <Button type="submit" onClick={saveChanges}>Save</Button>
         </div>
-      </div>
-      {/* <div className="right">
-        
-        <div> {success && <div style={{padding:" 20px 10px", background:" green", textAlign:" center", borderRadius:" 16px" }}>User is updated</div>}
-        {error && <div style={{padding:" 20px 10px", background:" red", textAlign:" center", borderRadius:" 16px" }}>{error}</div>}</div>
-      </div> */}
-      <div className="image">
-        <div className="pic">
-          <img src={profile} alt="" />
-        </div>
-        <div className="edit-img">
-          <p>Upload Image</p>
-          <input type="file" accept=".png, .jpg, .jpeg" id="uploadImage"/>
-        </div>
+        <ToastContainer />
       </div>
     </div>
   );
 }
-export default Edit;
+export default Edit ;
