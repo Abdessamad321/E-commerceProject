@@ -1,0 +1,42 @@
+/* Login.css */
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  .form {
+    display: flex;
+    flex-direction: column;
+    max-width: 300px;
+    width: 100%;
+  }
+  
+  .input {
+    margin: 8px 0;
+    padding: 10px;
+    font-size: 16px;
+  }
+  
+  .button {
+    background-color: #590404;
+    color: #fff;
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+ 
+  .additional-content {
+    margin-top: 20px; /* Adjust the margin as needed */
+    text-align: center;
+  }
+  
+  .register-link-button {
+    margin-top: 8px; /* Adjust the margin as needed */
+    text-decoration: none;
+    color: #590404;
+    font-size: 16px;
+    cursor: pointer;
+  }

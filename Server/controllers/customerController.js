@@ -5,9 +5,12 @@ const bcrypt = require("bcrypt");
 const validationCustomer = require("../middlewares/ValidationMiddleware");
 const jwt = require("jsonwebtoken");
 const sendEmail = require("../middlewares/EmailSender");
-
 const secretKey = process.env.TOKEN_KEY;
 const refreshKey = process.env.REFRESH_KEY;
+const nodemailer = require("nodemailer");
+const customers = require("../models/Customers");
+const passwordKey = process.env.PASS_KEY;
+
 
 async function createCustomer(req, res) {
   const { first_name, last_name, email, password } = req.body;
@@ -43,7 +46,7 @@ async function createCustomer(req, res) {
             if (existingCustomer) {
               return res
                 .status(400)
-                .json({ err: "Email is already in use, try something else" });
+                .json({ err: "Email is already in use" });
             } else {
               const newCustomer = new Customer({
                 first_name: firstName,
@@ -52,8 +55,8 @@ async function createCustomer(req, res) {
                 password: hash,
               });
               await newCustomer.save();
-              sendEmail.sendWelcomeEmail(newCustomer._id, email, first_name, password);
-              res.status(200).json("Customer created success");
+              sendEmail.sendWelcomeEmail(newCustomer._id, email, password);
+              res.status(200).json("Customer created successfully");
             }
           }
         });
@@ -76,29 +79,30 @@ async function loginCustumer(req, res) {
     const data = await Customer.findOne({ email: realEmail });
 
     if (!data || !(await bcrypt.compare(realPass, data.password))) {
+      sendEmail.frogotPassForUser( email, password);
       return res.status(401).json({ error: "Invalid credentials" });
     }
 
     const updatedData = await Customer.updateOne(data, {
       last_login: new Date(),
     });
+
     // GENERATING A TOKEN
     const token = jwt.sign(
-      { customerid: data._id, isDeleted: data.isDeleted },
+      { customerid: data._id },
       secretKey,
       {
-        expiresIn: "1h",
+        expiresIn: "30s",
       }
     );
-    const refreshToken = jwt.sign({ id: data.id }, refreshKey, {
-      expiresIn: "60s",
+    const refreshToken = jwt.sign({ customerid: data._id }, refreshKey, {
+      expiresIn: "60s" // Set an appropriate expiration time for refresh token
     });
-    console.log(token);
-    console.log(refreshToken);
+    
     return res.status(200).json({
       access_token: token,
       token_type: "jwt",
-      expires_in: "1h",
+      expires_in: "30s",
       refresh_token: refreshToken,
     });
   } catch (error) {
@@ -106,7 +110,70 @@ async function loginCustumer(req, res) {
     res.status(500).json({ error: error });
   }
 }
+ /////////////////RefreshToken
+async function refreshTokens(req, res) {
+  try {
+    const refreshToken = req.headers['authorization'].split('Bearer ')[1];
 
+    if (!refreshToken) {
+      return res.status(401).json('No refresh token found in the headers');
+    }
+
+    const decodedRefreshToken = jwt.verify(refreshToken, refreshKey);
+    const customer = await Customer.findById(decodedRefreshToken.customerid);
+
+    if (!customer) {
+      return res.status(401).json('Invalid refresh token');
+    }
+
+    const token = jwt.sign(
+      { customerid: customer._id, isDeleted: customer.isDeleted },
+      secretKey,
+      { expiresIn: '30s' }
+    );
+
+    const newRefreshToken = jwt.sign({ customerid: customer._id }, refreshKey, {
+      expiresIn: '60s' // Set an appropriate expiration time for refresh token
+    });
+
+    res.status(200).json({
+      access_token: token,
+      token_type: 'jwt',
+      expires_in: '60s',
+      refresh_token: newRefreshToken,
+    });
+  } catch (error) {
+    res.status(500).json({ err: error.message });
+  }
+} 
+////////////////forgetPassword 
+async function forgetPassword(req, res) {
+  try {
+    const { email, password } = req.body;
+
+    const customer = await customers.findOne({ email: email });
+
+    if (!customer) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+     if ( !(await bcrypt.compare(password, customer.password))){
+        sendEmail.frogotPassForUser( email, password);
+        res.status(200).json({ message: 'Password reset email sent successfully' });
+    }else {
+      res.status(409).json({ error: "Try to login first" }) ;
+    }
+    // Generate a token for password reset
+    // const token = jwt.sign({ customerid: customer._id }, 'jsecretKey', {
+    //   expiresIn: '1d',
+    // });
+
+    // Send an email with the reset link
+    
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+//////////////////////search 
 async function searchCustomer(req, res) {
   const page = req.query.page || 1;
   const singlePage = req.query.size || 10;
@@ -146,7 +213,7 @@ async function validateCustomer(req, res) {
       if (customers._id) {
         customers.valid_account = true;
         customers.save();
-        res.json("email validate successfully");
+        res.redirect('http://localhost:5173/login')
       }
     }
   } catch (error) {
@@ -272,6 +339,8 @@ async function allCustomer(req,res){
 module.exports = {
   createCustomer: createCustomer,
   loginCustumer: loginCustumer,
+  refreshTokens: refreshTokens,
+  forgetPassword:forgetPassword,
   searchCustomer: searchCustomer,
   retrieveCustomer: retrieveCustomer,
   validateCustomer: validateCustomer,

@@ -7,11 +7,15 @@ router.post("/customers", customerRoute.createCustomer);
 
 router.post("/customers/login", customerRoute.loginCustumer);
 
+router.post("/customers/refresh/token", customerRoute.refreshTokens);
+
+router.post('/customers/forget-password', customerRoute.forgetPassword);
+
 router.get('/customers',AMauthorization, customerRoute.searchCustomer)
 
 router.get('/customers/profile', customerRoute.profileCustomer);
 
-router.get('/customers/:id', AMauthorization,customerRoute.retrieveCustomer);
+router.get('/customers/:id',customerRoute.retrieveCustomer);
 
 router.get('/customers/validate/:id', customerRoute.validateCustomer);
 
@@ -24,4 +28,4 @@ router.patch('/customers/profile/update', customerRoute.updateIdCustomer);
 router.get('/allcustomers/all', customerRoute.allCustomer);
 
 
-module.exports = router;
+module.exports = router; 
