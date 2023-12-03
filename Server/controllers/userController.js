@@ -148,9 +148,9 @@ async function sortUsers(req, res) {
 async function updateUser(req, res){
     const userId = req.params.id;
     const {first_name, last_name, email, role, active} = req.body;
-    try {
-        const user = await users.findByIdAndUpdate(userId, {first_name, last_name, email, role, active});
-    const {first_name, last_name,user_name,password, email, role, active} = req.body;
+    // try {
+    //     const user = await users.findByIdAndUpdate(userId, {first_name, last_name, email, role, active});
+    // const {first_name, last_name,user_name,password, email, role, active} = req.body;
     try {
         const user = await users.findByIdAndUpdate(userId, {first_name, last_name,user_name,password, email, role, active});
         if (user) {
@@ -162,6 +162,7 @@ async function updateUser(req, res){
         res.json(error)
     }
 }
+
 
 // delete usesr ===================================
 
