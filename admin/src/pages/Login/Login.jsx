@@ -1,3 +1,4 @@
+
 // import React, { useState, useEffect, useContext } from "react";
 // import { useNavigate } from "react-router-dom";
 // import "./login.css";
@@ -56,6 +57,8 @@
 //     }
 //   };
 
+  
+
 //   const currentYear = new Date().getFullYear();
 
 //   return (
@@ -92,15 +95,18 @@
 
 // export default Login;
 
+
+
+
+
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import "./login.css";
 import logo from "../../assets/tst.png";
 import axios from "axios";
 import { AuthContext } from "../../AuthContext";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import TextField from "@mui/material/TextField";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function decodeJwt(token) {
   const base64Url = token.split(".")[1];
@@ -157,13 +163,14 @@ function Login() {
           user_name: username,
         }
       );
-      toast.success(response.data.message);
+      toast.success(response.data.message );
     } catch (error) {
       if (error.response.status === 404) {
-        toast.error("User not found");
-      } else {
-        toast.error("Forgot password failed");
+        toast.error('User not found');
+      }else{
+        toast.error('Forgot password failed');
       }
+      
     }
   };
 
@@ -171,82 +178,26 @@ function Login() {
 
   return (
     <div className="bodys">
-      <ToastContainer />
+          <ToastContainer />
       <div>
         <form className="formas">
           <img className="logos" src={logo} alt="Logo" />
-          <TextField
-  label="Username"
-  variant="outlined"
-  margin="normal"
-  fullWidth
-  type="text"
-  value={username}
-  InputProps={{
-    style: {
-      borderRadius: "16px",
-      border: error ? "1px solid red" : "1px solid #ccc",
-    },
-    notchedOutline: {
-      borderRadius: "16px", // Border radius for the outlined border
-      border: error ? "1px solid red" : "1px solid #ccc",
-    },
-  }}
-  InputLabelProps={{
-    style: {
-      borderRadius: "16px",
-      color: error ? "red" : "#333", // Label color changes to red when there's an error
-    },
-  }}
-  style={{
-    borderRadius: "16px", // Border radius for the entire component
-  }}
-  onChange={(e) => setUsername(e.target.value)}
-  required
-/>
-
-          <TextField
-            label="Password"
-            variant="outlined"
-            margin="normal"
-            fullWidth
-            type="password"
-            value={password}
-            InputProps={{
-              style: {
-                borderRadius: "16px",
-                border: error ? "1px solid red" : "1px solid #ccc",
-              },
-            }}
-            InputLabelProps={{
-              style: {
-                borderRadius: "16px",
-                // paddingLeft: '10px',
-              },
-            }}
-            style={{
-              borderRadius: "16px", // Border radius for the entire component
-            }}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-
-          {/* <input
+          <input
             className="forminput"
             style={{ border: error ? "1px solid red" : "1px solid #ccc" }}
             type="text"
             placeholder="Username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-          /> */}
-          {/* <input
+          />
+          <input
             className="forminput"
             style={{ border: error ? "1px solid red" : "1px solid #ccc" }}
             type="password"
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-          /> */}
+          />
           <button className="formbutton" onClick={handleLogin} type="submit">
             Login
           </button>

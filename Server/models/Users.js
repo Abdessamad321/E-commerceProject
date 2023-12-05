@@ -11,6 +11,9 @@ const usersSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  user_image: {
+    type: String,
+  },
   email: {
     type: String,
     required: true,
@@ -18,6 +21,8 @@ const usersSchema = new mongoose.Schema({
   },
   role: {
     type: String,
+    enum : ['manager','admin'],
+    default: 'admin'
   },
   user_name: {
     type: String,
@@ -38,6 +43,14 @@ const usersSchema = new mongoose.Schema({
   isDeleted:{
     type: Boolean,
     default: false
+  },
+  resetToken:{
+    type: String,
+    default: null
+  },
+  resetTokenExpiration:{
+    type:Date,
+    default: null
   }
 },{timestamps: true});
 
