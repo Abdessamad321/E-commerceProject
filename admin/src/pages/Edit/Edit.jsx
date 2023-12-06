@@ -106,15 +106,23 @@ function Edit() {
           position:'absolute'
         }} onClick={() => document.getElementById('image-input').click()} />
         ) : (
-          <img style={{ width: "100%" }} src={upload} alt="" />
+          <img style={{ width: "100%", height: '100%' }} src={upload} alt="" />
         )}
-          <input
-        type="file"
-        id="image-input"
-        style={{ display: 'none' }}
-        accept="image/*"
-        onChange={handleImageChange}
-      />
+       <input
+      type="file"
+      id="image-input"
+      style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        opacity: 0,
+        cursor: 'pointer'
+      }}
+      accept="image/*"
+      onChange={handleImageChange}
+    />
         </div>
       </div>
       <div className="blank">

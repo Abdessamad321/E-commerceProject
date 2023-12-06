@@ -13,6 +13,7 @@ const usersSchema = new mongoose.Schema({
   },
   user_image: {
     type: String,
+    default: null
   },
   email: {
     type: String,

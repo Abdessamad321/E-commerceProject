@@ -30,7 +30,7 @@ function Menu() {
   useEffect(() => {
     const currentPage = loca.pathname.split('/').pop();
     console.log(currentPage);
-    setSelectedItem(currentPage || 'Dashboard');
+    setSelectedItem(currentPage || 'dashboard');
   }, [loca.pathname]);
 
   const handleItemClick = (item) => {
@@ -75,8 +75,8 @@ function Menu() {
         </div>
         <div className="list">
       <ul>
-        <li className={`menu-item ${selectedItem === 'Dashboard' ? 'active' : ''}`}>
-          <Link to="/Dashboard" className="item1" onClick={() => handleItemClick('Dashboard')}>
+        <li className={`menu-item ${selectedItem === 'dashboard' ? 'active' : ''}`}>
+          <Link to="/Dashboard" className="item1" onClick={() => handleItemClick('dashboard')}>
             <DashboardRoundedIcon />
             Dashboard
           </Link>

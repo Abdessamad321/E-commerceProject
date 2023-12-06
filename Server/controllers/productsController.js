@@ -116,6 +116,7 @@ async function findProducts(req, res) {
             discount_price: 1,
             options: 1,
             active: 1,
+            createdAt:1
           },
         },
       ])
