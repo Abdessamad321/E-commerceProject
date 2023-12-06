@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuoteLeft } from "@fortawesome/free-solid-svg-icons";
 import "./HomePage.css";
+import axios from "axios";
 
 
 import testslide from "../../assets/testslide.png";
@@ -23,8 +24,9 @@ import Carouselreviews from "react-multi-carousel";
 import ArrowBackIosNewRoundedIcon from "@mui/icons-material/ArrowBackIosNewRounded";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
 import FavoriteBorderRoundedIcon from "@mui/icons-material/FavoriteBorderRounded";
+import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded';
 import "react-multi-carousel/lib/styles.css";
-import { productData } from "./data";
+// import { productData } from "./data";
 import { reviewsData } from "./data";
 // import antique from "../../assets/middle.jpg";
 // import decoration from "../../assets/second.jpeg";
@@ -58,59 +60,65 @@ import LocalShippingRoundedIcon from "@mui/icons-material/LocalShippingRounded";
 import MonetizationOnRoundedIcon from "@mui/icons-material/MonetizationOnRounded";
 import DiscountRoundedIcon from "@mui/icons-material/DiscountRounded";
 
-const products = [
-  {
-    id: 1,
-    name: "Product 1",
-    price: 100,
-    image: `${image}`,
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vel od",
-  },
-  {
-    id: 2,
-    name: "Product 2",
-    price: 100,
-    image: `${image}`,
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vel od",
-  },
-];
-
 const HomePage = () => {
   const { dispatch: cartDispatch } = useCart();
   // const { dispatch: likeDispatch } = useLike();
   const [currentIndex, setCurrentIndex] = useState(0);
   const carouselRef = useRef(null);
 
+  const [productData, setProductData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("http://localhost:7000/v1/allproducts/");
+        if (response.status === 200) {
+          setProductData(response.data);
+        } else {
+          console.error("Failed to fetch product data");
+        }
+      } catch (error) {
+        console.error("Error fetching product data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+
+
   const addToCart = (product) => {
     cartDispatch({ type: "ADD_TO_CART", payload: product });
   };
 
-  // const addtofavorite = (product) => {
-  //   likeDispatch({ type: "ADD_TO_LIKES", payload: product });
+  function capitalizeFirstLetter(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
 
-  // //   if (!likedItems.includes(product)) {
-
-  // //     setLikedProducts([...likedItems, product]);
-  // //   }
-  // };
+  // FAVORITES///////////////////////////////////
 
   const [favorites, setFavorites] = useState(() => {
     const jsonValue = localStorage.getItem("favorites");
     if (jsonValue !== null) return JSON.parse(jsonValue);
-    console.log(bitch);
     // return [];
   });
+
+  const [likedProducts, setLikedProducts] = useState({});
 
   useEffect(() => {
     localStorage.setItem("favorites", JSON.stringify(favorites));
   }, [favorites]);
 
   const handleFavorite = (product) => {
+    setLikedProducts((prevLikedProducts) => {
+      const updatedLikedProducts = { ...prevLikedProducts };
+      updatedLikedProducts[product._id] = !updatedLikedProducts[product._id];
+      return updatedLikedProducts;
+    });
     setFavorites((prevFavorites) => [...prevFavorites, product]);
     console.log(favorites);
   };
+
 
   let cards = [
     {
@@ -135,59 +143,17 @@ const HomePage = () => {
     },
   ];
 
-  //Productsss Carousellllllllllllllllllll******************/
-
-  // const Product = (props) => {
-  //   return (
-  //     <div className="card">
-  //       {/* onClick={() => addtofavorite(product)}  */}
-  //       <div className="likes-icon" onClick={() => handleFavorite(product)}>
-  //         <FavoriteBorderRoundedIcon />
-  //       </div>
-  //       <img className="product--image" src={props.url} alt="product image" />
-  //       <div className="cart-text">
-  //         <span>{props.name}</span>
-  //         <p>{props.description}</p>
-  //         <p className="price">{props.price}</p>
-  //       </div>
-  //       {/* onClick={() => send(product)} */}
-  //       <div className="addbutton">
-  //         <Button
-  //           style={{
-  //             position: "absolute",
-  //             bottom: 0,
-  //             right: 0,
-  //             borderRadius: 8,
-  //             border: "none",
-  //             outline: 0,
-  //             padding: 5,
-  //             margin: 10,
-  //             backgroundColor: "#590404",
-  //             color: "#fff",
-  //             textAlign: "center",
-  //             cursor: "pointer",
-  //             fontSize: 14,
-  //           }}
-  //           // style={{ backgroundColor: "#590404", position:"absolute", color: "#fff" }}
-  //           onClick={() => addToCart(product)}
-  //         >
-  //           Add To Cart
-  //         </Button>
-  //       </div>
-  //     </div>
-  //   );
-  // };
-
+  
   const product = productData.map((item) => (
     <div className="card" key={item.id}>
       <div className="likes-icon" onClick={() => handleFavorite(item)}>
-        <FavoriteBorderRoundedIcon />
+      {likedProducts[item._id] ? <FavoriteRoundedIcon /> : <FavoriteBorderRoundedIcon />}
       </div>
-      <img className="product--image" src={item.imageurl} alt="product image" />
+      <img className="product--image" src={item.product_image} alt="product image" />
       <div className="cart-text">
-        <span>{item.name}</span>
-        <p>{item.description}</p>
-        <p className="price">{item.price}</p>
+        <span className="prdctname">{capitalizeFirstLetter(item.product_name)}</span>
+        <p className="ellipsis">{item.short_description}</p>
+        <p className="price"><>$</>{item.price}</p>
       </div>
       <div className="addbutton">
         <Button
@@ -233,7 +199,7 @@ const HomePage = () => {
     return (
       <div className="card">
         <img className="reviews--image" src={props.image} alt="product image" />
-        <div className="cart-text">
+        <div className="cart-reviews">
           <span>{props.name}</span>
           <p>{props.description}</p>
           <div className="rating">{renderStars()}</div>
@@ -493,58 +459,6 @@ const HomePage = () => {
         </div>
       </div>
 
-      {/* <div>
-        <ul class="ch-grid">
-          <li>
-            <div class="ch-item ch-img-1">
-              <div class="ch-info-wrap">
-                <div class="ch-info">
-                  <div class="ch-info-front ch-img-1"></div>
-                  <div class="ch-info-back">
-                    <h3>taxi</h3>
-                    <p>
-                      by Ana Villa-Zamora{" "}
-                      <a href="http://drbl.in/ewng">View on Dribbble</a>
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </li>
-          <li>
-            <div class="ch-item ch-img-2">
-              <div class="ch-info-wrap">
-                <div class="ch-info">
-                  <div class="ch-info-front ch-img-2"></div>
-                  <div class="ch-info-back">
-                    <h3>Stay Foxy</h3>
-                    <p>
-                      by Arnel Baluyot{" "}
-                      <a href="http://drbl.in/eQDg">View on Dribbble</a>
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </li>
-          <li>
-            <div class="ch-item ch-img-3">
-              <div class="ch-info-wrap">
-                <div class="ch-info">
-                  <div class="ch-info-front ch-img-3"></div>
-                  <div class="ch-info-back">
-                    <h3>Klava Jinx</h3>
-                    <p>
-                      by Jamal Charanek{" "}
-                      <a href="http://drbl.in/ejLW">View on Dribbble</a>
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </li>
-        </ul>
-      </div> */}
 
       {/* Our Best Product *****************************/}
 
@@ -600,80 +514,9 @@ const HomePage = () => {
           {product}
         </Carouselprdct>
       </div>
+      
 
-      {/* TTTTTTTTESSSTTTTTTTTTT ****************************************************/}
-
-      {/* <>
-        <div className="shop">
-          <div className="item">
-            {products.map((product) => (
-              <div className="card" key={product.id}>
-                <img src={product.image} alt={product.name} />
-                <div className="card-body">
-                  <h3>{product.name}</h3>
-                  <p>{product.description}</p>
-                  <p>{product.price}</p>
-                  <div className="buttons">
-                    <button onClick={() => handleCart(product)}>
-                      Add to cart
-                    </button>
-                    <button onClick={() => handleFavorite(product)}>
-                      Mark as favorite
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </> */}
-
-      {/* A VERIFIERR *****************************************************/}
-
-      {/* <div className="shipping">
-            <div>
-              <div className="imagecard">
-              <img src={ancien} alt="" />
-            </div>
-              <h2>24/7 Days</h2>
-              <span>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam
-                quas eum{" "}
-              </span>
-            </div>
-            <div>
-              <div className="imagecard">
-              <img src={ancien} alt="" />
-            </div>
-              <h2>24/7 Days</h2>
-              <span>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam
-                quas eum{" "}
-              </span>
-            </div>
-            <div>
-              <div className="imagecard">
-              <img src={ancien} alt="" />
-            </div>
-              <h2>24/7 Days</h2>
-              <span>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam
-                quas eum{" "}
-              </span>
-            </div>
-            <div>
-              <div className="imagecard">
-              <img src={ancien} alt="" />
-            </div>
-              <h2>24/7 Days</h2>
-              <span>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam
-                quas eum{" "}
-              </span>
-            </div>
-          </div> */}
-
-      {/* Reviews *********************************************/}
+      {/* Reviews ****************************************************************/}
 
       <div className="reviewsection">
         <div className="title-reviews">
@@ -741,11 +584,10 @@ const HomePage = () => {
           >
             {reviews}
           </Carouselreviews>
-          {/* <span>What our customers say</span> */}
         </div>
       </div>
 
-      {/* About our store *****************************/}
+      {/* About our store **********************************************/}
 
       <div>
         <div className="services-title">
@@ -753,10 +595,6 @@ const HomePage = () => {
         </div>
         <div className="lastsection">
           <div className="infos-item">
-            {/* <div className="imagecard">
-            //   <img src={ancien} alt="" /> */}
-            {/* // </div> */}
-            <div className="the-img">{/* <img src={ancien} alt="" /> */}</div>
             <div className="cardfontc">
               <div className="servicesicons">
                 <HeadsetMicRoundedIcon style={{ fontSize: "70px" }} />
@@ -767,10 +605,6 @@ const HomePage = () => {
             </div>
           </div>
           <div className="infos-item">
-            {/* <div className="imagecard">
-            //   <img src={ancien} alt="" /> */}
-            {/* // </div> */}
-            <div className="the-img">{/* <img src={ancien} alt="" /> */}</div>
             <div className="cardfontc">
               <div className="servicesicons">
                 <MonetizationOnRoundedIcon style={{ fontSize: "70px" }} />
@@ -780,10 +614,6 @@ const HomePage = () => {
             </div>
           </div>
           <div className="infos-item">
-            {/* <div className="imagecard">
-            //   <img src={ancien} alt="" /> */}
-            {/* // </div> */}
-            <div className="the-img">{/* <img src={ancien} alt="" /> */}</div>
             <div className="cardfontc">
               <div className="servicesicons">
                 <LocalShippingRoundedIcon style={{ fontSize: "70px" }} />
@@ -794,10 +624,6 @@ const HomePage = () => {
             </div>
           </div>
           <div className="infos-item">
-            {/* <div className="imagecard">
-            //   <img src={ancien} alt="" /> */}
-            {/* // </div> */}
-            <div className="the-img">{/* <img src={ancien} alt="" /> */}</div>
             <div className="cardfontc">
               <div className="servicesicons">
                 <DiscountRoundedIcon style={{ fontSize: "70px" }} />
@@ -831,3 +657,100 @@ export default HomePage;
         </div>
       </div> */
 }
+
+
+
+
+
+
+
+
+
+
+
+
+// FAVORITES///////////////////////////////////
+
+  // const [favorites, setFavorites] = useState(() => {
+  //   const jsonValue = localStorage.getItem("favorites");
+  //   if (jsonValue !== null) return JSON.parse(jsonValue);
+  //   console.log(bitch);
+  //   // return [];
+  // });
+
+  // const [likedProducts, setLikedProducts] = useState({});
+
+  // useEffect(() => {
+  //   localStorage.setItem("favorites", JSON.stringify(favorites));
+  // }, [favorites]);
+
+  // const handleFavorite = (product) => {
+  //   // setIsFavorit(!isFavorit);
+  //   setLikedProducts((prevLikedProducts) => {
+  //     const updatedLikedProducts = { ...prevLikedProducts };
+  //     updatedLikedProducts[product.id] = !updatedLikedProducts[product.id];
+  //     return updatedLikedProducts;
+  //   });
+  //   setFavorites((prevFavorites) => [...prevFavorites, product]);
+  //   console.log(favorites);
+  // };
+
+  // let cards = [
+  //   {
+  //     key: 1,
+  //     content: <Card imagen={phone} />,
+  //   },
+  //   {
+  //     key: 2,
+  //     content: <Card imagen={radio} />,
+  //   },
+  //   {
+  //     key: 3,
+  //     content: <Card imagen={camera} />,
+  //   },
+  //   {
+  //     key: 4,
+  //     content: <Card imagen={gramo} />,
+  //   },
+  //   {
+  //     key: 5,
+  //     content: <Card imagen={clocks} />,
+  //   },
+  // ];
+
+  
+  // const product = productData.map((item) => (
+  //   <div className="card" key={item.id}>
+  //     <div className="likes-icon" onClick={() => handleFavorite(item)}>
+  //     {likedProducts[item.id] ? <FavoriteRoundedIcon /> : <FavoriteBorderRoundedIcon />}
+  //     </div>
+  //     <img className="product--image" src={item.imageurl} alt="product image" />
+  //     <div className="cart-text">
+  //       <span>{item.name}</span>
+  //       <p>{item.description}</p>
+  //       <p className="price">{item.price}</p>
+  //     </div>
+  //     <div className="addbutton">
+  //       <Button
+  //         style={{
+  //           position: "absolute",
+  //           bottom: 0,
+  //           right: 0,
+  //           borderRadius: 8,
+  //           border: "none",
+  //           outline: 0,
+  //           padding: 5,
+  //           margin: 10,
+  //           backgroundColor: "#590404",
+  //           color: "#fff",
+  //           textAlign: "center",
+  //           cursor: "pointer",
+  //           fontSize: 14,
+  //         }}
+  //         onClick={() => addToCart(item)}
+  //       >
+  //         Add To Cart
+  //       </Button>
+  //     </div>
+  //   </div>
+  // ));

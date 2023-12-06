@@ -78,7 +78,7 @@ function Menu() {
         <div className="list">
       <ul>
         <li className={`menu-item ${selectedItem === 'Dashboard' ? 'active' : ''}`}>
-          <Link to="/Dashboard" className="item1" onClick={() => handleItemClick('Dashboard')}>
+          <Link to="/dashboard" className="item1" onClick={() => handleItemClick('Dashboard')}>
             <DashboardRoundedIcon />
             Dashboard
           </Link>

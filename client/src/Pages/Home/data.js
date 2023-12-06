@@ -84,21 +84,14 @@
     "id": 3,
     "image": " src/assets/omar.jpg",
     "name": "Omar Agtib",
-    "description": "Adding a touch of history to my living space was a fantastic decision.",
+    "description": "Vintage perfection! Found exactly what I needed – love it!",
     "rating": 1,
   },
   {
     "id": 4,
-    "image": "src/assets/aicha.jpeg",
-    "name": "Bob Anderson",
+    "image": "src/assets/gates.jpg",
+    "name": "Bill Gates",
     "description": "Simple ordering process and fast shipping. Happy customer!",
     "rating": 4
   },
-  {
-    "id": 5,
-    "image": "src/assets/aicha.jpeg",
-    "name": "Eva Williams",
-    "description": "Vintage perfection! Found exactly what I needed – love it!",
-    "rating": 4
-  }
 ]

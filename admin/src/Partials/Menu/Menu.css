@@ -102,6 +102,7 @@
 .active {
   border-radius: 15px;
   background-color: var(--active);
+  box-shadow: 0px 0px 10px 0 rgba(0, 0, 0, 0.2); 
 }
 .list{
   display: flex;

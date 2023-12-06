@@ -1,5 +1,6 @@
 
 const nodemailer = require('nodemailer')
+
 require('dotenv').config();
 const passwordKey = process.env.PASS_KEY;
 
@@ -117,6 +118,34 @@ function sendWelcomeEmailForUser(email, userName, password) {
         }
 
 
+function contactEmail(name, email, message){
+
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'balstore.info@gmail.com',
+      pass: passwordKey,
+    },
+  });
+  
+  const mailOptions = {
+    from: email,
+    to: 'balstore.info@gmail.com',
+    subject: 'New Contact Form Submission',
+    text: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`,
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.error(error);
+      res.status(500).send('Internal Server Error');
+    } else {
+      console.log('Email sent: ' + info.response);
+      res.status(200).send('Email sent successfully');
+    }
+  });
+}
+
 
 
     
@@ -124,5 +153,6 @@ function sendWelcomeEmailForUser(email, userName, password) {
 module.exports = {
     sendWelcomeEmail:sendWelcomeEmail,
     sendWelcomeEmailForUser:sendWelcomeEmailForUser,
-    sendResetEmail:sendResetEmail
+    sendResetEmail:sendResetEmail,
+    contactEmail:contactEmail
 };

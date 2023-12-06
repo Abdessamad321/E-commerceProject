@@ -103,7 +103,6 @@ async function loginUser (req, res){
 
 async function getUsersId (req, res){
     const idd = req.params.id;
-    console.log(idd);
     try {
         const userId = await users.findById(idd)
         if (userId) {

@@ -113,8 +113,7 @@ async function searchCustomer(req, res) {
   try {
     const customers = await Customer.find({
       first_name: new RegExp(query, "i"),
-    })
-      .sort({ createdAt: sort });
+    }).sort({ createdAt: sort });
     res.json(customers);
   } catch (error) {
     res.status(500).json({ error: error });
@@ -140,7 +139,7 @@ async function validateCustomer(req, res) {
       if (customers._id) {
         customers.valid_account = true;
         customers.save();
-        res.redirect('http://localhost:5173/login')
+        res.redirect("http://localhost:5173/login");
       }
     }
   } catch (error) {
@@ -251,14 +250,25 @@ async function updateIdCustomer(req, res) {
   }
 }
 
-async function allCustomer(req,res){
+async function allCustomer(req, res) {
   try {
     const customer = await Customer.countDocuments({});
     res.json({ count: customer });
   } catch (error) {
     console.error(error);
     res.status(500).json(error);
-  } 
+  }
+}
+
+async function contact(req, res) {
+  try {
+    const { name, email, message } = req.body;
+    console.log(req.body);
+    sendEmail.contactEmail(name, email, message);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json(error);
+  }
 }
 
 module.exports = {
@@ -272,6 +282,5 @@ module.exports = {
   profileCustomer: profileCustomer,
   updateIdCustomer: updateIdCustomer,
   allCustomer: allCustomer,
-
+  contact: contact,
 };
-

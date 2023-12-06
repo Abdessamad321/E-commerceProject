@@ -1,4 +1,19 @@
-/* .favoritepage{
-    padding-top: 10%;
-    height: 100vh;
-} */
+.favoritepage{
+    padding: 10% 40px;
+    min-height: 100vh;
+}
+.favoritepage span{
+    font-size: 35px;
+}
+.favorites{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    width: 100%;
+}
+.nofound{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

@@ -31,7 +31,7 @@ function App() {
             </>
           ) : (
             <>
-              <Route path="/" element={<Dashboard />} />
+              {/* <Route path="/" element={<Dashboard />} /> */}
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/edit" element={<Edit />} />
               <Route path="/users" element={<Users />} />

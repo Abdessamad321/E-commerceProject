@@ -15,18 +15,34 @@ const Contact = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // You can handle form submission logic here
-    console.log("Form submitted:", formData);
-    // Clear the form fields after submission if needed
-    setFormData({
-      name: "",
-      email: "",
-      message: "",
-    });
+  
+    try {
+      const response = await fetch('http://localhost:7000/v1/customers/contact/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+  
+      if (response.ok) {
+        console.log('Email sent successfully');
+      } else {
+        console.error('Failed to send email');
+      }
+    } catch (error) {
+      console.error('Error sending email:', error);
+    } finally {
+      setFormData({
+        name: null,
+        email: null,
+        message: null,
+      });
+    }
   };
-
+  
   return (
     <div className="contactpage">
       <div className="pic">

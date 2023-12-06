@@ -306,7 +306,9 @@ const Navbar = () => {
                     alignItems="center"
                     mb={1}
                   >
-                    <Typography>{item.name}</Typography>
+                    
+                    <img style={{ width:'10%', height: '10%'}} src={item.product_image} alt="Product" />
+                    <Typography>{item.product_name}</Typography>
                     <Typography>${item.price}</Typography>
                   </Box>
                 ))
