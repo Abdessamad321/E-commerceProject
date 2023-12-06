@@ -15,7 +15,7 @@ body {
   position: fixed;
   top: 0;
   width: 100%;
-  background-color: transparent;
+  background-color: #590404;
   color: #fff;
   /* height: 6em; */
   padding: 2% 3%;
@@ -30,7 +30,6 @@ body {
   backdrop-filter: blur(10px);
   /* background-color: #590404c5; */
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(10px);
   background: linear-gradient(to top, #590404, #590404);
   /* background-color: #9e9797c5 ; */
 }
@@ -394,3 +393,4 @@ color: #000;
     font-size: 1.2rem;
   }
 }
+

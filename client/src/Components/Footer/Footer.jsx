@@ -95,15 +95,24 @@ const Footer = () => {
         <div className="footer-right">
           <p className="footer-company-about">
             <span>About the company</span>
-            Lorem ipsum dolor sit amet, consectateur adispicing elit. Fusce
-            euismod convallis velit, eu auctor lacus vehicula sit amet.
+            At OldyGoldyHouse, we don't just run a business; we curate an
+            experience, celebrating timeless elegance and the allure of vintage.
           </p>
 
           <div className="footer-icons">
-            <FacebookIcon className="soial-icons" style={{ fontSize: '40px' }}/>
-            <TwitterIcon className="soial-icons" style={{ fontSize: '40px' }}/>
-            <InstagramIcon className="soial-icons" style={{ fontSize: '40px' }}/>
-            <TelegramIcon className="soial-icons" style={{ fontSize: '40px' }}/>
+            <FacebookIcon
+              className="soial-icons"
+              style={{ fontSize: "40px" }}
+            />
+            <TwitterIcon className="soial-icons" style={{ fontSize: "40px" }} />
+            <InstagramIcon
+              className="soial-icons"
+              style={{ fontSize: "40px" }}
+            />
+            <TelegramIcon
+              className="soial-icons"
+              style={{ fontSize: "40px" }}
+            />
           </div>
         </div>
       </footer>

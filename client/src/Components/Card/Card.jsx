@@ -10,21 +10,22 @@ const cardStyles = {
   alignItems: "center",
   backgroundColor: "bisque",
   width: "19rem",
-  height: "fit-content",
-  padding: "0 2rem 2rem 2rem",
+  height: "20rem",
+  padding: "2rem",
   borderRadius: "10px",
 };
 
 const imageStyles = {
-  marginTop: "-20%",
+  // marginTop: "-20%",
   width: "100%",
+  height: "100%",
   borderRadius: "20px",
 };
 
-const h2Styles = {
-  margin: 0,
-  marginTop: "1rem",
-};
+// const h2Styles = {
+//   margin: 0,
+//   marginTop: "1rem",
+// };
 
 
 
@@ -46,7 +47,7 @@ function Card({ imagen }) {
       onMouseLeave={() => setShown(false)}
     >
       {/* <img src={imagen} alt="" style={imageStyles} /> */}
-      <h2 style={h2Styles}>Title</h2>
+      {/* <h2 style={h2Styles}>Title</h2> */}
       <img src={imagen} alt="" style={imageStyles} />
       
     </animated.div>

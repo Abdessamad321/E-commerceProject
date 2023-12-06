@@ -2,7 +2,20 @@ import React, { useState, useEffect, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuoteLeft } from "@fortawesome/free-solid-svg-icons";
 import "./HomePage.css";
-// import vid from "../../assets/vid.mp4";
+
+
+import testslide from "../../assets/testslide.png";
+// import clocks from "../../assets/clocks.png";
+// import video from "../../assets/testti.mp4";
+// import video from "../../assets/testti.mp4";
+// import video from "../../assets/testti.mp4";
+// import video from "../../assets/testti.mp4";
+// import video from "../../assets/testti.mp4";
+
+
+
+
+// import video from "../../assets/testti.mp4";
 // import reviews  from './reviews'
 import Button from "@mui/material/Button";
 import Carouselprdct from "react-multi-carousel";
@@ -19,115 +32,211 @@ import firstcategorie from "../../assets/artisanat.jpg";
 import secondcategorie from "../../assets/b.jpg";
 import tirthcategorie from "../../assets/img.jpg";
 import fourthcategorie from "../../assets/decoration.jpeg";
-import image from "../../assets/first.jpg";
-import ancien from "../../assets/wydad.png";
+import image from "../../assets/desinfinal.png";
+
 import { useCart } from "../../Components/cart/cartcontext";
+// import { useLike } from "../../Components/like/likecontext";
+
 import Card from "../../Components/Card/Card";
 import Carousel from "../../Components/Card/Carousel";
+
+// Our collection slide********************************************
+
+import camera from "../../assets/camera.png";
 import phone from "../../assets/phone.png";
-import testslide from "../../assets/testslide.png";
+import gramo from "../../assets/gramo.png";
+import clocks from "../../assets/clocks.png";
+import radio from "../../assets/radio.png";
+import koora from "../../assets/koora.png";
+import dactylo from "../../assets/dactyloo.png";
+
+
+//last section *********************************************************
 
 import HeadsetMicRoundedIcon from "@mui/icons-material/HeadsetMicRounded";
 import LocalShippingRoundedIcon from "@mui/icons-material/LocalShippingRounded";
 import MonetizationOnRoundedIcon from "@mui/icons-material/MonetizationOnRounded";
 import DiscountRoundedIcon from "@mui/icons-material/DiscountRounded";
 
+const products = [
+  {
+    id: 1,
+    name: "Product 1",
+    price: 100,
+    image: `${image}`,
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vel od",
+  },
+  {
+    id: 2,
+    name: "Product 2",
+    price: 100,
+    image: `${image}`,
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vel od",
+  },
+];
+
 const HomePage = () => {
-  const { dispatch } = useCart();
+  const { dispatch: cartDispatch } = useCart();
+  // const { dispatch: likeDispatch } = useLike();
   const [currentIndex, setCurrentIndex] = useState(0);
   const carouselRef = useRef(null);
 
   const addToCart = (product) => {
-    dispatch({ type: "ADD_TO_CART", payload: product });
+    cartDispatch({ type: "ADD_TO_CART", payload: product });
+  };
+
+  // const addtofavorite = (product) => {
+  //   likeDispatch({ type: "ADD_TO_LIKES", payload: product });
+
+  // //   if (!likedItems.includes(product)) {
+
+  // //     setLikedProducts([...likedItems, product]);
+  // //   }
+  // };
+
+  const [favorites, setFavorites] = useState(() => {
+    const jsonValue = localStorage.getItem("favorites");
+    if (jsonValue !== null) return JSON.parse(jsonValue);
+    console.log(bitch);
+    // return [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem("favorites", JSON.stringify(favorites));
+  }, [favorites]);
+
+  const handleFavorite = (product) => {
+    setFavorites((prevFavorites) => [...prevFavorites, product]);
+    console.log(favorites);
   };
 
   let cards = [
     {
       key: 1,
-      content: (
-        <Card imagen="https://updates.theme-fusion.com/wp-content/uploads/2017/12/convertplus_thumbnail.jpg" />
-      ),
+      content: <Card imagen={phone} />,
     },
     {
       key: 2,
-      content: (
-        <Card imagen="https://updates.theme-fusion.com/wp-content/uploads/2017/12/acf_pro.png" />
-      ),
+      content: <Card imagen={radio} />,
     },
     {
       key: 3,
-      content: (
-        <Card imagen="https://updates.theme-fusion.com/wp-content/uploads/2017/12/layer_slider_plugin_thumb.png" />
-      ),
+      content: <Card imagen={camera} />,
     },
     {
       key: 4,
-      content: <Card imagen={testslide} />,
+      content: <Card imagen={gramo} />,
     },
     {
       key: 5,
-      content: <Card imagen={phone} />,
+      content: <Card imagen={clocks} />,
     },
   ];
 
   //Productsss Carousellllllllllllllllllll******************/
 
-  const Product = (props) => {
-    return (
-      <div className="card">
-        <div className="likes-icon">
-          <FavoriteBorderRoundedIcon />
-        </div>
-        <img className="product--image" src={props.url} alt="product image" />
-        <div className="cart-text">
-          <span>{props.name}</span>
-          <p>{props.description}</p>
-          <p className="price">{props.price}</p>
-        </div>
-        {/* onClick={() => send(product)} */}
-        <div className="addbutton">
-          <Button
-            style={{
-              position: "absolute",
-              bottom: 0,
-              right: 0,
-              borderRadius: 8,
-              border: "none",
-              outline: 0,
-              padding: 5,
-              margin: 10,
-              backgroundColor: "#590404",
-              color: "#fff",
-              textAlign: "center",
-              cursor: "pointer",
-              fontSize: 14,
-            }}
-            // style={{ backgroundColor: "#590404", position:"absolute", color: "#fff" }}
-            onClick={() => addToCart(product)}
-          >
-            Add To Cart
-          </Button>
-        </div>
-      </div>
-    );
-  };
+  // const Product = (props) => {
+  //   return (
+  //     <div className="card">
+  //       {/* onClick={() => addtofavorite(product)}  */}
+  //       <div className="likes-icon" onClick={() => handleFavorite(product)}>
+  //         <FavoriteBorderRoundedIcon />
+  //       </div>
+  //       <img className="product--image" src={props.url} alt="product image" />
+  //       <div className="cart-text">
+  //         <span>{props.name}</span>
+  //         <p>{props.description}</p>
+  //         <p className="price">{props.price}</p>
+  //       </div>
+  //       {/* onClick={() => send(product)} */}
+  //       <div className="addbutton">
+  //         <Button
+  //           style={{
+  //             position: "absolute",
+  //             bottom: 0,
+  //             right: 0,
+  //             borderRadius: 8,
+  //             border: "none",
+  //             outline: 0,
+  //             padding: 5,
+  //             margin: 10,
+  //             backgroundColor: "#590404",
+  //             color: "#fff",
+  //             textAlign: "center",
+  //             cursor: "pointer",
+  //             fontSize: 14,
+  //           }}
+  //           // style={{ backgroundColor: "#590404", position:"absolute", color: "#fff" }}
+  //           onClick={() => addToCart(product)}
+  //         >
+  //           Add To Cart
+  //         </Button>
+  //       </div>
+  //     </div>
+  //   );
+  // };
 
   const product = productData.map((item) => (
-    <Product
-      name={item.name}
-      url={item.imageurl}
-      description={item.description}
-      price={item.price}
-    />
+    <div className="card" key={item.id}>
+      <div className="likes-icon" onClick={() => handleFavorite(item)}>
+        <FavoriteBorderRoundedIcon />
+      </div>
+      <img className="product--image" src={item.imageurl} alt="product image" />
+      <div className="cart-text">
+        <span>{item.name}</span>
+        <p>{item.description}</p>
+        <p className="price">{item.price}</p>
+      </div>
+      <div className="addbutton">
+        <Button
+          style={{
+            position: "absolute",
+            bottom: 0,
+            right: 0,
+            borderRadius: 8,
+            border: "none",
+            outline: 0,
+            padding: 5,
+            margin: 10,
+            backgroundColor: "#590404",
+            color: "#fff",
+            textAlign: "center",
+            cursor: "pointer",
+            fontSize: 14,
+          }}
+          onClick={() => addToCart(item)}
+        >
+          Add To Cart
+        </Button>
+      </div>
+    </div>
   ));
 
   const Reviews = (props) => {
+    const renderStars = () => {
+      const stars = [];
+      for (let i = 1; i <= 5; i++) {
+        stars.push(
+          <span
+            key={i}
+            className={i <= props.stars ? "star-filled" : "star-empty"}
+          >
+            ★
+          </span>
+        );
+      }
+      return stars;
+    };
+
     return (
       <div className="card">
-        <img className="product--image" src={props.url} alt="product image" />
+        <img className="reviews--image" src={props.image} alt="product image" />
         <div className="cart-text">
           <span>{props.name}</span>
           <p>{props.description}</p>
+          <div className="rating">{renderStars()}</div>
         </div>
       </div>
     );
@@ -135,9 +244,11 @@ const HomePage = () => {
 
   const reviews = reviewsData.map((item) => (
     <Reviews
+      key={item.id}
       name={item.name}
-      url={item.imageurl}
+      image={item.image}
       description={item.description}
+      stars={item.rating}
     />
   ));
 
@@ -190,7 +301,6 @@ const HomePage = () => {
 
   return (
     <div>
-
       <div className="section-home">
         <div className="half-home">
           <div className="home-one">
@@ -224,19 +334,20 @@ const HomePage = () => {
             </div>
           </div>
           <div className="home-two">
-            <img src={image} alt="" />
+            {/* <video autoPlay loop muted playsInline preload="auto">
+          <source src={video} type="video/mp4" />
+          Your browser does not support the video tag.
+        </video> */}
+            <img className="background" src={image} alt="" />
+            <img className="testslide" src={testslide} alt="" />
+            <img className="magana" src={clocks} alt="" />
+            <img className="radio" src={radio} alt="" />
+            <img className="camera" src={camera} alt="" />
+            <img className="koora" src={koora} alt="" />
+            <img className="phone" src={phone} alt="" />
+            <img className="dactylo" src={dactylo} alt="" />
           </div>
         </div>
-
-
-
-
-
-
-
-
-
-
 
         {/* category-carousel********************************/}
 
@@ -262,15 +373,6 @@ const HomePage = () => {
             ))}
           </div>
         </div>
-
-
-
-
-
-
-
-
-
 
         <div>
           <svg
@@ -311,14 +413,6 @@ const HomePage = () => {
           </svg>
         </div>
       </div>
-
-
-
-
-
-
-
-
 
       {/* new arrivals*********************************************/}
 
@@ -374,18 +468,6 @@ const HomePage = () => {
           {product}
         </Carouselprdct>
       </div>
-
-
-
-
-
-
-
-
-
-
-
-
 
       {/* cards******************************************************/}
 
@@ -464,11 +546,6 @@ const HomePage = () => {
         </ul>
       </div> */}
 
-
-
-
-
-
       {/* Our Best Product *****************************/}
 
       <div className="section-carousel">
@@ -524,16 +601,34 @@ const HomePage = () => {
         </Carouselprdct>
       </div>
 
+      {/* TTTTTTTTESSSTTTTTTTTTT ****************************************************/}
 
+      {/* <>
+        <div className="shop">
+          <div className="item">
+            {products.map((product) => (
+              <div className="card" key={product.id}>
+                <img src={product.image} alt={product.name} />
+                <div className="card-body">
+                  <h3>{product.name}</h3>
+                  <p>{product.description}</p>
+                  <p>{product.price}</p>
+                  <div className="buttons">
+                    <button onClick={() => handleCart(product)}>
+                      Add to cart
+                    </button>
+                    <button onClick={() => handleFavorite(product)}>
+                      Mark as favorite
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </> */}
 
-
-
-
-
-
-
-
-{/* A VERIFIERR *****************************************************/}
+      {/* A VERIFIERR *****************************************************/}
 
       {/* <div className="shipping">
             <div>
@@ -577,16 +672,6 @@ const HomePage = () => {
               </span>
             </div>
           </div> */}
-
-
-
-
-
-
-
-
-
-
 
       {/* Reviews *********************************************/}
 
@@ -660,13 +745,6 @@ const HomePage = () => {
         </div>
       </div>
 
-      
-
-
-
-
-
-
       {/* About our store *****************************/}
 
       <div>
@@ -684,9 +762,7 @@ const HomePage = () => {
                 <HeadsetMicRoundedIcon style={{ fontSize: "70px" }} />
               </div>
               <h2>24/7 Days</h2>
-              <span>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam
-                quas eum{" "}
+              <span>Count on us for assistance day or night. Your satisfaction is our priority.
               </span>
             </div>
           </div>
@@ -700,10 +776,7 @@ const HomePage = () => {
                 <MonetizationOnRoundedIcon style={{ fontSize: "70px" }} />
               </div>
               <h2>Money Return</h2>
-              <span>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam
-                quas eum{" "}
-              </span>
+              <span>Not satisfied? No worries. We offer a straightforward and hassle-free money-back guarantee. </span>
             </div>
           </div>
           <div className="infos-item">
@@ -716,9 +789,7 @@ const HomePage = () => {
                 <LocalShippingRoundedIcon style={{ fontSize: "70px" }} />
               </div>
               <h2>Free Delivery</h2>
-              <span>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam
-                quas eum{" "}
+              <span>Enjoy luxury with complimentary shipping on all orders, adding value to your purchases.
               </span>
             </div>
           </div>
@@ -732,9 +803,7 @@ const HomePage = () => {
                 <DiscountRoundedIcon style={{ fontSize: "70px" }} />
               </div>
               <h2>Order Discount</h2>
-              <span>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam
-                quas eum{" "}
+              <span>Your loyalty is rewarded with special pricing. Dive into a world of savings on every order.
               </span>
             </div>
           </div>
@@ -744,15 +813,10 @@ const HomePage = () => {
   );
 };
 
-
-
 export default HomePage;
 
-
-
-
-
-{/* <div className="section-video">
+{
+  /* <div className="section-video">
         <video autoPlay loop muted playsInline preload="auto">
           <source src={firstsection[0].video} type="video/mp4" />
           Your browser does not support the video tag.
@@ -765,6 +829,5 @@ export default HomePage;
             <p>{firstsection[0].content}</p>
           </div>
         </div>
-      </div> */}
-
-
+      </div> */
+}

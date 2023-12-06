@@ -9,7 +9,10 @@ import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import FavoriteBorderRoundedIcon from "@mui/icons-material/FavoriteBorderRounded";
 import SearchIcon from "@mui/icons-material/Search";
 import image from "../../assets/LOGOo.png";
+
 import { useCart } from "../cart/cartcontext";
+// import { useLike } from "../like/likecontext";
+
 import Popover from "@mui/material/Popover";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -21,6 +24,15 @@ const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [activeItem, setActivatedItem] = useState("Home");
   const { cart } = useCart();
+  // const { like } = useLike();
+
+  // const likeIcon = (product) => {
+  //     // Check if the product is already liked
+  //     if (!likedProducts.includes(product)) {
+  //       // Add the product to the likedProducts array
+  //       setLikedProducts([...likedProducts, product]);
+  //     }
+  //   };
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [anchortwoEl, setAnchortwoEl] = useState(null);
@@ -72,7 +84,9 @@ const Navbar = () => {
   const closeMenu = () => {
     setIsMenuOpen(false);
   };
+
   const [isLogin, setIsLogin] = useState(true);
+
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 0) {
@@ -88,10 +102,11 @@ const Navbar = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
   const handleSubmit = (event) => {
-    event.preventDefault(); // Prevents the default form submission behavior
-    // Add your login logic here
+    event.preventDefault();
   };
+
   const toggleForm = () => {
     setIsLogin((prevIsLogin) => !prevIsLogin);
   };
@@ -190,69 +205,74 @@ const Navbar = () => {
             style={{ marginTop: "20px", zIndex: 10000 }}
           >
             <Box p={2} maxWidth={500}>
-      <Typography variant="h6">{isLogin ? 'Login' : 'Register'}</Typography>
-      <form onSubmit={handleSubmit}>
-        {!isLogin && (
-          <div className="registerform">
-        <TextField
-          label="Firstname"
-          variant="outlined"
-          margin="normal"
-          fullWidth
-          required
-        />
-        <TextField
-          label="Lastname"
-          variant="outlined"
-          margin="normal"
-          fullWidth
-          required
-        />
-        </div>
-        )}
-      
-      <TextField
-          label="Email"
-          variant="outlined"
-          margin="normal"
-          fullWidth
-          required
-        />
-        <TextField
-          type="password"
-          label="Password"
-          variant="outlined"
-          margin="normal"
-          fullWidth
-          required
-        />
-        {/* {!isLogin && (
-          <TextField
-            type="password"
-            label="Confirm Password"
-            variant="outlined"
-            margin="normal"
-            fullWidth
-            required
-          />
-        )} */}
-        <Button
-          type="submit"
-          variant="contained"
-          style={{ backgroundColor: "#590404", color: "#fff" }}
-          fullWidth
-        >
-          {isLogin ? 'LOGIN' : 'REGISTER'}
-        </Button>
-      </form>
-      <Typography variant="body2" onClick={toggleForm} style={{ cursor: 'pointer', marginTop: '1rem' }}>
-        {isLogin ? 'Don\'t have an account? Register here.' : 'Already have an account? Login here.'}
-      </Typography>
-    </Box>
+              <Typography variant="h6">
+                {isLogin ? "Login" : "Register"}
+              </Typography>
+              <form onSubmit={handleSubmit}>
+                {!isLogin && (
+                  <div className="registerform">
+                    <TextField
+                      label="Firstname"
+                      variant="outlined"
+                      margin="normal"
+                      fullWidth
+                      required
+                    />
+                    <TextField
+                      label="Lastname"
+                      variant="outlined"
+                      margin="normal"
+                      fullWidth
+                      required
+                    />
+                  </div>
+                )}
+
+                <TextField
+                  label="Email"
+                  variant="outlined"
+                  margin="normal"
+                  fullWidth
+                  required
+                />
+                <TextField
+                  type="password"
+                  label="Password"
+                  variant="outlined"
+                  margin="normal"
+                  fullWidth
+                  required
+                />
+                <Button
+                  type="submit"
+                  variant="contained"
+                  style={{ backgroundColor: "#590404", color: "#fff" }}
+                  fullWidth
+                >
+                  {isLogin ? "LOGIN" : "REGISTER"}
+                </Button>
+              </form>
+              <Typography
+                variant="body2"
+                onClick={toggleForm}
+                style={{ cursor: "pointer", marginTop: "1rem" }}
+              >
+                {isLogin
+                  ? "Don't have an account? Register here."
+                  : "Already have an account? Login here."}
+              </Typography>
+            </Box>
           </Popover>
-          <div className="shoppingcart">
-            <FavoriteBorderRoundedIcon />
+
+          <div className="like">
+            <div className="shoppingcart">
+              <Link to="/Favorites">
+                <FavoriteBorderRoundedIcon />
+              </Link>
+            </div>
+            {/* <div className="numbercart">{like.length}</div> */}
           </div>
+
           <div className="cart" onClick={handlePopoverOpen}>
             <div className="shoppingcart">
               <ShoppingBagOutlinedIcon />
