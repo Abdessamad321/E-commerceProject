@@ -13,7 +13,7 @@
    align-items: center;
    height: 100vh;
    width: 100vw;
-   background-image: url(../../assets/caleb-george-5sF6NrB1MEg-unsplash.jpg);
+   background-image: url(../../assets/loginint.jpg);
    background-size: cover;
    background-repeat: no-repeat;
    overflow: hidden;
@@ -30,14 +30,16 @@
    background-color: rgba(95, 90, 90, 0.5);
    backdrop-filter: blur(10px);
    border: 1px solid rgba(95, 90, 90, 0.5);
-   box-shadow: 0 0.125em 0.25em rgba(0, 0, 0, 0.1), 0 0.5em 1em rgba(0, 0, 0, 0.1);
-   border-radius: 0.5em;
+  box-shadow: 0 0 18px rgba(0, 0, 0, 0.3);
+   /* box-shadow: 0 0.125em 0.25em rgba(0, 0, 0, 0.1), 0 0.5em 1em rgba(0, 0, 0, 0.1); */
    padding: 1em;
+   border-radius: 16px;
+
    text-align: center;
 } 
 
 .forminput {
-   border-radius: 15px;
+   border-radius: 8px;
    border: 1px solid #aeb1b6;
    outline: none;
    color: white;
@@ -48,41 +50,59 @@
    height:3em;
    font-size: 1em;
 }
+.forminput::placeholder{
+   color:#fff !important;
+   font-weight: 100;
+}
 .logos{
    width: 100%;
    max-width: 260px;
-   margin: 20px 0 40px 0;
+   margin: 20px 0;
 }
-.formbutton {
+.linkslogin{
+   display: flex;
+   justify-content: space-between;
+   /* border: solid; */
+   margin: 0.3em 1.3em;
+ }
+ .loginbutton:hover{
+   font-size: 16px;
+ }
+/* .formbutton {
    font-size: 18px;
-   height:2.5em;
+   height:2em;
    font-weight: 600;
-   background: #f1e496;
-   border: 0.1em solid #f1e496;
+   background-color: #590404 !important;
+   border: none;
    color: #590404;
    width: 30%;
    margin: 0.5em 0;
-   border-radius: 15px;
+   border-radius: 16px;
    cursor: pointer;
    transition: all 0.4s ease;
-}
+} */
 
-.formbutton:hover{
+/* .formbutton:hover{
    background-color: #590404;
    border: 0.1em solid #590404;
    color: #f1e496;
-}
+} */
 
 .footer {
    text-align: center;
-   color: #f5dab7;
-   margin-top: 20px;
+   color: #f9e9c8;
+   margin-bottom: 0;
+   margin-top: 5%;
+   /* border: solid; */
 }
 
-
+.forgot-password{
+   color: #fff;
+}
 .forgot-password:hover{
    text-decoration: underline;
-   cursor: pointer;color: blue;
+   cursor: pointer;
+   color: #f9e9c8;
 
 }
 .loading-overlay {

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { Link } from "react-router-dom";
+import RemoveCircleOutlineRoundedIcon from "@mui/icons-material/RemoveCircleOutlineRounded";
 import "./Navbar.css";
 import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
@@ -8,8 +9,9 @@ import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import FavoriteBorderRoundedIcon from "@mui/icons-material/FavoriteBorderRounded";
 import SearchIcon from "@mui/icons-material/Search";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import image from "../../assets/LOGOo.png";
-
+import axios from "axios";
 import { useCart } from "../cart/cartcontext";
 // import { useLike } from "../like/likecontext";
 
@@ -25,14 +27,13 @@ const Navbar = () => {
   const [activeItem, setActivatedItem] = useState("Home");
   const { cart } = useCart();
   // const { like } = useLike();
+  const [checkout, setCheckout] = useState([]);
 
-  // const likeIcon = (product) => {
-  //     // Check if the product is already liked
-  //     if (!likedProducts.includes(product)) {
-  //       // Add the product to the likedProducts array
-  //       setLikedProducts([...likedProducts, product]);
-  //     }
-  //   };
+  const handleDelete = (productId) => {
+    localStorage.removeItem(productId)
+    // const cartsaver = cart.filter((cartProduct) => cartProduct._id !== productId);
+    // setCheckout(cartsaver);
+  };
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [anchortwoEl, setAnchortwoEl] = useState(null);
@@ -103,16 +104,62 @@ const Navbar = () => {
     };
   }, []);
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const [formData, setFormData] = useState({
+    firstname: "",
+    lastname: "",
+    email: "",
+    password: "",
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+  const handleCheckout = (e) => {
+    handlePopoverClose();
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      let response;
+      if (isLogin) {
+        // Login
+        response = await axios.post(
+          "http://localhost:7000/v1/customers/login",
+          formData
+        );
+      } else {
+        // Register
+        response = await axios.post(
+          "http://localhost:7000/v1/customers/",
+          formData
+        );
+      }
+      console.log("Authentication successful", response.data);
+    } catch (error) {
+      console.error("Authentication failed", error);
+    } finally {
+      setFormData({
+        firstname: "",
+        lastname: "",
+        email: "",
+        password: "",
+      });
+    }
   };
 
   const toggleForm = () => {
     setIsLogin((prevIsLogin) => !prevIsLogin);
   };
 
+
   return (
-    <nav className={`navbar ${scrolled ? "scrolled" : ""}`}>
+    <nav className={`navbaaar ${scrolled ? "scrolled" : ""}`}>
       <div className="navleft">
         <div
           className={`burger-menu ${isMenuOpen ? "show" : ""}`}
@@ -121,7 +168,9 @@ const Navbar = () => {
           <MenuRoundedIcon style={{ fontSize: "2em" }} />
         </div>
         <div className="title">
-          <img src={image} alt="" />
+          <Link to="/">
+            <img src={image} alt="" />
+          </Link>
         </div>
         <div>
           <ul className={`menu ${isMenuOpen ? "show" : ""}`}>
@@ -188,7 +237,7 @@ const Navbar = () => {
         </div>
         <div className="icons">
           <div className="shoppingcart" onClick={AccountPopoverOpen}>
-            <AccountCircleOutlinedIcon />
+            {isLogin ? <AccountCircleOutlinedIcon /> : <AccountCircleIcon />}
           </div>
           <Popover
             open={Accountopen}
@@ -217,6 +266,9 @@ const Navbar = () => {
                       margin="normal"
                       fullWidth
                       required
+                      name="firstname"
+                      value={formData.firstname}
+                      onChange={handleChange}
                     />
                     <TextField
                       label="Lastname"
@@ -224,6 +276,9 @@ const Navbar = () => {
                       margin="normal"
                       fullWidth
                       required
+                      name="lastname"
+                      value={formData.lastname}
+                      onChange={handleChange}
                     />
                   </div>
                 )}
@@ -234,6 +289,9 @@ const Navbar = () => {
                   margin="normal"
                   fullWidth
                   required
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
                 />
                 <TextField
                   type="password"
@@ -242,11 +300,18 @@ const Navbar = () => {
                   margin="normal"
                   fullWidth
                   required
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
                 />
                 <Button
                   type="submit"
                   variant="contained"
-                  style={{ backgroundColor: "#590404", color: "#fff" }}
+                  style={{
+                    cursor: "pointer",
+                    backgroundColor: "#590404",
+                    color: "#fff",
+                  }}
                   fullWidth
                 >
                   {isLogin ? "LOGIN" : "REGISTER"}
@@ -266,7 +331,15 @@ const Navbar = () => {
 
           <div className="like">
             <div className="shoppingcart">
-              <Link to="/Favorites">
+              <Link
+                style={{
+                  cursor: "pointer",
+                  display: "flex",
+                  textDecoration: "none",
+                  color: "white",
+                }}
+                to="/Favorites"
+              >
                 <FavoriteBorderRoundedIcon />
               </Link>
             </div>
@@ -306,19 +379,38 @@ const Navbar = () => {
                     alignItems="center"
                     mb={1}
                   >
-                    
-                    <img style={{ width:'10%', height: '10%'}} src={item.product_image} alt="Product" />
+                    <img
+                      style={{ width: "30%", height: "30%" }}
+                      src={item.product_image}
+                      alt="Product"
+                    />
                     <Typography>{item.product_name}</Typography>
+                    <div style={{display:'flex', flexDirection: 'column', alignItems: 'flex-end', gap:'5px'}}>
+                    <div onClick={() => handleDelete(product._id)}>
+                    <RemoveCircleOutlineRoundedIcon />
+                    </div>
                     <Typography>${item.price}</Typography>
+                    </div>
+                    
                   </Box>
                 ))
               )}
               <Button
                 variant="contained"
-                style={{ backgroundColor: "#590404", color: "#fff" }}
+                style={{
+                  textDecoration: "none",
+                  backgroundColor: "#590404",
+                  color: "#fff",
+                }}
                 fullWidth
+                onClick={handleCheckout}
               >
-                Checkout
+                <Link
+                  style={{ textDecoration: "none", color: "white" }}
+                  to="/Payment"
+                >
+                  Checkout
+                </Link>
               </Button>
             </Box>
           </Popover>

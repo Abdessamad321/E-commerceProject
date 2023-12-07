@@ -10,7 +10,7 @@ body {
   /* font-family: Arial, Helvetica, sans-serif; */
 }
 
-.navbar {
+.navbaaar {
   position: fixed;
   top: 0;
   width: 100%;
@@ -141,6 +141,7 @@ color: #000;
   font-size: 17px;
 }
 .search-input::placeholder{
+  /* font-weight: 200 ; */
   color: #ffffff;
 }
 .title img {

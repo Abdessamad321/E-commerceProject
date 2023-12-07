@@ -36,9 +36,9 @@ const Contact = () => {
       console.error('Error sending email:', error);
     } finally {
       setFormData({
-        name: null,
-        email: null,
-        message: null,
+        name: "",
+        email: "",
+        message: "",
       });
     }
   };

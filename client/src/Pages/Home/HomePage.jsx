@@ -6,12 +6,6 @@ import axios from "axios";
 
 
 import testslide from "../../assets/testslide.png";
-// import clocks from "../../assets/clocks.png";
-// import video from "../../assets/testti.mp4";
-// import video from "../../assets/testti.mp4";
-// import video from "../../assets/testti.mp4";
-// import video from "../../assets/testti.mp4";
-// import video from "../../assets/testti.mp4";
 
 
 
@@ -25,15 +19,17 @@ import ArrowBackIosNewRoundedIcon from "@mui/icons-material/ArrowBackIosNewRound
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
 import FavoriteBorderRoundedIcon from "@mui/icons-material/FavoriteBorderRounded";
 import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded';
+import AddShoppingCartRoundedIcon from '@mui/icons-material/AddShoppingCartRounded';
+
 import "react-multi-carousel/lib/styles.css";
 // import { productData } from "./data";
 import { reviewsData } from "./data";
 // import antique from "../../assets/middle.jpg";
 // import decoration from "../../assets/second.jpeg";
-import firstcategorie from "../../assets/artisanat.jpg";
-import secondcategorie from "../../assets/b.jpg";
-import tirthcategorie from "../../assets/img.jpg";
-import fourthcategorie from "../../assets/decoration.jpeg";
+import firstcategorie from "../../assets/decodeco.png";
+import secondcategorie   from "../../assets/artifcollec.jpg";
+import tirthcategorie  from "../../assets/accessorii.png";
+import fourthcategorie from "../../assets/bookscateg.jpg";
 import image from "../../assets/desinfinal.png";
 
 import { useCart } from "../../Components/cart/cartcontext";
@@ -62,6 +58,7 @@ import DiscountRoundedIcon from "@mui/icons-material/DiscountRounded";
 
 const HomePage = () => {
   const { dispatch: cartDispatch } = useCart();
+  const [likedProducts, setLikedProducts] = useState({});
   // const { dispatch: likeDispatch } = useLike();
   const [currentIndex, setCurrentIndex] = useState(0);
   const carouselRef = useRef(null);
@@ -86,7 +83,6 @@ const HomePage = () => {
   }, []);
 
 
-
   const addToCart = (product) => {
     cartDispatch({ type: "ADD_TO_CART", payload: product });
   };
@@ -99,23 +95,24 @@ const HomePage = () => {
 
   const [favorites, setFavorites] = useState(() => {
     const jsonValue = localStorage.getItem("favorites");
-    if (jsonValue !== null) return JSON.parse(jsonValue);
-    // return [];
+    return jsonValue ? JSON.parse(jsonValue) : [];
   });
 
-  const [likedProducts, setLikedProducts] = useState({});
 
   useEffect(() => {
     localStorage.setItem("favorites", JSON.stringify(favorites));
-  }, [favorites]);
+  }, [favorites, likedProducts]);
 
   const handleFavorite = (product) => {
+  const isProductInFavorites = favorites.some((favProduct) => favProduct._id === product._id);
+    if (!isProductInFavorites) {
+      setFavorites((prevFavorites) => [...prevFavorites, product]);
+    }
     setLikedProducts((prevLikedProducts) => {
       const updatedLikedProducts = { ...prevLikedProducts };
       updatedLikedProducts[product._id] = !updatedLikedProducts[product._id];
       return updatedLikedProducts;
     });
-    setFavorites((prevFavorites) => [...prevFavorites, product]);
     console.log(favorites);
   };
 
@@ -149,7 +146,9 @@ const HomePage = () => {
       <div className="likes-icon" onClick={() => handleFavorite(item)}>
       {likedProducts[item._id] ? <FavoriteRoundedIcon /> : <FavoriteBorderRoundedIcon />}
       </div>
+      <div className="imageprdcts">
       <img className="product--image" src={item.product_image} alt="product image" />
+      </div>
       <div className="cart-text">
         <span className="prdctname">{capitalizeFirstLetter(item.product_name)}</span>
         <p className="ellipsis">{item.short_description}</p>
@@ -173,7 +172,7 @@ const HomePage = () => {
             fontSize: 14,
           }}
           onClick={() => addToCart(item)}
-        >
+        ><AddShoppingCartRoundedIcon/>
           Add To Cart
         </Button>
       </div>
@@ -197,7 +196,7 @@ const HomePage = () => {
     };
 
     return (
-      <div className="card">
+      <div className="cardreviews">
         <img className="reviews--image" src={props.image} alt="product image" />
         <div className="cart-reviews">
           <span>{props.name}</span>
@@ -232,7 +231,7 @@ const HomePage = () => {
       title: "Collectibles & Artifacts",
       description:
         "Discover artifacts and collectibles that tell captivating stories.",
-      imageUrl: fourthcategorie,
+      imageUrl: secondcategorie,
     },
     {
       id: 1,
@@ -245,7 +244,7 @@ const HomePage = () => {
       title: "Books & More",
       description:
         "Bring the past home with retro kitchenware and classic tools.",
-      imageUrl: secondcategorie,
+      imageUrl: fourthcategorie,
     },
   ];
 
@@ -264,6 +263,7 @@ const HomePage = () => {
   const handlePrevious = () => {
     carouselRef.current.previous();
   };
+
 
   return (
     <div>

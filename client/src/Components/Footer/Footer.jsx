@@ -1,5 +1,6 @@
 import React from "react";
 import "./Footer.css";
+import { Link } from "react-router-dom";
 import image from "../../assets/LOGOo.png";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import CallIcon from "@mui/icons-material/Call";
@@ -8,6 +9,14 @@ import FacebookIcon from "@mui/icons-material/Facebook";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import TelegramIcon from "@mui/icons-material/Telegram";
+
+
+// import HomePage from "../../Pages/Home/HomePage";
+// // import About from "../../Pages/About/About";
+// import Contact from "../../Pages/Contact/Contact";
+// import Blog from "../../Pages/Blog/Blog";
+// import FAQs from "../../Pages/FAQs/FAQs";
+
 const Footer = () => {
   return (
     <div>
@@ -51,21 +60,17 @@ const Footer = () => {
       </div>
       <footer className="footer-distributed">
         <div className="footer-left">
-          <img src={image} alt="" />
+          <Link to='/'>
+            <img src={image} alt="" />
+          </Link>
+
           <p className="footer-links">
-            <a href="#" className="link-1">
-              Home
-            </a>
-
-            <a href="#">Blog</a>
-
-            <a href="#">Pricing</a>
-
-            <a href="#">About</a>
-
-            <a href="#">Faq</a>
-
-            <a href="#">Contact</a>
+            <Link to='/'>Home</Link>
+            <Link to='/'>Blog</Link>
+            <Link to='/'>Pricing</Link>
+            <Link to='/'>About</Link> 
+            <Link to='/'>Faq</Link> 
+            <Link to='/Contact'>Contact</Link>
           </p>
 
           <p className="footer-company-name">Arkx © 2023</p>

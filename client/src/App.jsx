@@ -6,7 +6,7 @@ import HomePage from "./Pages/Home/HomePage.jsx";
 import Shop from "./Pages/Shop/Shop.jsx";
 import Contact from "./Pages/Contact/Contact.jsx";
 import Favorites from "./Pages/Favorites/Favorites";
-
+import Payment from "./Pages/Payment/Payment.jsx";
 function App() {
   return (
     <BrowserRouter>
@@ -16,6 +16,7 @@ function App() {
         <Route path="/Shop" element={<Shop />} />
         <Route path="/Contact" element={<Contact />} />
         <Route path="/Favorites" element={<Favorites />} />
+        <Route path="/Payment" element={<Payment />} />
       </Routes>
       <Footer />
     </BrowserRouter>

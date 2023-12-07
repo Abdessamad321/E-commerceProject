@@ -1,6 +1,8 @@
 .favoritepage{
     padding: 10% 40px;
     min-height: 100vh;
+    margin-bottom: -10%;
+
 }
 .favoritepage span{
     font-size: 35px;

@@ -1,4 +1,3 @@
-
 // import React, { useState, useEffect, useContext } from "react";
 // import { useNavigate } from "react-router-dom";
 // import "./login.css";
@@ -57,8 +56,6 @@
 //     }
 //   };
 
-  
-
 //   const currentYear = new Date().getFullYear();
 
 //   return (
@@ -95,18 +92,15 @@
 
 // export default Login;
 
-
-
-
-
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import "./login.css";
-import logo from "../../assets/tst.png";
+import logo from "../../assets/kiki.png";
 import axios from "axios";
 import { AuthContext } from "../../AuthContext";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import Button from "@mui/material/Button";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function decodeJwt(token) {
   const base64Url = token.split(".")[1];
@@ -163,14 +157,13 @@ function Login() {
           user_name: username,
         }
       );
-      toast.success(response.data.message );
+      toast.success(response.data.message);
     } catch (error) {
       if (error.response.status === 404) {
-        toast.error('User not found');
-      }else{
-        toast.error('Forgot password failed');
+        toast.error("User not found");
+      } else {
+        toast.error("Forgot password failed");
       }
-      
     }
   };
 
@@ -178,7 +171,7 @@ function Login() {
 
   return (
     <div className="bodys">
-          <ToastContainer />
+      <ToastContainer />
       <div>
         <form className="formas">
           <img className="logos" src={logo} alt="Logo" />
@@ -198,13 +191,29 @@ function Login() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <button className="formbutton" onClick={handleLogin} type="submit">
-            Login
-          </button>
-          <p className="forgot-password" onClick={handleForgotPassword}>
-            Forgot Password?
-          </p>
-          <p className="footer">&copy; {currentYear} Oldy Goldy House</p>
+          <div className="linkslogin">
+            <p className="forgot-password" onClick={handleForgotPassword}>
+              Forgot Password?
+            </p>
+            <Button
+              style={{
+                textDecoration: "none",
+                backgroundColor: "#590404",
+                color: "#fff",
+                width: "30%",
+                borderRadius: "8px",
+              }}
+              onClick={handleLogin}
+              type="submit"
+              className="loginbutton"
+            >
+              Login
+            </Button>
+          </div>
+
+          <div className="footer">
+            <p style={{marginBottom: 0 }}>&copy; {currentYear} Oldy Goldy House</p>
+          </div>
         </form>
       </div>
     </div>
