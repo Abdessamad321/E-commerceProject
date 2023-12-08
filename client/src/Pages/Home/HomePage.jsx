@@ -4,11 +4,7 @@ import { faQuoteLeft } from "@fortawesome/free-solid-svg-icons";
 import "./HomePage.css";
 import axios from "axios";
 
-
 import testslide from "../../assets/testslide.png";
-
-
-
 
 // import video from "../../assets/testti.mp4";
 // import reviews  from './reviews'
@@ -18,8 +14,8 @@ import Carouselreviews from "react-multi-carousel";
 import ArrowBackIosNewRoundedIcon from "@mui/icons-material/ArrowBackIosNewRounded";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
 import FavoriteBorderRoundedIcon from "@mui/icons-material/FavoriteBorderRounded";
-import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded';
-import AddShoppingCartRoundedIcon from '@mui/icons-material/AddShoppingCartRounded';
+import FavoriteRoundedIcon from "@mui/icons-material/FavoriteRounded";
+import AddShoppingCartRoundedIcon from "@mui/icons-material/AddShoppingCartRounded";
 
 import "react-multi-carousel/lib/styles.css";
 // import { productData } from "./data";
@@ -27,8 +23,8 @@ import { reviewsData } from "./data";
 // import antique from "../../assets/middle.jpg";
 // import decoration from "../../assets/second.jpeg";
 import firstcategorie from "../../assets/decodeco.png";
-import secondcategorie   from "../../assets/artifcollec.jpg";
-import tirthcategorie  from "../../assets/accessorii.png";
+import secondcategorie from "../../assets/artifcollec.jpg";
+import tirthcategorie from "../../assets/accessor.png";
 import fourthcategorie from "../../assets/bookscateg.jpg";
 import image from "../../assets/desinfinal.png";
 
@@ -48,7 +44,6 @@ import radio from "../../assets/radio.png";
 import koora from "../../assets/koora.png";
 import dactylo from "../../assets/dactyloo.png";
 
-
 //last section *********************************************************
 
 import HeadsetMicRoundedIcon from "@mui/icons-material/HeadsetMicRounded";
@@ -58,65 +53,11 @@ import DiscountRoundedIcon from "@mui/icons-material/DiscountRounded";
 
 const HomePage = () => {
   const { dispatch: cartDispatch } = useCart();
-  const [likedProducts, setLikedProducts] = useState({});
-  // const { dispatch: likeDispatch } = useLike();
   const [currentIndex, setCurrentIndex] = useState(0);
   const carouselRef = useRef(null);
+  // const [likedProducts, setLikedProducts] = useState({});
 
   const [productData, setProductData] = useState([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get("http://localhost:7000/v1/allproducts/");
-        if (response.status === 200) {
-          setProductData(response.data);
-        } else {
-          console.error("Failed to fetch product data");
-        }
-      } catch (error) {
-        console.error("Error fetching product data:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-
-  const addToCart = (product) => {
-    cartDispatch({ type: "ADD_TO_CART", payload: product });
-  };
-
-  function capitalizeFirstLetter(str) {
-    return str.charAt(0).toUpperCase() + str.slice(1);
-  }
-
-  // FAVORITES///////////////////////////////////
-
-  const [favorites, setFavorites] = useState(() => {
-    const jsonValue = localStorage.getItem("favorites");
-    return jsonValue ? JSON.parse(jsonValue) : [];
-  });
-
-
-  useEffect(() => {
-    localStorage.setItem("favorites", JSON.stringify(favorites));
-  }, [favorites, likedProducts]);
-
-  const handleFavorite = (product) => {
-  const isProductInFavorites = favorites.some((favProduct) => favProduct._id === product._id);
-    if (!isProductInFavorites) {
-      setFavorites((prevFavorites) => [...prevFavorites, product]);
-    }
-    setLikedProducts((prevLikedProducts) => {
-      const updatedLikedProducts = { ...prevLikedProducts };
-      updatedLikedProducts[product._id] = !updatedLikedProducts[product._id];
-      return updatedLikedProducts;
-    });
-    console.log(favorites);
-  };
-
-
   let cards = [
     {
       key: 1,
@@ -139,42 +80,106 @@ const HomePage = () => {
       content: <Card imagen={clocks} />,
     },
   ];
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:7000/v1/allproducts/"
+        );
+        if (response.status === 200) {
+          setProductData(response.data);
+        } else {
+          console.error("Failed to fetch product data");
+        }
+      } catch (error) {
+        console.error("Error fetching product data:", error);
+      }
+    };
 
-  
+    fetchData();
+  }, []);
+
+  const addToCart = (product) => {
+    cartDispatch({ type: "ADD_TO_CART", payload: product });
+  };
+
+  // FAVORITES///////////////////////////////////
+  const [favorites, setFavorites] = useState(() => {
+    const jsonValue = localStorage.getItem("favorites");
+    return jsonValue ? JSON.parse(jsonValue) : [];
+  });
+
+  const [likedProducts, setLikedProducts] = useState({});
+
+  useEffect(() => {
+    localStorage.setItem("favorites", JSON.stringify(favorites));
+  }, [favorites, likedProducts]);
+
+  const handleFavorite = (product) => {
+    const isProductInFavorites = favorites.some(
+      (favProduct) => favProduct._id === product._id
+    );
+
+    if (!isProductInFavorites) {
+      setFavorites((prevFavorites) => [...prevFavorites, product]);
+    }
+
+    setLikedProducts((prevLikedProducts) => {
+      const updatedLikedProducts = { ...prevLikedProducts };
+      updatedLikedProducts[product._id] = !updatedLikedProducts[product._id];
+      return updatedLikedProducts;
+    });
+  };
+
   const product = productData.map((item) => (
     <div className="card" key={item.id}>
       <div className="likes-icon" onClick={() => handleFavorite(item)}>
-      {likedProducts[item._id] ? <FavoriteRoundedIcon /> : <FavoriteBorderRoundedIcon />}
+        {likedProducts[item._id] ? (
+          <FavoriteRoundedIcon />
+        ) : (
+          <FavoriteBorderRoundedIcon />
+        )}
       </div>
       <div className="imageprdcts">
-      <img className="product--image" src={item.product_image} alt="product image" />
+        <img
+          className="product--image"
+          src={item.product_image}
+          alt="product image"
+        />
       </div>
       <div className="cart-text">
-        <span className="prdctname">{capitalizeFirstLetter(item.product_name)}</span>
+        <span className="prdctname">{item.product_name}</span>
         <p className="ellipsis">{item.short_description}</p>
-        <p className="price"><>$</>{item.price}</p>
+        <p className="price">
+          <>$</>
+          {item.price}
+        </p>
       </div>
-      <div className="addbutton">
-        <Button
-          style={{
-            position: "absolute",
-            bottom: 0,
-            right: 0,
-            borderRadius: 8,
-            border: "none",
-            outline: 0,
-            padding: 5,
-            margin: 10,
-            backgroundColor: "#590404",
-            color: "#fff",
-            textAlign: "center",
-            cursor: "pointer",
-            fontSize: 14,
-          }}
-          onClick={() => addToCart(item)}
-        ><AddShoppingCartRoundedIcon/>
-          Add To Cart
-        </Button>
+      <div className="cardprdct">
+
+        <div className="addbutton">
+          <Button
+            style={{
+              position: "absolute",
+              bottom: 0,
+              right: 0,
+              borderRadius: 8,
+              border: "none",
+              outline: 0,
+              padding: 9,
+              margin: 10,
+              backgroundColor: "#590404",
+              color: "#fff",
+              textAlign: "center",
+              cursor: "pointer",
+              fontSize: 14,
+            }}
+            onClick={() => addToCart(item)}
+          >
+            <AddShoppingCartRoundedIcon />
+            Add To Cart
+          </Button>
+        </div>
       </div>
     </div>
   ));
@@ -256,6 +261,7 @@ const HomePage = () => {
     return () => clearInterval(intervalId);
   }, []);
 
+  // Topcollection***************************************************************/
   const handleNext = () => {
     carouselRef.current.next();
   };
@@ -263,7 +269,6 @@ const HomePage = () => {
   const handlePrevious = () => {
     carouselRef.current.previous();
   };
-
 
   return (
     <div>
@@ -274,7 +279,7 @@ const HomePage = () => {
               <div className="titlesection">
                 <h3>Vintage Flair for Modern Living</h3>
               </div>
-              <div>
+              <div className="txthomeone">
                 <p>
                   Whether you're a history enthusiast, a collector, or someone
                   seeking to add a touch of vintage flair to your space, our
@@ -285,10 +290,10 @@ const HomePage = () => {
               <div className="discoverbutton">
                 <Button
                   style={{
-                    padding: "8px",
-                    borderRadius: "16px",
+                    padding: "px",
+                    borderRadius: "12px",
                     marginTop: "10px",
-                    backgroundColor: "#f8e4af",
+                    backgroundColor: "#f9e9c8",
                     fontFamily: "Poppins, sans-serif",
                     fontSize: "14px",
                     color: "#590404",
@@ -459,7 +464,6 @@ const HomePage = () => {
         </div>
       </div>
 
-
       {/* Our Best Product *****************************/}
 
       <div className="section-carousel">
@@ -514,7 +518,6 @@ const HomePage = () => {
           {product}
         </Carouselprdct>
       </div>
-      
 
       {/* Reviews ****************************************************************/}
 
@@ -596,41 +599,59 @@ const HomePage = () => {
         <div className="lastsection">
           <div className="infos-item">
             <div className="cardfontc">
+              {/* <div className="titlservices"> */}
               <div className="servicesicons">
-                <HeadsetMicRoundedIcon style={{ fontSize: "70px" }} />
+                <HeadsetMicRoundedIcon style={{ fontSize: "4em" }} />
               </div>
               <h2>24/7 Days</h2>
-              <span>Count on us for assistance day or night. Your satisfaction is our priority.
+              {/* </div> */}
+              <span>
+                Count on us for assistance day or night. Your satisfaction is
+                our priority.
               </span>
             </div>
           </div>
           <div className="infos-item">
             <div className="cardfontc">
+              {/* <div className="titlservices"> */}
               <div className="servicesicons">
-                <MonetizationOnRoundedIcon style={{ fontSize: "70px" }} />
+                <MonetizationOnRoundedIcon style={{ fontSize: "4em" }} />
               </div>
               <h2>Money Return</h2>
-              <span>Not satisfied? No worries. We offer a straightforward and hassle-free money-back guarantee. </span>
+              {/* </div> */}
+              <span>
+                Not satisfied? No worries. We offer a straightforward and
+                hassle-free money-back guarantee.{" "}
+              </span>
             </div>
           </div>
           <div className="infos-item">
             <div className="cardfontc">
+              {/* <div className="titlservices"> */}
               <div className="servicesicons">
-                <LocalShippingRoundedIcon style={{ fontSize: "70px" }} />
+                <LocalShippingRoundedIcon style={{ fontSize: "4em" }} />
               </div>
               <h2>Free Delivery</h2>
-              <span>Enjoy luxury with complimentary shipping on all orders, adding value to your purchases.
+              {/* </div> */}
+              <span>
+                Enjoy luxury with complimentary shipping on all orders, adding
+                value to your purchases.
               </span>
             </div>
           </div>
           <div className="infos-item">
             <div className="cardfontc">
+              {/* <div className="titlservices"> */}
               <div className="servicesicons">
-                <DiscountRoundedIcon style={{ fontSize: "70px" }} />
+                <DiscountRoundedIcon style={{ fontSize: "4em" }} />
               </div>
               <h2>Order Discount</h2>
-              <span>Your loyalty is rewarded with special pricing. Dive into a world of savings on every order.
+              {/* </div> */}
+              <span>
+                Your loyalty is rewarded with special pricing. Dive into a world
+                of savings on every order.
               </span>
+              
             </div>
           </div>
         </div>
@@ -658,99 +679,87 @@ export default HomePage;
       </div> */
 }
 
-
-
-
-
-
-
-
-
-
-
-
 // FAVORITES///////////////////////////////////
 
-  // const [favorites, setFavorites] = useState(() => {
-  //   const jsonValue = localStorage.getItem("favorites");
-  //   if (jsonValue !== null) return JSON.parse(jsonValue);
-  //   console.log(bitch);
-  //   // return [];
-  // });
+// const [favorites, setFavorites] = useState(() => {
+//   const jsonValue = localStorage.getItem("favorites");
+//   if (jsonValue !== null) return JSON.parse(jsonValue);
+//   console.log(bitch);
+//   // return [];
+// });
 
-  // const [likedProducts, setLikedProducts] = useState({});
+// const [likedProducts, setLikedProducts] = useState({});
 
-  // useEffect(() => {
-  //   localStorage.setItem("favorites", JSON.stringify(favorites));
-  // }, [favorites]);
+// useEffect(() => {
+//   localStorage.setItem("favorites", JSON.stringify(favorites));
+// }, [favorites]);
 
-  // const handleFavorite = (product) => {
-  //   // setIsFavorit(!isFavorit);
-  //   setLikedProducts((prevLikedProducts) => {
-  //     const updatedLikedProducts = { ...prevLikedProducts };
-  //     updatedLikedProducts[product.id] = !updatedLikedProducts[product.id];
-  //     return updatedLikedProducts;
-  //   });
-  //   setFavorites((prevFavorites) => [...prevFavorites, product]);
-  //   console.log(favorites);
-  // };
+// const handleFavorite = (product) => {
+//   // setIsFavorit(!isFavorit);
+//   setLikedProducts((prevLikedProducts) => {
+//     const updatedLikedProducts = { ...prevLikedProducts };
+//     updatedLikedProducts[product.id] = !updatedLikedProducts[product.id];
+//     return updatedLikedProducts;
+//   });
+//   setFavorites((prevFavorites) => [...prevFavorites, product]);
+//   console.log(favorites);
+// };
 
-  // let cards = [
-  //   {
-  //     key: 1,
-  //     content: <Card imagen={phone} />,
-  //   },
-  //   {
-  //     key: 2,
-  //     content: <Card imagen={radio} />,
-  //   },
-  //   {
-  //     key: 3,
-  //     content: <Card imagen={camera} />,
-  //   },
-  //   {
-  //     key: 4,
-  //     content: <Card imagen={gramo} />,
-  //   },
-  //   {
-  //     key: 5,
-  //     content: <Card imagen={clocks} />,
-  //   },
-  // ];
+// let cards = [
+//   {
+//     key: 1,
+//     content: <Card imagen={phone} />,
+//   },
+//   {
+//     key: 2,
+//     content: <Card imagen={radio} />,
+//   },
+//   {
+//     key: 3,
+//     content: <Card imagen={camera} />,
+//   },
+//   {
+//     key: 4,
+//     content: <Card imagen={gramo} />,
+//   },
+//   {
+//     key: 5,
+//     content: <Card imagen={clocks} />,
+//   },
+// ];
 
-  
-  // const product = productData.map((item) => (
-  //   <div className="card" key={item.id}>
-  //     <div className="likes-icon" onClick={() => handleFavorite(item)}>
-  //     {likedProducts[item.id] ? <FavoriteRoundedIcon /> : <FavoriteBorderRoundedIcon />}
-  //     </div>
-  //     <img className="product--image" src={item.imageurl} alt="product image" />
-  //     <div className="cart-text">
-  //       <span>{item.name}</span>
-  //       <p>{item.description}</p>
-  //       <p className="price">{item.price}</p>
-  //     </div>
-  //     <div className="addbutton">
-  //       <Button
-  //         style={{
-  //           position: "absolute",
-  //           bottom: 0,
-  //           right: 0,
-  //           borderRadius: 8,
-  //           border: "none",
-  //           outline: 0,
-  //           padding: 5,
-  //           margin: 10,
-  //           backgroundColor: "#590404",
-  //           color: "#fff",
-  //           textAlign: "center",
-  //           cursor: "pointer",
-  //           fontSize: 14,
-  //         }}
-  //         onClick={() => addToCart(item)}
-  //       >
-  //         Add To Cart
-  //       </Button>
-  //     </div>
-  //   </div>
-  // ));
+// const product = productData.map((item) => (
+//   <div className="card" key={item.id}>
+//     <div className="likes-icon" onClick={() => handleFavorite(item)}>
+//     {likedProducts[item.id] ? <FavoriteRoundedIcon /> : <FavoriteBorderRoundedIcon />}
+//     </div>
+//     <img className="product--image" src={item.imageurl} alt="product image" />
+//     <div className="cart-text">
+//       <span>{item.name}</span>
+//       <p>{item.description}</p>
+//       <p className="price">{item.price}</p>
+//     </div>
+//     <div className="addbutton">
+//       <Button
+//         style={{
+//           position: "absolute",
+//           bottom: 0,
+//           right: 0,
+//           borderRadius: 8,
+//           border: "none",
+//           outline: 0,
+//           padding: 5,
+//           margin: 10,
+//           backgroundColor: "#590404",
+//           color: "#fff",
+//           textAlign: "center",
+//           cursor: "pointer",
+//           fontSize: 14,
+//         }}
+//         onClick={() => addToCart(item)}
+//       >
+//         Add To Cart
+//       </Button>
+//     </div>
+//   </div>
+// ));

@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import RemoveCircleOutlineRoundedIcon from "@mui/icons-material/RemoveCircleOutlineRounded";
 import "./Navbar.css";
 import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
@@ -11,15 +11,23 @@ import FavoriteBorderRoundedIcon from "@mui/icons-material/FavoriteBorderRounded
 import SearchIcon from "@mui/icons-material/Search";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import image from "../../assets/LOGOo.png";
-import axios from "axios";
 import { useCart } from "../cart/cartcontext";
-// import { useLike } from "../like/likecontext";
-
 import Popover from "@mui/material/Popover";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
+
+import axios from "axios";
+import Login from "../../Components/Logincontext/Login";
+import Register from "../../Components/Logincontext/Register";
+import {
+  useAuth,
+  AuthProvider,
+  AuthContext,
+} from "../../Components/Logincontext/Logincontext";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -27,12 +35,38 @@ const Navbar = () => {
   const [activeItem, setActivatedItem] = useState("Home");
   const { cart } = useCart();
   // const { like } = useLike();
+  // const [cartdeleted, setCart] = useState([]);
   const [checkout, setCheckout] = useState([]);
 
+  // useEffect(() => {
+  //   const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
+  //   setCart(storedCart);
+  // }, []);
+  // const removeFromCart = (productId) => {
+  //   const updatedCart = cartdeleted.filter(
+  //     (cartProduct) => cartProduct._id !== productId
+  //   );
+  //   setCart(updatedCart);
+  //   localStorage.setItem("cart", JSON.stringify(updatedCart));
+  // };
+  useEffect(() => {
+    const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
+    // const storedFavorites = JSON.parse(localStorage.getItem("favorites")) || [];
+    // setFavorites(storedFavorites);
+    setCheckout(storedCart);
+  }, []);
+
   const handleDelete = (productId) => {
-    localStorage.removeItem(productId)
-    // const cartsaver = cart.filter((cartProduct) => cartProduct._id !== productId);
-    // setCheckout(cartsaver);
+    // Filter out the product with the given productId
+    const updatedCart = storedCart.filter(
+      (cartProduct) => cartProduct._id !== productId
+    );
+
+    // Update local storage with the filtered cart
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
+
+    // Update the state with the filtered cart
+    setCheckout(updatedCart);
   };
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -86,8 +120,6 @@ const Navbar = () => {
     setIsMenuOpen(false);
   };
 
-  const [isLogin, setIsLogin] = useState(true);
-
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 0) {
@@ -105,8 +137,8 @@ const Navbar = () => {
   }, []);
 
   const [formData, setFormData] = useState({
-    firstname: "",
-    lastname: "",
+    first_name: "",
+    last_name: "",
     email: "",
     password: "",
   });
@@ -122,6 +154,11 @@ const Navbar = () => {
     handlePopoverClose();
   };
 
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+  const authCtx = useContext(AuthContext);
+  const [message, setMessage] = useState("");
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -129,34 +166,132 @@ const Navbar = () => {
       let response;
       if (isLogin) {
         // Login
-        response = await axios.post(
-          "http://localhost:7000/v1/customers/login",
-          formData
-        );
+        function decodeJwt(token) {
+          const base64Url = token.split(".")[1];
+          const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+          const jsonPayload = decodeURIComponent(
+            atob(base64)
+              .split("")
+              .map(function (c) {
+                return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+              })
+              .join("")
+          );
+
+          return JSON.parse(jsonPayload);
+        }
+        // const [data, setData] = useState({
+        //   email: "",
+        //   password: "",
+        // });
+
+        // const handleLogin = async (e) => {
+        //   e.preventDefault();
+        try {
+          const response = await axios.post(
+            "http://localhost:7000/v1/customers/login",
+            {
+              email: formData.email,
+              password: formData.password,
+            }
+          );
+          const { access_token, refresh_token } = response.formData;
+          authCtx.login(access_token, refresh_token);
+          const decoded = decodeJwt(access_token);
+          const userId = decoded.userId;
+          localStorage.setItem("userId", userId);
+          navigate("/");
+        } catch (error) {
+          console.error("Login failed:", error);
+          if (
+            error.response &&
+            error.response.formData &&
+            error.response.formData.error
+          ) {
+            // If the server responds with an error message
+            setError(error.response.formData.error);
+            toast.error(error.response.formData.error);
+          } else {
+            // Handle other errors
+            setError("An error occurred during login");
+            toast.error("An error occurred during login");
+          }
+        }
+        // };
+        const handleForgotPassword = async () => {
+          try {
+            const response = await axios.post("http://localhost:7000/v1/customers/forget-password", {
+              email: formData.email,
+              password: formData.password,
+            });
+            console.log(response.formData.message);
+            toast.success(response.formData.message);
+          } catch (error) {
+            console.error("Forgot Password failed:", error);
+            if (error.response && error.response.formData && error.response.formData.error) {
+              toast.error(error.response.formData.error);
+            } else {
+              toast.error("An error occurred while processing your request");
+            }
+          }
+        };
+
+        // response = await axios.post(
+        //   "http://localhost:7000/v1/customers/login",
+        //   formData
+        // );
       } else {
         // Register
-        response = await axios.post(
-          "http://localhost:7000/v1/customers/",
-          formData
-        );
+        try {
+          // Send a POST request to the server with the form data
+          const response = await axios.post(
+            "http://localhost:7000/v1/customers",
+            formData
+          );
+          console.log(response);
+          toast.success(
+            response.data,
+            "Check your Email to activate your account."
+          );
+          toast.success("Check your Email to activate your account.");
+          // navigate('/login');
+          setMessage();
+        } catch (error) {
+          if (error.response && error.response.status === 400) {
+            const validationErrors = error.response.data.err;
+            toast.error(
+              [
+                ...validationErrors,
+                "Please check your input and try again.",
+              ].join("\n")
+            );
+          } else {
+            const errorMessage = error.response.data.err || "An error occurred";
+            toast.error(errorMessage);
+          }
+        }
+        // response = await axios.post(
+        //   "http://localhost:7000/v1/customers/",
+        //   formData
+        // );
       }
       console.log("Authentication successful", response.data);
     } catch (error) {
       console.error("Authentication failed", error);
     } finally {
       setFormData({
-        firstname: "",
-        lastname: "",
+        first_name: "",
+        last_name: "",
         email: "",
         password: "",
       });
     }
   };
+  const [isLogin, setIsLogin] = useState(true);
 
   const toggleForm = () => {
     setIsLogin((prevIsLogin) => !prevIsLogin);
   };
-
 
   return (
     <nav className={`navbaaar ${scrolled ? "scrolled" : ""}`}>
@@ -257,27 +392,30 @@ const Navbar = () => {
               <Typography variant="h6">
                 {isLogin ? "Login" : "Register"}
               </Typography>
+              {/* onSubmit={handleSubmit} */}
               <form onSubmit={handleSubmit}>
                 {!isLogin && (
                   <div className="registerform">
                     <TextField
-                      label="Firstname"
+                      label="First Name"
                       variant="outlined"
                       margin="normal"
                       fullWidth
                       required
-                      name="firstname"
-                      value={formData.firstname}
+                      id="first_name"
+                      name="first_name"
+                      value={formData.first_name}
                       onChange={handleChange}
                     />
                     <TextField
-                      label="Lastname"
+                      label="Last Name"
                       variant="outlined"
                       margin="normal"
                       fullWidth
                       required
-                      name="lastname"
-                      value={formData.lastname}
+                      id="last_name"
+                      name="last_name"
+                      value={formData.last_name}
                       onChange={handleChange}
                     />
                   </div>
@@ -290,6 +428,8 @@ const Navbar = () => {
                   fullWidth
                   required
                   name="email"
+                  id="email"
+                  autoComplete="on"
                   value={formData.email}
                   onChange={handleChange}
                 />
@@ -301,6 +441,7 @@ const Navbar = () => {
                   fullWidth
                   required
                   name="password"
+                  id="password"
                   value={formData.password}
                   onChange={handleChange}
                 />
@@ -317,15 +458,31 @@ const Navbar = () => {
                   {isLogin ? "LOGIN" : "REGISTER"}
                 </Button>
               </form>
+              <ToastContainer />
+              <div 
+                style={{ cursor: "pointer", marginTop: "1rem", display: "flex",alignItems:"center" ,justifyContent: "space-between"}}
+              >
+              {isLogin ? (
+                  <Link 
+                    to="#"
+                    className="forgot-password"
+                    onClick={handleSubmit.handleForgotPassword}
+                  >
+                    Forgot Password
+                  </Link>
+                ) : null}
               <Typography
                 variant="body2"
                 onClick={toggleForm}
-                style={{ cursor: "pointer", marginTop: "1rem" }}
               >
+                
                 {isLogin
-                  ? "Don't have an account? Register here."
+                  ? 
+                    "Don't have an account? Register here."
                   : "Already have an account? Login here."}
               </Typography>
+              </div>
+              
             </Box>
           </Popover>
 
@@ -373,7 +530,7 @@ const Navbar = () => {
               ) : (
                 cart.map((item) => (
                   <Box
-                    key={item.id}
+                    key={item._id}
                     display="flex"
                     justifyContent="space-between"
                     alignItems="center"
@@ -385,13 +542,22 @@ const Navbar = () => {
                       alt="Product"
                     />
                     <Typography>{item.product_name}</Typography>
-                    <div style={{display:'flex', flexDirection: 'column', alignItems: 'flex-end', gap:'5px'}}>
-                    <div onClick={() => handleDelete(product._id)}>
-                    <RemoveCircleOutlineRoundedIcon />
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "flex-end",
+                        gap: "5px",
+                      }}
+                    >
+                      {/* a verifirr onClick={() => removeFromCart handleDelete(product._id)} */}
+                      <div>
+                        <RemoveCircleOutlineRoundedIcon
+                          onClick={handleDelete}
+                        />
+                      </div>
+                      <Typography>${item.price}</Typography>
                     </div>
-                    <Typography>${item.price}</Typography>
-                    </div>
-                    
                   </Box>
                 ))
               )}

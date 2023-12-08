@@ -20,6 +20,7 @@ function sendWelcomeEmail(id, email, password) {
         subject: 'Welcome to Our Website',
         html: `
             <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f4;">
+            <img src="https://res.cloudinary.com/dv9arhzij/image/upload/v1701472759/E-COMERCEimgs/e3nqz7pbbek2sdxs8r0c.png" alt="LOGO" style="max-width: 260px; height: auto;" />
             <h2 style="color: #333;">Welcome to Our Website!</h2>
             <p style="color: #555;">Thank you for signing up. Your account has been created successfully.</p>
             <p style="color: #555;">Now you can log in using your credentials:</p>
@@ -134,6 +135,13 @@ function contactEmail(name, email, message){
     subject: 'New Contact Form Submission',
     text: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`,
   };
+
+
+
+
+
+
+  
 
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
