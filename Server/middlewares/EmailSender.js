@@ -1,24 +1,22 @@
+const nodemailer = require("nodemailer");
 
-const nodemailer = require('nodemailer')
-
-require('dotenv').config();
+require("dotenv").config();
 const passwordKey = process.env.PASS_KEY;
 
-
 function sendWelcomeEmail(id, email, password) {
-    const transporter = nodemailer.createTransport({
-        service: 'Gmail',
-        auth: {
-            user: 'balstore.info@gmail.com',
-            pass: passwordKey,
-        },
-        });
-    
-    const mailContent = {
-        from: 'balstore.info@gmail.com',
-        to: email,
-        subject: 'Welcome to Our Website',
-        html: `
+  const transporter = nodemailer.createTransport({
+    service: "Gmail",
+    auth: {
+      user: "balstore.info@gmail.com",
+      pass: passwordKey,
+    },
+  });
+
+  const mailContent = {
+    from: "balstore.info@gmail.com",
+    to: email,
+    subject: "Welcome to Our Website",
+    html: `
             <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f4;">
             <img src="https://res.cloudinary.com/dv9arhzij/image/upload/v1701472759/E-COMERCEimgs/e3nqz7pbbek2sdxs8r0c.png" alt="LOGO" style="max-width: 260px; height: auto;" />
             <h2 style="color: #333;">Welcome to Our Website!</h2>
@@ -30,34 +28,31 @@ function sendWelcomeEmail(id, email, password) {
             <p style="color: #555;">Click <a href="http://localhost:7000/v1/customers/validate/${id}" style="color: #007BFF; text-decoration: none; font-weight: bold;">here</a> to log in to your account.</p>
             </div>
         `,
-    };
-    
-        transporter.sendMail(mailContent, (err, info) => {
-        if (err) {
-            console.error(err);
-        } else {
-            console.log('Email sent:', info.response);
-        }
-        });
+  };
+
+  transporter.sendMail(mailContent, (err, info) => {
+    if (err) {
+      console.error(err);
+    } else {
+      console.log("Email sent:", info.response);
+    }
+  });
 }
 
-
-
-
 function sendWelcomeEmailForUser(email, userName, password) {
-    const transporter = nodemailer.createTransport({
-        service: 'Gmail',
-        auth: {
-            user: 'balstore.info@gmail.com',
-            pass: passwordKey,
-        },
-        });
-    
-        const mailContent = {
-        from: 'balstore.info@gmail.com',
-        to: email,
-        subject: 'Welcome to Our Website',
-        html: `
+  const transporter = nodemailer.createTransport({
+    service: "Gmail",
+    auth: {
+      user: "balstore.info@gmail.com",
+      pass: passwordKey,
+    },
+  });
+
+  const mailContent = {
+    from: "balstore.info@gmail.com",
+    to: email,
+    subject: "Welcome to Our Website",
+    html: `
             <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f4;">
             <h2 style="color: #333;">Welcome to Our Website!</h2>
             <p style="color: #555;">Thank you for signing up. Your account has been created successfully.</p>
@@ -67,35 +62,32 @@ function sendWelcomeEmailForUser(email, userName, password) {
             <p style="color: #555;">Please do not share your login information with anyone.</p>
             </div>
         `,
-        };
-    
-        transporter.sendMail(mailContent, (err, info) => {
-        if (err) {
-            console.error(err);
-        } else {
-            console.log('Email sent:', info.response);
-        }
-        });
+  };
+
+  transporter.sendMail(mailContent, (err, info) => {
+    if (err) {
+      console.error(err);
+    } else {
+      console.log("Email sent:", info.response);
+    }
+  });
 }
-    
 
+// for reset passss =========================
 
-
-    // for reset passss =========================
-
-    function sendResetEmail(email, resetToken) {
-        const transporter = nodemailer.createTransport({
-            service: 'Gmail',
-            auth:{
-                user: 'balstore.info@gmail.com',
-                pass: passwordKey
-            }
-        });
-        const mailContent = {
-            from: 'balstore.info@gmail.com',
-            to: email,
-            subject: 'Password Reset',
-            html: `
+function sendResetEmail(email, resetToken) {
+  const transporter = nodemailer.createTransport({
+    service: "Gmail",
+    auth: {
+      user: "balstore.info@gmail.com",
+      pass: passwordKey,
+    },
+  });
+  const mailContent = {
+    from: "balstore.info@gmail.com",
+    to: email,
+    subject: "Password Reset",
+    html: `
             <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f4; text-align: center;">
                 <img src="https://res.cloudinary.com/dv9arhzij/image/upload/v1701472759/E-COMERCEimgs/e3nqz7pbbek2sdxs8r0c.png" alt="LOGO" style="max-width: 260px; height: auto;" />
                 <h2 style="color: #333;">Password Reset</h2>
@@ -107,60 +99,48 @@ function sendWelcomeEmailForUser(email, userName, password) {
                 <p style="color: #555;">If you didn't request a password reset, you can ignore this email.</p>
             </div>
         `,
-            
-        };
-        transporter.sendMail(mailContent, (err, info) => {
-            if (err) {
-                console.error(err);
-            } else { 
-                console.log('Email sent:', info.response);
-            }
-        })
-        }
-
-
-function contactEmail(name, email, message){
-
-  const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: 'balstore.info@gmail.com',
-      pass: passwordKey,
-    },
-  });
-  
-  const mailOptions = {
-    from: email,
-    to: 'balstore.info@gmail.com',
-    subject: 'New Contact Form Submission',
-    text: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`,
   };
-
-
-
-
-
-
-  
-
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.error(error);
-      res.status(500).send('Internal Server Error');
+  transporter.sendMail(mailContent, (err, info) => {
+    if (err) {
+      console.error(err);
     } else {
-      console.log('Email sent: ' + info.response);
-      res.status(200).send('Email sent successfully');
+      console.log("Email sent:", info.response);
     }
   });
 }
 
 
 
-    
+function contactEmail(name, email, message) {
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: "balstore.info@gmail.com",
+      pass: passwordKey,
+    },
+  });
+
+  const mailOptions = {
+    from: email,
+    to: "balstore.info@gmail.com",
+    subject: "New Contact Form Submission",
+    text: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`,
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.error(error);
+      res.status(500).send("Internal Server Error");
+    } else {
+      console.log("Email sent: " + info.response);
+      res.status(200).send("Email sent successfully");
+    }
+  });
+}
 
 module.exports = {
-    sendWelcomeEmail:sendWelcomeEmail,
-    sendWelcomeEmailForUser:sendWelcomeEmailForUser,
-    sendResetEmail:sendResetEmail,
-    contactEmail:contactEmail
+  sendWelcomeEmail: sendWelcomeEmail,
+  sendWelcomeEmailForUser: sendWelcomeEmailForUser,
+  sendResetEmail: sendResetEmail,
+  contactEmail: contactEmail,
 };

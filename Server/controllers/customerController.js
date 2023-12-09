@@ -271,6 +271,111 @@ async function contact(req, res) {
   }
 }
 
+// REFRESH TOKEN////////////////////////////////
+async function refreshTokens(req, res) {
+  try {
+    const refreshToken = req.headers["authorization"].split("Bearer ")[1];
+
+    if (!refreshToken) {
+      return res.status(401).json("No refresh token found in the headers");
+    }
+
+    const decodedRefreshToken = jwt.verify(refreshToken, refreshKey);
+    const customer = await Customer.findById(decodedRefreshToken.customerid);
+
+    if (!customer) {
+      return res.status(401).json("Invalid refresh token");
+    }
+
+    const token = jwt.sign(
+      { customerid: customer._id, isDeleted: customer.isDeleted },
+      secretKey,
+      { expiresIn: "30s" }
+    );
+
+    const newRefreshToken = jwt.sign({ customerid: customer._id }, refreshKey, {
+      expiresIn: "60s", // Set an appropriate expiration time for refresh token
+    });
+
+    res.status(200).json({
+      access_token: token,
+      token_type: "jwt",
+      expires_in: "60s",
+      refresh_token: newRefreshToken,
+    });
+  } catch (error) {
+    res.status(500).json({ err: error.message });
+  }
+}
+
+
+
+
+//reset passsssssssss================================
+
+async function resetRquist (req, res) {
+  const { email } = req.body;
+  try {
+  const customers = await Customer.findOne({ email: email });
+  if (!customers) {
+      return res.status(404).json({ message: 'customer not found' });
+  }
+  const resetToken = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+  customers.resetToken = resetToken;
+  customers.resetTokenExpiration = Date.now() + 300000; 
+  await customers.save();
+  sendEmail.sendResetEmail(customers.email, resetToken);
+  return res.status(200).json({ message: 'Password reset email sent successfully' });
+  } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: 'Internal server error' });
+  }
+}
+
+// Verify ttoken ================================
+async function verifyResetToken (req, res) {
+  const { token } = req.params;
+  try {
+      const customers = await Customer.findOne({
+          resetToken: token,
+          resetTokenExpiration: { $gt: Date.now() },
+      });
+  if (!customers) {
+      return res.status(400).json({ message: 'Invalid or expired token' });
+  }
+  return res.status(200).json({ message: 'Token is valid' });
+  } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: 'Internal server error' });
+  }
+}
+
+// Set new Passssssssssssssssssssssss=========================
+async function setNewPass (req, res) {
+  const { token } = req.params;
+  const { newPassword } = req.body;
+
+  try {
+      const customers = await Customer.findOne({
+      resetToken: token,
+      resetTokenExpiration: { $gt: Date.now() },
+      });
+      if (!customers) {
+          return res.status(400).json({ message: 'Invalid or expired token' });
+      }
+      const hashedPass = await bcrypt.hash(newPassword, 10);
+      customers.password = hashedPass;
+      customers.resetToken = null;
+      customers.resetTokenExpiration = null;
+      await customers.save();
+
+      return res.status(200).json({ message: 'Password updated successfully' });
+  } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
 module.exports = {
   createCustomer: createCustomer,
   loginCustumer: loginCustumer,
@@ -283,4 +388,8 @@ module.exports = {
   updateIdCustomer: updateIdCustomer,
   allCustomer: allCustomer,
   contact: contact,
+  refreshTokens: refreshTokens,
+  resetRquist:resetRquist,
+  verifyResetToken:verifyResetToken,
+  setNewPass:setNewPass
 };

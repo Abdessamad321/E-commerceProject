@@ -34,7 +34,16 @@ const customerSchema = new mongoose.Schema({
   isDeleted: {
     type: Boolean,
     default: true,
+  },
+  resetToken:{
+    type: String,
+    default: null
+  },
+  resetTokenExpiration:{
+    type:Date,
+    default: null
   }
+
 }, {timestamps: true});
 
 const customers = mongoose.model("Customers", customerSchema);

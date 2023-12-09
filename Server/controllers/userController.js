@@ -299,6 +299,9 @@ async function setNewPass (req, res) {
 
 
 
+
+
+
 module.exports = {
     createUser: createUser,
     loginUser: loginUser,
@@ -311,5 +314,5 @@ module.exports = {
     getAllUsers:getAllUsers,
     resetRquist:resetRquist,
     verifyResetToken:verifyResetToken,
-    setNewPass:setNewPass
+    setNewPass:setNewPass,
 };

@@ -21,6 +21,7 @@ import TextField from "@mui/material/TextField";
 import axios from "axios";
 import Login from "../../Components/Logincontext/Login";
 import Register from "../../Components/Logincontext/Register";
+
 import {
   useAuth,
   AuthProvider,
@@ -159,6 +160,26 @@ const Navbar = () => {
   const authCtx = useContext(AuthContext);
   const [message, setMessage] = useState("");
 
+  
+  const handleForgotPassword = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:7000/v1/customers/password/reset",
+        {
+        email: formData.email,
+        }
+      );
+      toast.success(response.data.message );
+    } catch (error) {
+      if (error.response.status === 404) {
+        toast.error('User not found');
+      }else{
+        toast.error('Forgot password failed');
+      }
+      
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -195,7 +216,8 @@ const Navbar = () => {
               password: formData.password,
             }
           );
-          const { access_token, refresh_token } = response.formData;
+          const { access_token, refresh_token } = response.data;
+          console.log(response.data)
           authCtx.login(access_token, refresh_token);
           const decoded = decodeJwt(access_token);
           const userId = decoded.userId;
@@ -205,12 +227,12 @@ const Navbar = () => {
           console.error("Login failed:", error);
           if (
             error.response &&
-            error.response.formData &&
-            error.response.formData.error
+            error.response.data &&
+            error.response.data.error
           ) {
             // If the server responds with an error message
-            setError(error.response.formData.error);
-            toast.error(error.response.formData.error);
+            setError(error.response.data.error);
+            toast.error(error.response.data.error);
           } else {
             // Handle other errors
             setError("An error occurred during login");
@@ -218,32 +240,10 @@ const Navbar = () => {
           }
         }
         // };
-        const handleForgotPassword = async () => {
-          try {
-            const response = await axios.post("http://localhost:7000/v1/customers/forget-password", {
-              email: formData.email,
-              password: formData.password,
-            });
-            console.log(response.formData.message);
-            toast.success(response.formData.message);
-          } catch (error) {
-            console.error("Forgot Password failed:", error);
-            if (error.response && error.response.formData && error.response.formData.error) {
-              toast.error(error.response.formData.error);
-            } else {
-              toast.error("An error occurred while processing your request");
-            }
-          }
-        };
-
-        // response = await axios.post(
-        //   "http://localhost:7000/v1/customers/login",
-        //   formData
-        // );
+        
       } else {
         // Register
         try {
-          // Send a POST request to the server with the form data
           const response = await axios.post(
             "http://localhost:7000/v1/customers",
             formData
@@ -254,7 +254,6 @@ const Navbar = () => {
             "Check your Email to activate your account."
           );
           toast.success("Check your Email to activate your account.");
-          // navigate('/login');
           setMessage();
         } catch (error) {
           if (error.response && error.response.status === 400) {
@@ -275,7 +274,7 @@ const Navbar = () => {
         //   formData
         // );
       }
-      console.log("Authentication successful", response.data);
+      // console.log("Authentication successful", response.data);
     } catch (error) {
       console.error("Authentication failed", error);
     } finally {
@@ -324,7 +323,7 @@ const Navbar = () => {
             <li className={`navItem ${activeItem === "Home" ? "active" : ""}`}>
               <NavLink
                 exact
-                to="/"
+                to="/Home"
                 activeClassName
                 className="active-link"
                 onClick={() => activeItemClick("Home")}
@@ -466,7 +465,7 @@ const Navbar = () => {
                   <Link 
                     to="#"
                     className="forgot-password"
-                    onClick={handleSubmit.handleForgotPassword}
+                    onClick={handleForgotPassword}
                   >
                     Forgot Password
                   </Link>
@@ -482,7 +481,6 @@ const Navbar = () => {
                   : "Already have an account? Login here."}
               </Typography>
               </div>
-              
             </Box>
           </Popover>
 
