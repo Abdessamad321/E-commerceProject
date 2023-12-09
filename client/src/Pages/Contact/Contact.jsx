@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import "./Contact.css"; // Import your CSS file
+import happy from "../../assets/happy.png";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -17,23 +18,26 @@ const Contact = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     try {
-      const response = await fetch('http://localhost:7000/v1/customers/contact/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-  
+      const response = await fetch(
+        "http://localhost:7000/v1/customers/contact/",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
+
       if (response.ok) {
-        console.log('Email sent successfully');
+        console.log("Email sent successfully");
       } else {
-        console.error('Failed to send email');
+        console.error("Failed to send email");
       }
     } catch (error) {
-      console.error('Error sending email:', error);
+      console.error("Error sending email:", error);
     } finally {
       setFormData({
         name: "",
@@ -42,7 +46,7 @@ const Contact = () => {
       });
     }
   };
-  
+
   return (
     <div className="contactpage">
       <div className="pic">
@@ -50,10 +54,16 @@ const Contact = () => {
         <p>
           Our team of friendly experts is ready to assist you with anything you
           need. Whether it's about products, orders, or if you simply want to
-          chat about your favorite items – we're here for you! <br /> 
-          Feel free to drop us a message using the form below. Your feedback is invaluable to us.
-          We look forward to connecting with you! Happy shopping! 
+          chat about your favorite items – we're here for you!
+        {/* </p>
+        <p> */}
+        <br />
+          Feel free to drop us a message using the form below. Your feedback is
+          invaluable to us. We look forward to connecting with you!
         </p>
+          <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+            Happy shopping! <img style={{ width: "24px" }} src={happy} alt="" />
+          </div>
         {/* <img src="src/assets/sergey.jpg" alt="" /> */}
       </div>
       <div className="contact-form">

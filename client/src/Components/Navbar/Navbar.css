@@ -25,7 +25,7 @@ body {
   z-index: 9999;
   transition: background-color 0.3s ease;
 }
-.navbar.scrolled {
+.navbaaar.scrolled {
   backdrop-filter: blur(10px);
   /* background-color: #590404c5; */
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.7);
@@ -141,7 +141,8 @@ color: #000;
   font-size: 17px;
 }
 .search-input::placeholder{
-  /* font-weight: 200 ; */
+  font-size: 16px;
+  font-weight: 100 ;
   color: #ffffff;
 }
 .title img {

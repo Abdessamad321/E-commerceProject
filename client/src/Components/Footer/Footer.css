@@ -84,7 +84,7 @@ body {
 } */
 
 .footer-distributed {
-  margin-top: 8em;
+  /* margin-top: 5em; */
   background: #590404;
   box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.12);
   box-sizing: border-box;
@@ -171,7 +171,7 @@ body {
 .footer-distributed .footer-center p span {
   display: block;
   font-weight: normal;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 2;
 }
 
@@ -221,7 +221,11 @@ body {
   color: white;
 }
 .soial-icons{
+  cursor: pointer;
 	margin-right: 5px;
+}
+.soial-icons:hover{
+  font-size: 50px;
 }
 
 

@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { Link, useNavigate } from "react-router-dom";
@@ -17,10 +18,6 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-
-import axios from "axios";
-import Login from "../../Components/Logincontext/Login";
-import Register from "../../Components/Logincontext/Register";
 
 import {
   useAuth,
@@ -160,23 +157,21 @@ const Navbar = () => {
   const authCtx = useContext(AuthContext);
   const [message, setMessage] = useState("");
 
-  
   const handleForgotPassword = async () => {
     try {
       const response = await axios.post(
         "http://localhost:7000/v1/customers/password/reset",
         {
-        email: formData.email,
+          email: formData.email,
         }
       );
-      toast.success(response.data.message );
+      toast.success(response.data.message);
     } catch (error) {
       if (error.response.status === 404) {
-        toast.error('User not found');
-      }else{
-        toast.error('Forgot password failed');
+        toast.error("User not found");
+      } else {
+        toast.error("Forgot password failed");
       }
-      
     }
   };
 
@@ -217,7 +212,7 @@ const Navbar = () => {
             }
           );
           const { access_token, refresh_token } = response.data;
-          console.log(response.data)
+          console.log(response.data);
           authCtx.login(access_token, refresh_token);
           const decoded = decodeJwt(access_token);
           const userId = decoded.userId;
@@ -240,7 +235,6 @@ const Navbar = () => {
           }
         }
         // };
-        
       } else {
         // Register
         try {
@@ -458,11 +452,17 @@ const Navbar = () => {
                 </Button>
               </form>
               <ToastContainer />
-              <div 
-                style={{ cursor: "pointer", marginTop: "1rem", display: "flex",alignItems:"center" ,justifyContent: "space-between"}}
+              <div
+                style={{
+                  cursor: "pointer",
+                  marginTop: "1rem",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
               >
-              {isLogin ? (
-                  <Link 
+                {isLogin ? (
+                  <Link
                     to="#"
                     className="forgot-password"
                     onClick={handleForgotPassword}
@@ -470,16 +470,11 @@ const Navbar = () => {
                     Forgot Password
                   </Link>
                 ) : null}
-              <Typography
-                variant="body2"
-                onClick={toggleForm}
-              >
-                
-                {isLogin
-                  ? 
-                    "Don't have an account? Register here."
-                  : "Already have an account? Login here."}
-              </Typography>
+                <Typography variant="body2" onClick={toggleForm}>
+                  {isLogin
+                    ? "Don't have an account? Register here."
+                    : "Already have an account? Login here."}
+                </Typography>
               </div>
             </Box>
           </Popover>
@@ -532,20 +527,33 @@ const Navbar = () => {
                     display="flex"
                     justifyContent="space-between"
                     alignItems="center"
+                    // border="solid"
+                    gap="20px"
                     mb={1}
                   >
-                    <img
-                      style={{ width: "30%", height: "30%" }}
-                      src={item.product_image}
-                      alt="Product"
-                    />
-                    <Typography>{item.product_name}</Typography>
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "10px",
+                        // border: "solid",
+                      }}
+                    >
+                      <img
+                        style={{ width: "3em", height: "3em" }}
+                        src={item.product_image}
+                        alt="Product"
+                      />
+                      {/* <div className="d" style={{border:"solid"}}> */}
+
+                      <Typography>{item.product_name}</Typography>
+                    </div>
                     <div
                       style={{
                         display: "flex",
                         flexDirection: "column",
                         alignItems: "flex-end",
-                        gap: "5px",
+                        // border: "solid",
                       }}
                     >
                       {/* a verifirr onClick={() => removeFromCart handleDelete(product._id)} */}
@@ -556,6 +564,8 @@ const Navbar = () => {
                       </div>
                       <Typography>${item.price}</Typography>
                     </div>
+
+                    {/* </div> */}
                   </Box>
                 ))
               )}

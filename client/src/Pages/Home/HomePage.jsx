@@ -149,25 +149,20 @@ const HomePage = () => {
       </div>
       <div className="cart-text">
         <span className="prdctname">{item.product_name}</span>
-        <p className="ellipsis">{item.short_description}</p>
-        <p className="price">
-          <>$</>
-          {item.price}
-        </p>
-      </div>
-      <div className="cardprdct">
-
-        <div className="addbutton">
+        <p className="desc_ellipsis">{item.short_description}</p>
+        <div className="price">
+          <div className="realprice">${item.price}</div>
+       <div className="addbutton">
           <Button
             style={{
-              position: "absolute",
-              bottom: 0,
-              right: 0,
+              // position: "absolute",
+              // bottom: 0,
+              // right: 0,
               borderRadius: 8,
-              border: "none",
               outline: 0,
-              padding: 9,
-              margin: 10,
+              padding: 5,
+              // margin: 10,
+              // border: 'solid',
               backgroundColor: "#590404",
               color: "#fff",
               textAlign: "center",
@@ -177,11 +172,17 @@ const HomePage = () => {
             onClick={() => addToCart(item)}
           >
             <AddShoppingCartRoundedIcon />
-            Add To Cart
+            {/* Add To Cart */}
           </Button>
+        </div> 
         </div>
       </div>
+      {/* <div className="cardprdct"> */}
+
+          
+        
     </div>
+    // </div>
   ));
 
   const Reviews = (props) => {
@@ -192,6 +193,7 @@ const HomePage = () => {
           <span
             key={i}
             className={i <= props.stars ? "star-filled" : "star-empty"}
+            style={{ padding: 0, fontSize: "1.4rem" }}
           >
             ★
           </span>
@@ -528,7 +530,7 @@ const HomePage = () => {
               icon={faQuoteLeft}
               style={{ color: "#ffffff", fontSize: "4rem" }}
             />
-            <span>What our customers say</span>
+            <span>What Our Customers Say</span>
           </div>
           <div className="outsidebutton">
             <button onClick={handlePrevious}>
@@ -651,7 +653,6 @@ const HomePage = () => {
                 Your loyalty is rewarded with special pricing. Dive into a world
                 of savings on every order.
               </span>
-              
             </div>
           </div>
         </div>

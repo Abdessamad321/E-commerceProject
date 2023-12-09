@@ -10,7 +10,6 @@ import TwitterIcon from "@mui/icons-material/Twitter";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import TelegramIcon from "@mui/icons-material/Telegram";
 
-
 // import HomePage from "../../Pages/Home/HomePage";
 // // import About from "../../Pages/About/About";
 // import Contact from "../../Pages/Contact/Contact";
@@ -60,17 +59,16 @@ const Footer = () => {
       </div>
       <footer className="footer-distributed">
         <div className="footer-left">
-          <Link to='/'>
+          <Link to="/">
             <img src={image} alt="" />
           </Link>
 
           <p className="footer-links">
-            <Link to='/'>Home</Link>
-            <Link to='/'>Blog</Link>
-            <Link to='/'>Pricing</Link>
-            <Link to='/'>About</Link> 
-            <Link to='/'>Faq</Link> 
-            <Link to='/Contact'>Contact</Link>
+            <Link to="/">Home</Link>
+            <Link to="/Shop">Shop</Link>
+            <Link to="/About">About</Link>
+            <Link to="/Terms">Terms</Link>
+            <Link to="/Contact">Contact</Link>
           </p>
 
           <p className="footer-company-name">Arkx © 2023</p>
@@ -86,13 +84,21 @@ const Footer = () => {
 
           <div>
             <CallIcon className="footer-icon" />
-            <p>+212.06.21.30.51.51</p>
+            <a
+              href="https://wa.me/212621305151"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <p>+212.06.21.30.51.51</p>
+            </a>
           </div>
 
           <div>
             <EmailIcon className="footer-icon" />
             <p>
-              <a href="mailto:support@company.com">oldygoldyhouse@gmail.com</a>
+              <a href="mailto:oldygoldyhouse@gmail.com">
+                oldygoldyhouse@gmail.com
+              </a>
             </p>
           </div>
         </div>

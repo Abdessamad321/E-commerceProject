@@ -7,7 +7,10 @@ import Shop from "./Pages/Shop/Shop.jsx";
 import Contact from "./Pages/Contact/Contact.jsx";
 import Favorites from "./Pages/Favorites/Favorites";
 import Payment from "./Pages/Payment/Payment.jsx";
+import About from "./Pages/About/About.jsx";
+import Terms from "./Pages/Terms/Terms.jsx";
 import PasswordReset from "./Pages/ResetPassword/ResetPassword.jsx"
+import Backtothetop from "./Components/backtothetop/backtothetop.jsx";
 import React, { useContext } from "react";
 import { AuthContext } from './Components/Logincontext/Logincontext.jsx';
 function App() {
@@ -22,6 +25,8 @@ function App() {
         <Route path="/Shop" element={<Shop />} />
         <Route path="/Contact" element={<Contact />} />
         <Route path="/Payment" element={<Payment />} />
+        <Route path="/About" element={<About />} />
+        <Route path="/Terms" element={<Terms />} />
         <Route path="/reset-password/:token" element={<PasswordReset />} />
         </>
     {!authCtx.token || authCtx.refToken ? (
@@ -37,6 +42,7 @@ function App() {
         )}
 
       </Routes>
+      <Backtothetop/>
       <Footer />
     </BrowserRouter>
   );
