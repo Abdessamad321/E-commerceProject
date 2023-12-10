@@ -1,0 +1,76 @@
+.checkout-page{
+    padding: 8em 40px;
+    width: 100%;
+     font-family: "Poppins", serif;
+     display: flex;
+  justify-content: space-between;
+}
+
+.desc-product{
+    width: 66%;
+}
+/* .checkou-products-list{
+    text-decoration: none;
+    list-style: none;
+    background-color: white;
+} */
+
+
+h1 {
+    color: #590404;
+  }
+  
+  h2 {
+    color: #590404;
+  }
+  
+  .checkout-products-list {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #ccc;
+    background-color: white;
+    border-radius: 16px;
+    padding: 10px ;
+    margin-bottom: 10px;
+  }
+  
+  .product-image {
+    width: 100px;
+    height: 100px;
+    margin-right: 20px;
+  }
+  
+  .product-details {
+    flex-grow: 1;
+  }
+  
+  .product-price {
+    font-weight: bold;
+    color: #590404;
+  }
+
+
+  .checkout-summary {
+    width: 30%; /* Adjust the width as needed */
+    position: fixed;
+    top: 0px; /* Adjust the top position as needed */
+    right: 20px; /* Adjust the right position as needed */
+    background-color: white;
+    border-radius: 16px;
+    margin: 8em 40px 0 0 ;
+    padding: 10px;
+  }
+  
+  .summary-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  
+  .total {
+    font-weight: bold;
+  }
+  
+  .payment-method {
+    margin-top: 20px;
+  }

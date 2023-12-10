@@ -2,21 +2,13 @@ import React, { useState, useEffect, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuoteLeft } from "@fortawesome/free-solid-svg-icons";
 import "./HomePage.css";
-
+import Navbar from "../../Components/Navbar/Navbar";
 
 import testslide from "../../assets/testslide.png";
-// import clocks from "../../assets/clocks.png";
-// import video from "../../assets/testti.mp4";
-// import video from "../../assets/testti.mp4";
-// import video from "../../assets/testti.mp4";
-// import video from "../../assets/testti.mp4";
-// import video from "../../assets/testti.mp4";
 
 
 
 
-// import video from "../../assets/testti.mp4";
-// import reviews  from './reviews'
 import Button from "@mui/material/Button";
 import Carouselprdct from "react-multi-carousel";
 import Carouselreviews from "react-multi-carousel";
@@ -26,8 +18,6 @@ import FavoriteBorderRoundedIcon from "@mui/icons-material/FavoriteBorderRounded
 import "react-multi-carousel/lib/styles.css";
 import { productData } from "./data";
 import { reviewsData } from "./data";
-// import antique from "../../assets/middle.jpg";
-// import decoration from "../../assets/second.jpeg";
 import firstcategorie from "../../assets/artisanat.jpg";
 import secondcategorie from "../../assets/b.jpg";
 import tirthcategorie from "../../assets/img.jpg";
@@ -35,7 +25,6 @@ import fourthcategorie from "../../assets/decoration.jpeg";
 import image from "../../assets/desinfinal.png";
 
 import { useCart } from "../../Components/cart/cartcontext";
-// import { useLike } from "../../Components/like/likecontext";
 
 import Card from "../../Components/Card/Card";
 import Carousel from "../../Components/Card/Carousel";
@@ -76,9 +65,9 @@ const products = [
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vel od",
   },
 ];
-
 const HomePage = () => {
   const { dispatch: cartDispatch } = useCart();
+
   // const { dispatch: likeDispatch } = useLike();
   const [currentIndex, setCurrentIndex] = useState(0);
   const carouselRef = useRef(null);
@@ -87,19 +76,10 @@ const HomePage = () => {
     cartDispatch({ type: "ADD_TO_CART", payload: product });
   };
 
-  // const addtofavorite = (product) => {
-  //   likeDispatch({ type: "ADD_TO_LIKES", payload: product });
-
-  // //   if (!likedItems.includes(product)) {
-
-  // //     setLikedProducts([...likedItems, product]);
-  // //   }
-  // };
+ 
 
   const [favorites, setFavorites] = useState(() => {
-    // const jsonValue = localStorage.getItem('favorites');
-    // if (jsonValue !== null) return JSON.parse(jsonValue);
-    // console.log(bitch);
+
     return [];
   });
 
@@ -136,47 +116,6 @@ const HomePage = () => {
   ];
 
   //Productsss Carousellllllllllllllllllll******************/
-
-  // const Product = (props) => {
-  //   return (
-  //     <div className="card">
-  //       {/* onClick={() => addtofavorite(product)}  */}
-  //       <div className="likes-icon" onClick={() => handleFavorite(product)}>
-  //         <FavoriteBorderRoundedIcon />
-  //       </div>
-  //       <img className="product--image" src={props.url} alt="product image" />
-  //       <div className="cart-text">
-  //         <span>{props.name}</span>
-  //         <p>{props.description}</p>
-  //         <p className="price">{props.price}</p>
-  //       </div>
-  //       {/* onClick={() => send(product)} */}
-  //       <div className="addbutton">
-  //         <Button
-  //           style={{
-  //             position: "absolute",
-  //             bottom: 0,
-  //             right: 0,
-  //             borderRadius: 8,
-  //             border: "none",
-  //             outline: 0,
-  //             padding: 5,
-  //             margin: 10,
-  //             backgroundColor: "#590404",
-  //             color: "#fff",
-  //             textAlign: "center",
-  //             cursor: "pointer",
-  //             fontSize: 14,
-  //           }}
-  //           // style={{ backgroundColor: "#590404", position:"absolute", color: "#fff" }}
-  //           onClick={() => addToCart(product)}
-  //         >
-  //           Add To Cart
-  //         </Button>
-  //       </div>
-  //     </div>
-  //   );
-  // };
 
   const product = productData.map((item) => (
     <div className="card" key={item.id}>
@@ -298,6 +237,7 @@ const HomePage = () => {
   const handlePrevious = () => {
     carouselRef.current.previous();
   };
+  
 
   return (
     <div>
@@ -334,10 +274,7 @@ const HomePage = () => {
             </div>
           </div>
           <div className="home-two">
-            {/* <video autoPlay loop muted playsInline preload="auto">
-          <source src={video} type="video/mp4" />
-          Your browser does not support the video tag.
-        </video> */}
+            
             <img className="background" src={image} alt="" />
             <img className="testslide" src={testslide} alt="" />
             <img className="magana" src={clocks} alt="" />
@@ -493,58 +430,6 @@ const HomePage = () => {
         </div>
       </div>
 
-      {/* <div>
-        <ul class="ch-grid">
-          <li>
-            <div class="ch-item ch-img-1">
-              <div class="ch-info-wrap">
-                <div class="ch-info">
-                  <div class="ch-info-front ch-img-1"></div>
-                  <div class="ch-info-back">
-                    <h3>taxi</h3>
-                    <p>
-                      by Ana Villa-Zamora{" "}
-                      <a href="http://drbl.in/ewng">View on Dribbble</a>
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </li>
-          <li>
-            <div class="ch-item ch-img-2">
-              <div class="ch-info-wrap">
-                <div class="ch-info">
-                  <div class="ch-info-front ch-img-2"></div>
-                  <div class="ch-info-back">
-                    <h3>Stay Foxy</h3>
-                    <p>
-                      by Arnel Baluyot{" "}
-                      <a href="http://drbl.in/eQDg">View on Dribbble</a>
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </li>
-          <li>
-            <div class="ch-item ch-img-3">
-              <div class="ch-info-wrap">
-                <div class="ch-info">
-                  <div class="ch-info-front ch-img-3"></div>
-                  <div class="ch-info-back">
-                    <h3>Klava Jinx</h3>
-                    <p>
-                      by Jamal Charanek{" "}
-                      <a href="http://drbl.in/ejLW">View on Dribbble</a>
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </li>
-        </ul>
-      </div> */}
 
       {/* Our Best Product *****************************/}
 
@@ -602,78 +487,6 @@ const HomePage = () => {
       </div>
 
       {/* TTTTTTTTESSSTTTTTTTTTT ****************************************************/}
-
-      {/* <>
-        <div className="shop">
-          <div className="item">
-            {products.map((product) => (
-              <div className="card" key={product.id}>
-                <img src={product.image} alt={product.name} />
-                <div className="card-body">
-                  <h3>{product.name}</h3>
-                  <p>{product.description}</p>
-                  <p>{product.price}</p>
-                  <div className="buttons">
-                    <button onClick={() => handleCart(product)}>
-                      Add to cart
-                    </button>
-                    <button onClick={() => handleFavorite(product)}>
-                      Mark as favorite
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </> */}
-
-      {/* A VERIFIERR *****************************************************/}
-
-      {/* <div className="shipping">
-            <div>
-              <div className="imagecard">
-              <img src={ancien} alt="" />
-            </div>
-              <h2>24/7 Days</h2>
-              <span>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam
-                quas eum{" "}
-              </span>
-            </div>
-            <div>
-              <div className="imagecard">
-              <img src={ancien} alt="" />
-            </div>
-              <h2>24/7 Days</h2>
-              <span>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam
-                quas eum{" "}
-              </span>
-            </div>
-            <div>
-              <div className="imagecard">
-              <img src={ancien} alt="" />
-            </div>
-              <h2>24/7 Days</h2>
-              <span>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam
-                quas eum{" "}
-              </span>
-            </div>
-            <div>
-              <div className="imagecard">
-              <img src={ancien} alt="" />
-            </div>
-              <h2>24/7 Days</h2>
-              <span>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam
-                quas eum{" "}
-              </span>
-            </div>
-          </div> */}
-
-      {/* Reviews *********************************************/}
 
       <div className="reviewsection">
         <div className="title-reviews">
@@ -753,9 +566,7 @@ const HomePage = () => {
         </div>
         <div className="lastsection">
           <div className="infos-item">
-            {/* <div className="imagecard">
-            //   <img src={ancien} alt="" /> */}
-            {/* // </div> */}
+            
             <div className="the-img">{/* <img src={ancien} alt="" /> */}</div>
             <div className="cardfontc">
               <div className="servicesicons">
@@ -767,9 +578,7 @@ const HomePage = () => {
             </div>
           </div>
           <div className="infos-item">
-            {/* <div className="imagecard">
-            //   <img src={ancien} alt="" /> */}
-            {/* // </div> */}
+
             <div className="the-img">{/* <img src={ancien} alt="" /> */}</div>
             <div className="cardfontc">
               <div className="servicesicons">
@@ -780,9 +589,6 @@ const HomePage = () => {
             </div>
           </div>
           <div className="infos-item">
-            {/* <div className="imagecard">
-            //   <img src={ancien} alt="" /> */}
-            {/* // </div> */}
             <div className="the-img">{/* <img src={ancien} alt="" /> */}</div>
             <div className="cardfontc">
               <div className="servicesicons">
@@ -815,19 +621,3 @@ const HomePage = () => {
 
 export default HomePage;
 
-{
-  /* <div className="section-video">
-        <video autoPlay loop muted playsInline preload="auto">
-          <source src={firstsection[0].video} type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-        <div className="contentb">
-          <div className="title">
-            <h3>{firstsection[0].title}</h3>
-          </div>
-          <div className="description">
-            <p>{firstsection[0].content}</p>
-          </div>
-        </div>
-      </div> */
-}

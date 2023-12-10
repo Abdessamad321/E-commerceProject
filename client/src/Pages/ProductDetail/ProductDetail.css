@@ -1,0 +1,67 @@
+.card-details{
+    padding: 8em 40px;
+  width: 100%;
+   font-family: "Poppins", serif;
+}
+.shoppingcard{
+    display: flex;
+    background: #fff;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+.cardbtn{
+    background: #fff;
+    padding: 10px 0;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+.cardbtn button{
+    padding: 10px 15px;
+    margin-left: 10px;
+    background: #590404;
+    border-radius: 8px;
+    color: #fff;
+}
+.shoppingcard-details{
+    padding-left: 10px;
+    width: 100%;
+}
+
+.nameSku{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding-bottom: 2rem;
+}
+
+.payment{
+    /* display: flex;
+    align-items: center; */
+    padding-bottom: 2rem;
+    /* justify-content: space-between; */
+}
+.cardFooter{
+    display: flex;
+    justify-content: space-between
+}
+.button1{
+    padding: 10px 2rem;
+    width: 85%;
+    background: #590404;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+.button2{
+    width: 10%;
+    background: #f9e9c8;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+

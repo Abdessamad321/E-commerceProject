@@ -6,6 +6,8 @@ import HomePage from "./Pages/Home/HomePage.jsx";
 import Shop from "./Pages/Shop/Shop.jsx";
 import Contact from "./Pages/Contact/Contact.jsx";
 import Favorites from "./Pages/Favorites/Favorites";
+import ProductDetail from './Pages/ProductDetail/ProductDetail.jsx'
+import Checkout from './Pages/CheckOut/CheckOut.jsx'
 
 function App() {
   return (
@@ -16,6 +18,8 @@ function App() {
         <Route path="/Shop" element={<Shop />} />
         <Route path="/Contact" element={<Contact />} />
         <Route path="/Favorites" element={<Favorites />} />
+        <Route path="/product/:productId" element={<ProductDetail/>} />
+        <Route path="/checkout" element={<Checkout/>} />
       </Routes>
       <Footer />
     </BrowserRouter>
