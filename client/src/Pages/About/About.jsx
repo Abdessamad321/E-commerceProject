@@ -3,10 +3,10 @@ import './About.css'
 export default function About() {
   return (
     <div className="about-us-container">
-      <h1>Welcome to OldyGoldyHouse</h1>
-      <p>Where Vintage Meets Value!</p>
+      <span>Welcome to OldyGoldyHouse</span>
+      <i>Where Vintage Meets Value</i>
 
-      <div className="about-us-content">
+      <div className="about-us-content center-justify">
         <p>
           Immerse yourself in the timeless allure of OldyGoldyHouse, where we celebrate the elegance of the VintageEra.
           As fervent enthusiasts of bygone epochs, we've cultivated a sanctuary for vintage lovers and aficionados of antique treasures.

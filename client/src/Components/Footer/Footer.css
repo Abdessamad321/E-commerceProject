@@ -220,16 +220,16 @@ body {
   margin-top: 25px;
   color: white;
 }
-.soial-icons{
+.social-icons{
   cursor: pointer;
 	margin-right: 5px;
+  transition: transform 0.3s ease-in-out;
 }
-.soial-icons:hover{
-  font-size: 50px;
+.social-icons:hover{
+  /* font-size: 60px; */
+  transform: scale(1.2);
 }
 
-
-/* If you don't want the footer to be responsive, remove these media queries */
 
 @media (max-width: 880px) {
   .footer-distributed {

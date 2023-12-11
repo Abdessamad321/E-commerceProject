@@ -19,7 +19,7 @@ router.put("/customers/:id", customerRoute.updateCustomer);
 
 router.delete("/customers/delete", customerRoute.deleteCustomer);
 
-router.patch("/customers/profile/update", customerRoute.updateIdCustomer);
+router.patch("/customers/update/:id", customerRoute.updateIdCustomer);
 
 router.get("/allcustomers/all", customerRoute.allCustomer);
 

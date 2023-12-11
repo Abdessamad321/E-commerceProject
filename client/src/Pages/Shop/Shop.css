@@ -1,3 +1,179 @@
-/* body {
-    background-color: #590404;
-  } */
+.shopy{
+  margin: 8em 0px;
+}
+.mt-4{
+  display: flex;
+  width: 100%;
+   font-family: "Poppins", serif;
+   gap: .8rem;
+}
+.ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  padding:  10px 0px 5px 0px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+input[type='range'] {
+  overflow: hidden;
+  border-radius: 16px;
+  -webkit-appearance: none;
+  background-color: #590404;
+  accent-color:#f9e9c8;
+  height: 5px;
+  cursor: pointer;
+}
+
+.selects{
+  cursor: pointer;
+}
+.selects > option{
+  cursor: pointer;
+  background-color: #f9e9c8;
+}
+.selects option:checked {
+  background: #590404 ;
+  color: #fff;
+}
+/* .heart {
+  background: red;
+  color: red; /* Add your styles to turn the heart red when liked */
+
+
+
+.filter-sidebar {
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  width: 20%;
+}
+
+.product-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .8em;
+  justify-content: flex-start;
+  width: 100%;
+  max-height: 715px;
+  overflow-y: auto;
+}
+
+.product-list::-webkit-scrollbar {
+  width: 5px; 
+}
+
+.product-list::-webkit-scrollbar-thumb {
+  background-color: #590404; /* Color of the scrollbar thumb */
+  border-radius: 8px; /* Border radius of the thumb */
+}
+
+.product-list::-webkit-scrollbar-track {
+  background-color: #f8f9fa; 
+}
+.tittle{
+  background: #590404;
+    color: white;
+    padding: 10px;
+    border-radius: 16px;
+}
+.card {
+  display: flex;
+  cursor: pointer;
+  flex-direction: column;
+  position: relative;
+  gap: 5px;
+  border-radius: 16px;
+  /* border: solid; */
+  /* width: 100%; */
+  background-color: white;
+  /* box-shadow: 0 6px 8px rgba(0, 0, 0, 0.5); */
+  max-width: 250px;
+  min-width: 250px;
+  height: 350px;
+  padding: 0;
+  margin: 0;
+  font-family: arial;
+  /* text-align: center; */
+  /* box-shadow: 0 0 8px rgb(0, 0, 0); */
+}
+
+.likes-icon {
+  display: flex;
+  position: absolute;
+  color: #590404;
+  margin: 10px;
+  padding: 5px;
+  /* height: 10px; */
+  right: 0;
+  /* border: solid; */
+  background-color: #f9e9c8;
+  border-radius: 100px;
+}
+.likes-icon:hover {
+  fill: black;
+}
+.imageprdcts{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.product--image {
+  width: 100%;
+  height: 10em;
+  object-fit: contain;
+  border-radius: 16px 16px 0px 0px;
+  transition: transform 0.7s ease;
+}
+.product--image:hover{
+  /* transform: scale(7); */
+  /* transform: scale(1.1) translate(0, -5%); */
+  object-fit:none;
+}
+.prdctname:first-letter {
+  text-transform: uppercase;
+}
+
+
+.cart-text {
+  /* text-align: center; */
+  margin: 5px 10px;
+  /* border: solid; */
+  /* background-color: #590404; */
+  padding-bottom: 5px;
+}
+
+/* a verifierr *************************/
+.cart-text .prdctname {
+  font-size: 24px;
+  font-weight: 500;
+  text-align: left;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  white-space: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0;
+  cursor: pointer;
+  /* text-transform: capitalize; */
+  /* text-rendering: optimizeLegibility; */
+}
+.cart-text p {
+  margin-bottom: 5px;
+  color: #212121;
+}
+.price {
+  align-self: flex-end;
+  /* margin-top: 5%; */
+  color: black;
+  /* font-size: 20px; */
+}
+
+.addbutton span {
+  width: 100%;
+  height: 100%;
+}

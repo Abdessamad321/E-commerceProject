@@ -12,6 +12,10 @@ import Terms from "./Pages/Terms/Terms.jsx";
 import PasswordReset from "./Pages/ResetPassword/ResetPassword.jsx"
 import Backtothetop from "./Components/backtothetop/backtothetop.jsx";
 import React, { useContext } from "react";
+import ProductDetail from './Pages/ProductDetail/ProductDetail.jsx'
+import Checkout from './Pages/checkout/Checkout.jsx'
+import Profil from "./Pages/Profile/profile.jsx";
+
 import { AuthContext } from './Components/Logincontext/Logincontext.jsx';
 function App() {
   const authCtx = useContext(AuthContext);
@@ -23,10 +27,13 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/Home" element={<HomePage />} />
         <Route path="/Shop" element={<Shop />} />
+        <Route path="/Profil" element={<Profil/>}/>
         <Route path="/Contact" element={<Contact />} />
         <Route path="/Payment" element={<Payment />} />
         <Route path="/About" element={<About />} />
         <Route path="/Terms" element={<Terms />} />
+        <Route path="/product/:productId" element={<ProductDetail/>} />
+        <Route path="/checkout" element={<Checkout/>} />
         <Route path="/reset-password/:token" element={<PasswordReset />} />
         </>
     {!authCtx.token || authCtx.refToken ? (

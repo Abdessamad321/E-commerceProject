@@ -17,6 +17,12 @@ import TelegramIcon from "@mui/icons-material/Telegram";
 // import FAQs from "../../Pages/FAQs/FAQs";
 
 const Footer = () => {
+  const handleMapClick = () => {
+    const coordinates = "33.571789, -7.647860";
+    const mapUrl = `https://www.google.com/maps/place/${coordinates}`;
+    window.open(mapUrl, "_blank");
+  };
+
   return (
     <div>
       <div>
@@ -78,7 +84,10 @@ const Footer = () => {
           <div>
             <LocationOnIcon className="footer-icon" />
             <p>
-              <span>Boulevard Ghandi, Rond Point Oulmes</span> Casablanca 20026
+              <span style={{ cursor: "pointer" }} onClick={handleMapClick}>
+                Boulevard Ghandi, Rond Point Oulmes
+              </span>{" "}
+              Casablanca 20026
             </p>
           </div>
 
@@ -111,19 +120,50 @@ const Footer = () => {
           </p>
 
           <div className="footer-icons">
-            <FacebookIcon
-              className="soial-icons"
-              style={{ fontSize: "40px" }}
-            />
-            <TwitterIcon className="soial-icons" style={{ fontSize: "40px" }} />
-            <InstagramIcon
-              className="soial-icons"
-              style={{ fontSize: "40px" }}
-            />
-            <TelegramIcon
-              className="soial-icons"
-              style={{ fontSize: "40px" }}
-            />
+            <a
+              href="https://www.facebook.com/ARKxacademy/"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: "white" }}
+            >
+              <FacebookIcon
+                className="social-icons"
+                style={{ fontSize: "40px" }}
+              />
+            </a>
+            <a
+              href="https://twitter.com/your-twitter-account"
+              target="_blank"
+              style={{ color: "white" }}
+              rel="noopener noreferrer"
+            >
+              <TwitterIcon
+                className="social-icons"
+                style={{ fontSize: "40px" }}
+              />
+            </a>
+            <a
+              href="https://www.instagram.com/your-instagram-account"
+              target="_blank"
+              style={{ color: "white" }}
+              rel="noopener noreferrer"
+            >
+              <InstagramIcon
+                className="social-icons"
+                style={{ fontSize: "40px" }}
+              />
+            </a>
+            <a
+              href="https://t.me/your-telegram-channel"
+              target="_blank"
+              style={{ color: "white" }}
+              rel="noopener noreferrer"
+            >
+              <TelegramIcon
+                className="social-icons"
+                style={{ fontSize: "40px" }}
+              />
+            </a>
           </div>
         </div>
       </footer>

@@ -1,8 +1,8 @@
-import axios from "axios";
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { Link, useNavigate } from "react-router-dom";
 import RemoveCircleOutlineRoundedIcon from "@mui/icons-material/RemoveCircleOutlineRounded";
+import axios from "axios";
 import "./Navbar.css";
 import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
@@ -27,14 +27,22 @@ import {
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const Navbar = () => {
+const Navbar = ({ onSearchChange }) => {
+  const location = useLocation();
+  console.log(location.pathname);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [activeItem, setActivatedItem] = useState("Home");
-  const { cart } = useCart();
+  const [activeItem, setActivatedItem] = useState("");
+
+  const authCtx = useContext(AuthContext);
+
+  // const { cart } = useCart();
   // const { like } = useLike();
   // const [cartdeleted, setCart] = useState([]);
   const [checkout, setCheckout] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const { cart, dispatch } = useCart();
+  const navigate = useNavigate();
 
   // useEffect(() => {
   //   const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -89,6 +97,16 @@ const Navbar = () => {
     document.body.classList.remove("overflow-auto");
   };
 
+  const removeFromCart = (productId) => {
+    dispatch({ type: "REMOVE_FROM_CART", payload: productId });
+  };
+
+  const handleSearchChange = (e) => {
+    const newQuery = e.target.value;
+    setSearchQuery(newQuery);
+    onSearchChange(newQuery);
+  };
+
   useEffect(() => {
     const originalBodyPaddingRight = document.body.style.paddingRight;
 
@@ -105,6 +123,20 @@ const Navbar = () => {
 
   const open = Boolean(anchorEl);
   const Accountopen = Boolean(anchortwoEl);
+
+  // useEffect(() => {
+  //   const currentPage = location.pathname.split('/').pop();
+  //   console.log(currentPage);
+  //   setActivatedItem(currentPage || '/' );
+  // }, [location.pathname]);
+
+  useEffect(() => {
+    const currentPage =
+      location.pathname === "/" || location.pathname === "/Home"
+        ? "/"
+        : location.pathname.split("/").pop();
+    setActivatedItem(currentPage);
+  }, [location.pathname]);
 
   const activeItemClick = (item) => {
     setActivatedItem(item);
@@ -153,8 +185,6 @@ const Navbar = () => {
   };
 
   const [error, setError] = useState("");
-  const navigate = useNavigate();
-  const authCtx = useContext(AuthContext);
   const [message, setMessage] = useState("");
 
   const handleForgotPassword = async () => {
@@ -215,8 +245,10 @@ const Navbar = () => {
           console.log(response.data);
           authCtx.login(access_token, refresh_token);
           const decoded = decodeJwt(access_token);
-          const userId = decoded.userId;
-          localStorage.setItem("userId", userId);
+          console.log(decoded);
+          const customerid = decoded.customerid;
+          toast.success("Shop with confidence! Login successful.");
+          localStorage.setItem("customerId", customerid);
           navigate("/");
         } catch (error) {
           console.error("Login failed:", error);
@@ -310,11 +342,15 @@ const Navbar = () => {
             </div>
             {/* khassu link mazal */}
             <div className="logo">
-              <Link exact to="/Shop">
+              <Link exact to="/Home">
                 <img src={image} alt="" />
               </Link>
             </div>
-            <li className={`navItem ${activeItem === "Home" ? "active" : ""}`}>
+            <li
+              className={`navItem ${
+                activeItem === "Home" || activeItem === "/" ? "active" : ""
+              }`}
+            >
               <NavLink
                 exact
                 to="/Home"
@@ -345,12 +381,14 @@ const Navbar = () => {
                 Contact
               </NavLink>
             </li>
-            <li>
+            <li className="searchrespo">
               <div className="search-responsive">
                 <input
                   type="text"
-                  placeholder="Search something..."
+                  placeholder="Search"
                   className="search-responsive-input"
+                  value={searchQuery}
+                  onChange={handleSearchChange}
                 />
                 <SearchIcon className="search-responsive-icon" />
               </div>
@@ -360,14 +398,22 @@ const Navbar = () => {
       </div>
       <div className="navright">
         <div className="search">
-          <input className="search-input" type="text" placeholder="Search" />
+          <input
+            className="search-input"
+            value={searchQuery}
+            onChange={handleSearchChange}
+            type="text"
+            placeholder="Search"
+          />
           <SearchIcon className="search-icon" />
         </div>
         <div className="icons">
           <div className="shoppingcart" onClick={AccountPopoverOpen}>
-            {isLogin ? <AccountCircleOutlinedIcon /> : <AccountCircleIcon />}
-          </div>
-          <Popover
+            {/* {isLogin ? <AccountCircleOutlinedIcon /> : <AccountCircleIcon />} */}
+            {!authCtx.token || authCtx.refToken ? (
+              <>
+                <AccountCircleOutlinedIcon  />
+                <Popover
             open={Accountopen}
             anchorEl={anchortwoEl}
             onClose={AccountPopoverClose}
@@ -478,6 +524,17 @@ const Navbar = () => {
               </div>
             </Box>
           </Popover>
+              </>
+            ) : (
+              <>
+              <AccountCircleIcon  onClick={() => {
+                  navigate("/Profil");
+                }}/>
+
+              </>
+            )}
+          </div>
+          
 
           <div className="like">
             <div className="shoppingcart">
@@ -493,7 +550,6 @@ const Navbar = () => {
                 <FavoriteBorderRoundedIcon />
               </Link>
             </div>
-            {/* <div className="numbercart">{like.length}</div> */}
           </div>
 
           <div className="cart" onClick={handlePopoverOpen}>
@@ -544,7 +600,6 @@ const Navbar = () => {
                         src={item.product_image}
                         alt="Product"
                       />
-                      {/* <div className="d" style={{border:"solid"}}> */}
 
                       <Typography>{item.product_name}</Typography>
                     </div>
@@ -556,16 +611,13 @@ const Navbar = () => {
                         // border: "solid",
                       }}
                     >
-                      {/* a verifirr onClick={() => removeFromCart handleDelete(product._id)} */}
                       <div>
                         <RemoveCircleOutlineRoundedIcon
-                          onClick={handleDelete}
+                          onClick={() => removeFromCart(item._id)}
                         />
                       </div>
                       <Typography>${item.price}</Typography>
                     </div>
-
-                    {/* </div> */}
                   </Box>
                 ))
               )}
@@ -577,7 +629,10 @@ const Navbar = () => {
                   color: "#fff",
                 }}
                 fullWidth
-                onClick={handleCheckout}
+                onClick={() => {
+                  handlePopoverClose();
+                  navigate("/checkout");
+                }}
               >
                 <Link
                   style={{ textDecoration: "none", color: "white" }}

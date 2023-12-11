@@ -214,39 +214,36 @@ async function profileCustomer(req, res) {
   }
 }
 
+//=========================== updateeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
 async function updateIdCustomer(req, res) {
-  const token =
-    req.headers.authorization && req.headers.authorization.split(" ")[1];
+  const customerId =req.params.id;
+  const { old_password, new_password, first_name, last_name, email } = req.body;
 
-  const { first_name, last_name, email, password } = req.body;
-  console.log(token);
   try {
-    jwt.verify(token, secretKey, async (err, decoded) => {
-      if (err) {
-        return res.send("Invalid Token");
-      } else {
-        const customerId = decoded.customerid;
-        console.log(customerId);
+    const customer = await Customer.findById(customerId);
 
-        const customers = await Customer.findByIdAndUpdate(customerId, {
-          first_name,
-          last_name,
-          email,
-          password,
-        });
-        if (customers) {
-          customers.valid_account = true;
-          customers.active = true;
-          customers.save();
-          res.json(customers);
-          console.log(customers);
-        } else {
-          res.status(404).json({ error: "Customer not found" });
-        }
-      }
-    });
+    const isPasswordValid = await bcrypt.compare(old_password, customer.password);
+
+    if (!isPasswordValid) {
+      return res.status(401).json({ error: "Invalid old password" });
+    }
+
+    const hashedNewPassword = await bcrypt.hash(new_password, 10);
+
+    customer.first_name = first_name;
+    customer.last_name = last_name;
+    customer.email = email;
+    customer.password = hashedNewPassword;
+
+    await customer.save();
+
+    customer.valid_account = true;
+    customer.active = true;
+
+    res.json(customer);
+    console.log(customer);
   } catch (error) {
-    res.status(500).json({ error: error });
+    res.status(500).json({ error: error.message });
   }
 }
 

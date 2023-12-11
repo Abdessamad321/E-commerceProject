@@ -3,8 +3,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuoteLeft } from "@fortawesome/free-solid-svg-icons";
 import "./HomePage.css";
 import axios from "axios";
-
+import { Link, useNavigate } from "react-router-dom";
 import testslide from "../../assets/testslide.png";
+import FavoriteIcon from '@mui/icons-material/Favorite';
+
 
 // import video from "../../assets/testti.mp4";
 // import reviews  from './reviews'
@@ -31,7 +33,7 @@ import image from "../../assets/desinfinal.png";
 import { useCart } from "../../Components/cart/cartcontext";
 // import { useLike } from "../../Components/like/likecontext";
 
-import Card from "../../Components/Card/Card";
+import Card from "../../Components/Card/card/mycard";
 import Carousel from "../../Components/Card/Carousel";
 
 // Our collection slide********************************************
@@ -52,11 +54,12 @@ import MonetizationOnRoundedIcon from "@mui/icons-material/MonetizationOnRounded
 import DiscountRoundedIcon from "@mui/icons-material/DiscountRounded";
 
 const HomePage = () => {
-  const { dispatch: cartDispatch } = useCart();
+  // const { dispatch: cartDispatch } = useCart();
   const [currentIndex, setCurrentIndex] = useState(0);
+  const navigate = useNavigate();
+  const { cart,likedProducts, dispatch } = useCart();
   const carouselRef = useRef(null);
-  // const [likedProducts, setLikedProducts] = useState({});
-
+  const [likedProductIds, setLikedProductIds] = useState([]);
   const [productData, setProductData] = useState([]);
   let cards = [
     {
@@ -80,6 +83,7 @@ const HomePage = () => {
       content: <Card imagen={clocks} />,
     },
   ];
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -99,88 +103,120 @@ const HomePage = () => {
     fetchData();
   }, []);
 
+  // const addToCart = (product) => {
+  //   cartDispatch({ type: "ADD_TO_CART", payload: product });
+  // };
   const addToCart = (product) => {
-    cartDispatch({ type: "ADD_TO_CART", payload: product });
+    const isProductInCart = cart.some((cartProduct) => cartProduct._id === product._id);
+
+    if (!isProductInCart) {
+      dispatch({ type: "ADD_TO_CART", payload: product });
+    }
   };
-
   // FAVORITES///////////////////////////////////
-  const [favorites, setFavorites] = useState(() => {
-    const jsonValue = localStorage.getItem("favorites");
-    return jsonValue ? JSON.parse(jsonValue) : [];
-  });
+  // const [favorites, setFavorites] = useState(() => {
+  //   const jsonValue = localStorage.getItem("favorites");
+  //   return jsonValue ? JSON.parse(jsonValue) : [];
+  // });
 
-  const [likedProducts, setLikedProducts] = useState({});
+  // const [likedProductIds, setLikedProductIds] = useState([]);
 
   useEffect(() => {
-    localStorage.setItem("favorites", JSON.stringify(favorites));
-  }, [favorites, likedProducts]);
+    const likedIds = likedProducts.map(product => product._id);
+    setLikedProductIds(likedIds);
+  }, [likedProducts]);
 
-  const handleFavorite = (product) => {
-    const isProductInFavorites = favorites.some(
-      (favProduct) => favProduct._id === product._id
-    );
+  // const [likedProducts, setLikedProducts] = useState({});
 
-    if (!isProductInFavorites) {
-      setFavorites((prevFavorites) => [...prevFavorites, product]);
+  // useEffect(() => {
+  //   localStorage.setItem("favorites", JSON.stringify(favorites));
+  // }, [favorites, likedProducts]);
+
+
+  const handleFavorite = async (product) => {
+    const isLiked = likedProductIds.includes(product._id);
+    
+  
+    if (isLiked) {
+      dispatch({ type: 'REMOVE_FROM_LIKED_PRODUCTS', payload: product._id });
+      setLikedProductIds((prevIds) => prevIds.filter((id) => id !== product._id));
+    } else {
+      await dispatch({ type: 'ADD_TO_LIKED_PRODUCTS', payload: product });
+      setLikedProductIds((prevIds) => [...prevIds, product._id]);
     }
 
-    setLikedProducts((prevLikedProducts) => {
-      const updatedLikedProducts = { ...prevLikedProducts };
-      updatedLikedProducts[product._id] = !updatedLikedProducts[product._id];
-      return updatedLikedProducts;
-    });
   };
 
+  // const handleFavorite = (product) => {
+  //   const isProductInFavorites = favorites.some(
+  //     (favProduct) => favProduct._id === product._id
+  //   );
+
+  //   if (!isProductInFavorites) {
+  //     setFavorites((prevFavorites) => [...prevFavorites, product]);
+  //   }
+
+  //   setLikedProducts((prevLikedProducts) => {
+  //     const updatedLikedProducts = { ...prevLikedProducts };
+  //     updatedLikedProducts[product._id] = !updatedLikedProducts[product._id];
+  //     return updatedLikedProducts;
+  //   });
+  // };
+  
+  const navigateToProductDetail = (productId) => {
+  navigate(`/product/${productId}`);
+};
+
   const product = productData.map((item) => (
-    <div className="card" key={item.id}>
-      <div className="likes-icon" onClick={() => handleFavorite(item)}>
-        {likedProducts[item._id] ? (
+    <div className="cardd" key={item._id}>
+      {/* <div className="likes-iconn" onClick={() => handleFavorite(item)}>
+        {likedProducts(item._id) ? (
           <FavoriteRoundedIcon />
         ) : (
           <FavoriteBorderRoundedIcon />
         )}
-      </div>
-      <div className="imageprdcts">
+      </div> */}
+      <div className="likes-icon" onClick={() => handleFavorite(item)}>
+                  <FavoriteIcon style={{ fontSize: '1.7rem', color: likedProductIds.includes(item._id) ? 'red' : 'white' }} />
+                </div>
+      <div className="imageprdctss">
         <img
-          className="product--image"
+          className="product--imagee"
           src={item.product_image}
           alt="product image"
         />
       </div>
-      <div className="cart-text">
-        <span className="prdctname">{item.product_name}</span>
-        <p className="desc_ellipsis">{item.short_description}</p>
-        <div className="price">
-          <div className="realprice">${item.price}</div>
-       <div className="addbutton">
-          <Button
-            style={{
-              // position: "absolute",
-              // bottom: 0,
-              // right: 0,
-              borderRadius: 8,
-              outline: 0,
-              padding: 5,
-              // margin: 10,
-              // border: 'solid',
-              backgroundColor: "#590404",
-              color: "#fff",
-              textAlign: "center",
-              cursor: "pointer",
-              fontSize: 14,
-            }}
-            onClick={() => addToCart(item)}
-          >
-            <AddShoppingCartRoundedIcon />
-            {/* Add To Cart */}
-          </Button>
-        </div> 
+      <div className="cart-textt">
+        <span className="prdctnamee" onClick={() => navigateToProductDetail(item._id)} >{item.product_name}</span>
+        <p className="desc_ellipsis" onClick={() => navigateToProductDetail(item._id)}>{item.short_description}</p>
+        <div className="pricee">
+          <div className="realprice" onClick={() => navigateToProductDetail(item._id)}>${item.price}</div>
+          <div className="addbuttonn">
+            <Button
+              style={{
+                // position: "absolute",
+                // bottom: 0,
+                // right: 0,
+                borderRadius: 8,
+                outline: 0,
+                padding: 5,
+                // margin: 10,
+                // border: 'solid',
+                backgroundColor: "#590404",
+                color: "#fff",
+                textAlign: "center",
+                cursor: "pointer",
+                fontSize: 14,
+              }}
+              onClick={() => addToCart(item)}
+            >
+              <AddShoppingCartRoundedIcon />
+              {/* Add To Cart */}
+            </Button>
+          </div>
         </div>
       </div>
       {/* <div className="cardprdct"> */}
-
-          
-        
     </div>
     // </div>
   ));
@@ -237,7 +273,7 @@ const HomePage = () => {
       id: 1,
       title: "Collectibles & Artifacts",
       description:
-        "Discover artifacts and collectibles that tell captivating stories.",
+        "Discover collectibles, artifacts & more with captivating stories.",
       imageUrl: secondcategorie,
     },
     {
@@ -290,19 +326,23 @@ const HomePage = () => {
                 </p>
               </div>
               <div className="discoverbutton">
-                <Button
-                  style={{
-                    padding: "px",
-                    borderRadius: "12px",
-                    marginTop: "10px",
-                    backgroundColor: "#f9e9c8",
-                    fontFamily: "Poppins, sans-serif",
-                    fontSize: "14px",
-                    color: "#590404",
-                  }}
-                >
-                  Discover Now
-                </Button>
+                <Link to="/Shop">
+                  {" "}
+                  <Button
+                    style={{
+                      padding: "px",
+                      borderRadius: "12px",
+                      marginTop: "10px",
+                      backgroundColor: "#f9e9c8",
+                      fontFamily: "Poppins, sans-serif",
+                      fontSize: "14px",
+                      color: "#590404",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Discover Now
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>
@@ -526,10 +566,14 @@ const HomePage = () => {
       <div className="reviewsection">
         <div className="title-reviews">
           <div className="secondtitle">
-            <FontAwesomeIcon
-              icon={faQuoteLeft}
-              style={{ color: "#ffffff", fontSize: "4rem" }}
-            />
+            <div >
+              <FontAwesomeIcon
+              className="iconfafa"
+                icon={faQuoteLeft}
+                style={{ color: "#ffffff", fontSize: "4em" }}
+              />
+            </div>
+
             <span>What Our Customers Say</span>
           </div>
           <div className="outsidebutton">
@@ -590,6 +634,14 @@ const HomePage = () => {
             {reviews}
           </Carouselreviews>
         </div>
+        <div className="outsidebutton2">
+            <button onClick={handlePrevious}>
+              <ArrowBackIosNewRoundedIcon />
+            </button>
+            <button onClick={handleNext}>
+              <ArrowForwardIosRoundedIcon />
+            </button>
+          </div>
       </div>
 
       {/* About our store **********************************************/}
