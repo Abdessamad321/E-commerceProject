@@ -12,7 +12,7 @@ import "./Shop.css";
 import FavoriteBorderRoundedIcon from "@mui/icons-material/FavoriteBorderRounded";
 import FavoriteRoundedIcon from "@mui/icons-material/FavoriteRounded";
 
-const Shop = () => {
+const Shop = ({ searchQuery }) => {
   const [products, setProducts] = useState([]);
   const [sortBy, setSortBy] = useState("default");
   const [conditionFilter, setConditionFilter] = useState("all");
@@ -25,7 +25,7 @@ const Shop = () => {
   const [likedProductIds, setLikedProductIds] = useState([]);
   const [visibleProducts, setVisibleProducts] = useState(8);
   const [currentCategory, setCurrentCategory] = useState("all");
-  const [searchQuery, setSearchQuery] = useState("");
+  // const [searchQuery, setSearchQuery] = useState("");
   const [noResults, setNoResults] = useState(false);
 
   useEffect(() => {
@@ -120,9 +120,9 @@ const Shop = () => {
     setVisibleProducts(8);
   };
 
-  const handleSearchChange = async (query) => {
-    setSearchQuery(query);
-  };
+  // const handleSearchChange = async (query) => {
+  //   setSearchQuery(query);
+  // };
 
   const navigate = useNavigate();
 
@@ -133,7 +133,7 @@ const Shop = () => {
   return (
     <div className="shopy">
       <div className="mt-4">
-        <Navbar onSearchChange={handleSearchChange} />
+        {/* <Navbar onSearchChange={handleSearchChange} /> */}
         <div className="filter-sidebar">
           <label style={{ display: "grid" }}>
             <p

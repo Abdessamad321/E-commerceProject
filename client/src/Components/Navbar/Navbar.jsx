@@ -320,9 +320,8 @@ const Navbar = ({ onSearchChange }) => {
   };
 
   return (
+    <>
     <nav className={`navbaaar ${scrolled ? "scrolled" : ""}`}>
-          <ToastContainer />
-
       <div className="navleft">
         <div
           className={`burger-menu ${isMenuOpen ? "show" : ""}`}
@@ -525,15 +524,15 @@ const Navbar = ({ onSearchChange }) => {
                 </Typography>
               </div>
             </Box>
+            
           </Popover>
-
               </>
+              
             ) : (
               <>
               <AccountCircleIcon  onClick={() => {
                   navigate("/Profil");
                 }}/>
-
               </>
             )}
           </div>
@@ -648,7 +647,10 @@ const Navbar = ({ onSearchChange }) => {
           </Popover>
         </div>
       </div>
+    
     </nav>
+      <ToastContainer/>
+    </>
   );
 };
 

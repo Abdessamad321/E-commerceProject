@@ -11,7 +11,7 @@ import About from "./Pages/About/About.jsx";
 import Terms from "./Pages/Terms/Terms.jsx";
 import PasswordReset from "./Pages/ResetPassword/ResetPassword.jsx";
 import Backtothetop from "./Components/backtothetop/backtothetop.jsx";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import ProductDetail from "./Pages/ProductDetail/ProductDetail.jsx";
 import Checkout from "./Pages/checkout/Checkout.jsx";
 import Profil from "./Pages/Profile/profile.jsx";
@@ -20,14 +20,20 @@ import Profil from "./Pages/Profile/profile.jsx";
 import { AuthContext } from "./Components/Logincontext/Logincontext.jsx";
 function App() {
   const authCtx = useContext(AuthContext);
+
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleSearchChange = (query) => {
+    setSearchQuery(query);
+  };
   return (
     <BrowserRouter>
-      <Navbar />
+      <Navbar onSearchChange={handleSearchChange} />
       <Routes>
         <>
           <Route path="/" element={<HomePage />} />
           <Route path="/Home" element={<HomePage />} />
-          <Route path="/Shop" element={<Shop />} />
+          <Route path="/shop" element={<Shop searchQuery={searchQuery} />} />
           <Route path="/Contact" element={<Contact />} />
           <Route path="/Payment" element={<Payment />} />
           <Route path="/About" element={<About />} />
