@@ -15,7 +15,6 @@ router.get('/products/:id', productsController.getProductById)
 router.patch('/products/:id',upload.single('productImage'), productsController.updateProduct)
 
 router.delete('/products/:id', productsController.removeProduct)
-
 // router.get('/products/sorts', productsController.sortProducts)
 
 module.exports = router

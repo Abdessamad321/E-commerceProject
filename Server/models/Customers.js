@@ -6,6 +6,10 @@ const customerSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  customer_image:{
+    type: String,
+    default: null
+  },
   last_name: {
     type: String,
     required: true,

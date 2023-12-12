@@ -2,8 +2,9 @@ const express = require("express");
 const customerRoute = require("../../controllers/customerController");
 const router = express.Router();
 const AMauthorization = require('../../middlewares/AuthAM')
+const upload = require('../../middlewares/Cloudinary')
 
-router.post("/customers", customerRoute.createCustomer); 
+router.post("/customers",upload.single('customer_image'), customerRoute.createCustomer); 
 
 router.post("/customers/login", customerRoute.loginCustumer);
 
@@ -19,7 +20,7 @@ router.put('/customers/:id', customerRoute.updateCustomer);
 
 router.delete('/customers/delete', customerRoute.deleteCustomer);
 
-router.patch('/customers/profile/update', customerRoute.updateIdCustomer);
+router.patch('/customers/update/:id',upload.single('customer_image'), customerRoute.updateIdCustomer);
 
 router.get('/allcustomers/all', customerRoute.allCustomer);
 

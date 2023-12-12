@@ -292,6 +292,11 @@ const Navbar = ({ onSearchChange }) => {
               </Link>
             </div>
             {/* <div className="numbercart">{like.length}</div> */}
+            <div className="shoppingcart">
+              <Link to="/Profil">
+                <FavoriteBorderRoundedIcon />
+              </Link>
+            </div>
           </div>
 
           <div className="cart" onClick={handlePopoverOpen}>

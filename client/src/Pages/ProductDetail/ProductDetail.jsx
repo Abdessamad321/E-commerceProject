@@ -7,7 +7,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useCart } from '../../Components/cart/cartcontext';
 
 const ProductDetail = () => {
-{const { productId } = useParams();
+const { productId } = useParams();
 const navigate = useNavigate();
 const { likedProducts, dispatch } = useCart();
 
@@ -95,6 +95,6 @@ return (
     </div>
 </div>
 );}
-};
+
 
 export default ProductDetail;

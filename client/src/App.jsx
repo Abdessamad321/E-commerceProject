@@ -8,6 +8,7 @@ import Contact from "./Pages/Contact/Contact.jsx";
 import Favorites from "./Pages/Favorites/Favorites";
 import ProductDetail from './Pages/ProductDetail/ProductDetail.jsx'
 import Checkout from './Pages/CheckOut/CheckOut.jsx'
+import Profil from "./Pages/Profile/Profile.jsx";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/Favorites" element={<Favorites />} />
         <Route path="/product/:productId" element={<ProductDetail/>} />
         <Route path="/checkout" element={<Checkout/>} />
+        <Route path="/Profil" element={<Profil/>}/>
       </Routes>
       <Footer />
     </BrowserRouter>
