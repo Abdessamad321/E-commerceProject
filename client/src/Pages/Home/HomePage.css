@@ -686,7 +686,7 @@ body::-webkit-scrollbar-button {
   justify-content: space-around;
   padding: 0 30px;
   margin-bottom: 8em;
-  min-height: 20em;
+  /* min-height: 20em; */
   /* border: solid; */
 }
 
