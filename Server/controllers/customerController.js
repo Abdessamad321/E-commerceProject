@@ -10,11 +10,13 @@ const secretKey = process.env.TOKEN_KEY;
 const refreshKey = process.env.REFRESH_KEY;
 
 async function createCustomer(req, res) {
-  const { first_name, last_name, email, password } = req.body;
+  const { first_name, last_name,  email, password } = req.body;
   const firstName = xss(first_name);
   const lastName = xss(last_name);
   const realEmail = xss(email);
   const realPass = xss(password);
+  const customer_image = req.file ? req.file.path : null;
+  console.log(customer_image);
 
   const validationErrors = validationCustomer.validatecustomer(
     firstName,
@@ -46,6 +48,7 @@ async function createCustomer(req, res) {
                 .json({ err: "Email is already in use, try something else" });
             } else {
               const newCustomer = new Customer({
+                customer_image: customer_image,
                 first_name: firstName,
                 last_name: lastName,
                 email: realEmail,
@@ -139,7 +142,7 @@ async function validateCustomer(req, res) {
       if (customers._id) {
         customers.valid_account = true;
         customers.save();
-        res.redirect("http://localhost:5173/login");
+        res.redirect("http://localhost:5173/Home");
       }
     }
   } catch (error) {
@@ -216,20 +219,26 @@ async function profileCustomer(req, res) {
 
 //=========================== updateeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
 async function updateIdCustomer(req, res) {
-  const customerId =req.params.id;
+  const customerId = req.params.id;
   const { old_password, new_password, first_name, last_name, email } = req.body;
+   
+  const customer_image = req.file ? req.file.path : null;
+
 
   try {
     const customer = await Customer.findById(customerId);
 
-    const isPasswordValid = await bcrypt.compare(old_password, customer.password);
+    const isPasswordValid = await bcrypt.compare(
+      old_password,
+      customer.password
+    );
 
     if (!isPasswordValid) {
       return res.status(401).json({ error: "Invalid old password" });
     }
 
     const hashedNewPassword = await bcrypt.hash(new_password, 10);
-
+    customer.customer_image = customer_image;
     customer.first_name = first_name;
     customer.last_name = last_name;
     customer.email = email;
@@ -305,73 +314,74 @@ async function refreshTokens(req, res) {
   }
 }
 
-
-
-
 //reset passsssssssss================================
 
-async function resetRquist (req, res) {
+async function resetRquist(req, res) {
   const { email } = req.body;
   try {
-  const customers = await Customer.findOne({ email: email });
-  if (!customers) {
-      return res.status(404).json({ message: 'customer not found' });
-  }
-  const resetToken = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-  customers.resetToken = resetToken;
-  customers.resetTokenExpiration = Date.now() + 300000; 
-  await customers.save();
-  sendEmail.sendResetEmail(customers.email, resetToken);
-  return res.status(200).json({ message: 'Password reset email sent successfully' });
+    const customers = await Customer.findOne({ email: email });
+    if (!customers) {
+      return res.status(404).json({ message: "customer not found" });
+    }
+    const resetToken =
+      Math.random().toString(36).substring(2, 15) +
+      Math.random().toString(36).substring(2, 15);
+    customers.resetToken = resetToken;
+    customers.resetTokenExpiration = Date.now() + 300000;
+    await customers.save();
+    sendEmail.sendResetEmail(customers.email, resetToken);
+    return res
+      .status(200)
+      .json({ message: "Password reset email sent successfully" });
   } catch (error) {
-      console.error(error);
-      return res.status(500).json({ message: 'Internal server error' });
+    console.error(error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 }
 
 // Verify ttoken ================================
-async function verifyResetToken (req, res) {
+async function verifyResetToken(req, res) {
   const { token } = req.params;
   try {
-      const customers = await Customer.findOne({
-          resetToken: token,
-          resetTokenExpiration: { $gt: Date.now() },
-      });
-  if (!customers) {
-      return res.status(400).json({ message: 'Invalid or expired token' });
-  }
-  return res.status(200).json({ message: 'Token is valid' });
+    const customers = await Customer.findOne({
+      resetToken: token,
+      resetTokenExpiration: { $gt: Date.now() },
+    });
+    if (!customers) {
+      return res.status(400).json({ message: "Invalid or expired token" });
+    }
+    return res.status(200).json({ message: "Token is valid" });
   } catch (error) {
-      console.error(error);
-      return res.status(500).json({ message: 'Internal server error' });
+    console.error(error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 }
 
 // Set new Passssssssssssssssssssssss=========================
-async function setNewPass (req, res) {
+async function setNewPass(req, res) {
   const { token } = req.params;
   const { newPassword } = req.body;
 
   try {
-      const customers = await Customer.findOne({
+    const customers = await Customer.findOne({
       resetToken: token,
       resetTokenExpiration: { $gt: Date.now() },
-      });
-      if (!customers) {
-          return res.status(400).json({ message: 'Invalid or expired token' });
-      }
-      const hashedPass = await bcrypt.hash(newPassword, 10);
-      customers.password = hashedPass;
-      customers.resetToken = null;
-      customers.resetTokenExpiration = null;
-      await customers.save();
+    });
+    if (!customers) {
+      return res.status(400).json({ message: "Invalid or expired token" });
+    }
+    const hashedPass = await bcrypt.hash(newPassword, 10);
+    customers.password = hashedPass;
+    customers.resetToken = null;
+    customers.resetTokenExpiration = null;
+    await customers.save();
 
-      return res.status(200).json({ message: 'Password updated successfully' });
+    return res.status(200).json({ message: "Password updated successfully" });
   } catch (error) {
-      console.error(error);
-      return res.status(500).json({ message: 'Internal server error' });
+    console.error(error);
+    return res.status(500).json({ message: "Internal server error" });
   }
-};
+}
 
 module.exports = {
   createCustomer: createCustomer,
@@ -386,7 +396,7 @@ module.exports = {
   allCustomer: allCustomer,
   contact: contact,
   refreshTokens: refreshTokens,
-  resetRquist:resetRquist,
-  verifyResetToken:verifyResetToken,
-  setNewPass:setNewPass
+  resetRquist: resetRquist,
+  verifyResetToken: verifyResetToken,
+  setNewPass: setNewPass,
 };

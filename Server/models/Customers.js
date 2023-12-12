@@ -10,6 +10,10 @@ const customerSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  customer_image: {
+    type: String,
+    default: null
+  },
   email: {
     type: String,
     unique: true,

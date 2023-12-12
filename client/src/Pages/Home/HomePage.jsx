@@ -5,8 +5,7 @@ import "./HomePage.css";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import testslide from "../../assets/testslide.png";
-import FavoriteIcon from '@mui/icons-material/Favorite';
-
+import FavoriteIcon from "@mui/icons-material/Favorite";
 
 // import video from "../../assets/testti.mp4";
 // import reviews  from './reviews'
@@ -57,7 +56,7 @@ const HomePage = () => {
   // const { dispatch: cartDispatch } = useCart();
   const [currentIndex, setCurrentIndex] = useState(0);
   const navigate = useNavigate();
-  const { cart,likedProducts, dispatch } = useCart();
+  const { cart, likedProducts, dispatch } = useCart();
   const carouselRef = useRef(null);
   const [likedProductIds, setLikedProductIds] = useState([]);
   const [productData, setProductData] = useState([]);
@@ -107,7 +106,9 @@ const HomePage = () => {
   //   cartDispatch({ type: "ADD_TO_CART", payload: product });
   // };
   const addToCart = (product) => {
-    const isProductInCart = cart.some((cartProduct) => cartProduct._id === product._id);
+    const isProductInCart = cart.some(
+      (cartProduct) => cartProduct._id === product._id
+    );
 
     if (!isProductInCart) {
       dispatch({ type: "ADD_TO_CART", payload: product });
@@ -122,7 +123,7 @@ const HomePage = () => {
   // const [likedProductIds, setLikedProductIds] = useState([]);
 
   useEffect(() => {
-    const likedIds = likedProducts.map(product => product._id);
+    const likedIds = likedProducts.map((product) => product._id);
     setLikedProductIds(likedIds);
   }, [likedProducts]);
 
@@ -132,19 +133,18 @@ const HomePage = () => {
   //   localStorage.setItem("favorites", JSON.stringify(favorites));
   // }, [favorites, likedProducts]);
 
-
   const handleFavorite = async (product) => {
     const isLiked = likedProductIds.includes(product._id);
-    
-  
+
     if (isLiked) {
-      dispatch({ type: 'REMOVE_FROM_LIKED_PRODUCTS', payload: product._id });
-      setLikedProductIds((prevIds) => prevIds.filter((id) => id !== product._id));
+      dispatch({ type: "REMOVE_FROM_LIKED_PRODUCTS", payload: product._id });
+      setLikedProductIds((prevIds) =>
+        prevIds.filter((id) => id !== product._id)
+      );
     } else {
-      await dispatch({ type: 'ADD_TO_LIKED_PRODUCTS', payload: product });
+      await dispatch({ type: "ADD_TO_LIKED_PRODUCTS", payload: product });
       setLikedProductIds((prevIds) => [...prevIds, product._id]);
     }
-
   };
 
   // const handleFavorite = (product) => {
@@ -162,10 +162,10 @@ const HomePage = () => {
   //     return updatedLikedProducts;
   //   });
   // };
-  
+
   const navigateToProductDetail = (productId) => {
-  navigate(`/product/${productId}`);
-};
+    navigate(`/product/${productId}`);
+  };
 
   const product = productData.map((item) => (
     <div className="cardd" key={item._id}>
@@ -176,9 +176,21 @@ const HomePage = () => {
           <FavoriteBorderRoundedIcon />
         )}
       </div> */}
-      <div className="likes-icon" onClick={() => handleFavorite(item)}>
-                  <FavoriteIcon style={{ fontSize: '1.7rem', color: likedProductIds.includes(item._id) ? 'red' : 'white' }} />
-                </div>
+      {/* <div className="likes-icon" onClick={() => handleFavorite(item)}>
+        <FavoriteIcon
+          style={{
+            fontSize: "1.7rem",
+            color: likedProductIds.includes(item._id) ? "red" : "white",
+          }}
+        />
+      </div> */}
+      <div className="likes-iconn" onClick={() => handleFavorite(item)}>
+        {likedProductIds.includes(item._id) ? (
+          <FavoriteRoundedIcon  />
+        ) : (
+          <FavoriteBorderRoundedIcon />
+        )}
+      </div>
       <div className="imageprdctss">
         <img
           className="product--imagee"
@@ -187,10 +199,25 @@ const HomePage = () => {
         />
       </div>
       <div className="cart-textt">
-        <span className="prdctnamee" onClick={() => navigateToProductDetail(item._id)} >{item.product_name}</span>
-        <p className="desc_ellipsis" onClick={() => navigateToProductDetail(item._id)}>{item.short_description}</p>
+        <span
+          className="prdctnamee"
+          onClick={() => navigateToProductDetail(item._id)}
+        >
+          {item.product_name}
+        </span>
+        <p
+          className="desc_ellipsis"
+          onClick={() => navigateToProductDetail(item._id)}
+        >
+          {item.short_description}
+        </p>
         <div className="pricee">
-          <div className="realprice" onClick={() => navigateToProductDetail(item._id)}>${item.price}</div>
+          <div
+            className="realprice"
+            onClick={() => navigateToProductDetail(item._id)}
+          >
+            ${item.price}
+          </div>
           <div className="addbuttonn">
             <Button
               style={{
@@ -566,9 +593,9 @@ const HomePage = () => {
       <div className="reviewsection">
         <div className="title-reviews">
           <div className="secondtitle">
-            <div >
+            <div>
               <FontAwesomeIcon
-              className="iconfafa"
+                className="iconfafa"
                 icon={faQuoteLeft}
                 style={{ color: "#ffffff", fontSize: "4em" }}
               />
@@ -635,13 +662,13 @@ const HomePage = () => {
           </Carouselreviews>
         </div>
         <div className="outsidebutton2">
-            <button onClick={handlePrevious}>
-              <ArrowBackIosNewRoundedIcon />
-            </button>
-            <button onClick={handleNext}>
-              <ArrowForwardIosRoundedIcon />
-            </button>
-          </div>
+          <button onClick={handlePrevious}>
+            <ArrowBackIosNewRoundedIcon />
+          </button>
+          <button onClick={handleNext}>
+            <ArrowForwardIosRoundedIcon />
+          </button>
+        </div>
       </div>
 
       {/* About our store **********************************************/}
@@ -674,8 +701,7 @@ const HomePage = () => {
               <h2>Money Return</h2>
               {/* </div> */}
               <span>
-                Not satisfied? No worries. We offer a straightforward and
-                hassle-free money-back guarantee.{" "}
+                Not satisfied? No worries. We provide a simple and hassle-free refund policy.
               </span>
             </div>
           </div>

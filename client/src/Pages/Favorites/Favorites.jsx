@@ -119,8 +119,13 @@ const Favorites = () => {
 
   return (
     <div className='favoritepage'>
-      <h1>Liked Products</h1>
+      {/* <h1>Liked Products</h1> */}
+     <span>Favorites</span>
       <div className='liked-products'>
+      {likedProducts.length === 0 ? (
+        <span>No favorites found.</span>
+      ) : (
+        <>
         {likedProducts.map((likedProduct, index) => (
           <div key={index} className='card'>
             <div className="imageprdcts">
@@ -153,14 +158,17 @@ const Favorites = () => {
                     display: "flex",
                   }}
                 >
-                  Remove
+                  Remove from Favorites
                 </Button>
+                
               </div>
             </div>
           </div>
-        ))}
-      </div>
-    </div>
+        ))} 
+        </>
+        )}
+        </div>
+   </div>
   );
 };
 

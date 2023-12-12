@@ -247,9 +247,10 @@ const Navbar = ({ onSearchChange }) => {
           const decoded = decodeJwt(access_token);
           console.log(decoded);
           const customerid = decoded.customerid;
-          toast.success("Shop with confidence! Login successful.");
           localStorage.setItem("customerId", customerid);
           navigate("/");
+          toast.success('logged in successfully');
+
         } catch (error) {
           console.error("Login failed:", error);
           if (
@@ -320,6 +321,8 @@ const Navbar = ({ onSearchChange }) => {
 
   return (
     <nav className={`navbaaar ${scrolled ? "scrolled" : ""}`}>
+          <ToastContainer />
+
       <div className="navleft">
         <div
           className={`burger-menu ${isMenuOpen ? "show" : ""}`}
@@ -497,7 +500,6 @@ const Navbar = ({ onSearchChange }) => {
                   {isLogin ? "LOGIN" : "REGISTER"}
                 </Button>
               </form>
-              <ToastContainer />
               <div
                 style={{
                   cursor: "pointer",
@@ -524,6 +526,7 @@ const Navbar = ({ onSearchChange }) => {
               </div>
             </Box>
           </Popover>
+
               </>
             ) : (
               <>

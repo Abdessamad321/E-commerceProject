@@ -5,7 +5,7 @@ export const AuthContext = createContext({
   token: "",
   refToken: "",
   // decodedToken: null,
-  // userImage: null,
+  customerImage: null,
   login: (access, refresh) => {},
   logout: () => {},
   setUserImage: (image) => {},
@@ -15,7 +15,7 @@ export const AuthProvider = ({ children }) => {
   const [authToken, setAuthToken] = useState(localStorage.getItem("token") || null);
   const [refToken, setRefToken] = useState(localStorage.getItem("refreshToken") || null);
   // const [decodedToken, setDecodedToken] = useState(null);
-  // const [userImage, setUserImage] = useState(null);
+  const [customerImage, setCustomerImage] = useState(null);
 
   const loginHandler = (access, refresh) => {
     setAuthToken(access);
@@ -31,9 +31,9 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem("refreshToken");
   };
 
-  // const setUserImageHandler = (image) => {
-  //   setUserImage(image);
-  // };
+  const setCustomerImageHandler = (image) => {
+    setCustomerImage(image);
+  };
 
   const refreshAccessToken = async () => {
     try {
@@ -73,21 +73,22 @@ export const AuthProvider = ({ children }) => {
         } else {
           // setDecodedToken(decoded);
           loginHandler(authToken, refToken);
-      //     const storedCustomerid = localStorage.getItem("customerid");
-      //     try {
-      //       const response = await axios.get(`http://localhost:7000/v1/customers/${storedCustomerid}`);
-      //       const userData = response.data;
-      //       setUserImage(userData.user_image || null);
-      //     } catch (error) {
-      //       console.error("Error fetching user image:", error);
-      //     }
-      //   }
-      // } else {
-        // logoutHandler();
+          const storedCustomerid = localStorage.getItem("customerId");
+          try {
+            const response = await axios.get(`http://localhost:7000/v1/customers/${storedCustomerid}`);
+            const customerData = response.data;
+            console.log(customerData);
+            setCustomerImage(customerData.customer_image || null);
+          } catch (error) {
+            console.error("Error fetching user image:", error);
+          }
+        }
+      } else {
+        logoutHandler();
       }
     };
-  }
-    checkAuthentication();
+  
+    checkAuthentication()
   }, [authToken]);
 
   return (
@@ -96,10 +97,10 @@ export const AuthProvider = ({ children }) => {
         token: authToken,
         refresh: refToken,
         // decodedToken: decodedToken,
-        // userImage: userImage,
+        customerImage: customerImage,
         login: loginHandler,
         logout: logoutHandler,
-        // setUserImage: setUserImageHandler,
+        setCustomerImage: setCustomerImageHandler,
       }}
     >
       {children}
