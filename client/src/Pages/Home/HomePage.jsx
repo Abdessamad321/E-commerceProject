@@ -699,7 +699,7 @@ const HomePage = () => {
               </div>
               <h2>Money Return</h2>
               {/* </div> */}
-              <span>Shop worry-free with our money-back guarantee.</span>
+              <span>Shop worry-free with our 100% money-back guarantee.</span>
             </div>
           </div>
           <div className="infos-item">

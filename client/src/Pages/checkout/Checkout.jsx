@@ -1,8 +1,8 @@
 
+
 import React from 'react';
 import { useCart } from '../../Components/cart/cartcontext';
 import './CheckOut.css'
-import paypal from '../../assets/how-paypa.png';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 
@@ -38,11 +38,11 @@ const Checkout = () => {
                         ${item.price}
                     </div>
                     <div className='product-remove'>
-                    {/* Add a Remove button here */}
                     <IconButton
                     onClick={() => removeFromCart(item._id)}
                     color="secondary"
                     aria-label="remove"
+                    style={{ color: '#590404' }}
                     >
                     <DeleteIcon />
                     </IconButton>
@@ -54,22 +54,24 @@ const Checkout = () => {
             )}
             </div>
             <div className='checkout-summary'>
-            <h2>Order Summary:</h2>
+                <h2>Order Summary:</h2>
             <div className='summary-item'>
-            <span>Products Total:</span>
-            <span>${totalSum.toFixed(2)}</span>
+                <span>Products Total:</span>
+                <span>${totalSum.toFixed(2)}</span>
             </div>
             <div className='summary-item'>
-            <span>Shipping:</span>
-            <span>${shippingPrice.toFixed(2)}</span>
+                <span>Shipping:</span>
+                <span>${shippingPrice.toFixed(2)}</span>
             </div>
             <div className='summary-item total'>
-            <span>Total:</span>
-            <span>${totalPrice.toFixed(2)}</span>
+                <span>Total:</span>
+                <span>${totalPrice.toFixed(2)}</span>
             </div>
             <div className='payment-method'>
-            <h2>Payment Method:</h2>
-            <img style={{ width: '150px' }}src={paypal} alt='paypal logo' />
+                <h2>Payment on delivery</h2>
+            </div>
+            <div className='payment-btn'>
+                <button>Pay Now</button>
             </div>
         </div>
         </div>

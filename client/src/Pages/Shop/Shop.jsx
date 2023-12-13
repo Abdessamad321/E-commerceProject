@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -35,7 +36,6 @@ const Shop = ({ searchQuery }) => {
           `http://localhost:7000/v1/allproducts?query=${searchQuery}`
         );
         setProducts(response.data);
-        console.log(products);
         setNoResults(response.data.length === 0);
       } catch (error) {
         console.error("Error fetching product data:", error);
@@ -133,7 +133,6 @@ const Shop = ({ searchQuery }) => {
   return (
     <div className="shopy">
       <div className="mt-4">
-        {/* <Navbar onSearchChange={handleSearchChange} /> */}
         <div className="filter-sidebar">
           <label style={{ display: "grid" }}>
             <p
@@ -181,7 +180,7 @@ const Shop = ({ searchQuery }) => {
               <FaFilter />
             </p>
             <select
-              className="selects"
+              className="selects "
               style={{
                 padding: "10px 5px",
                 borderRadius: "16px",
@@ -228,11 +227,10 @@ const Shop = ({ searchQuery }) => {
             </label>
           </div>
         </div>
-        <div style={{ display: "grid", width: "80%" }}>
+        <div className="forCrdss" >
           {noResults ? (
             <div className="no-results-message" style={{ textAlign: "center" }}>
-              <CancelIcon style={{ fontSize: "5rem", color: "red" }} />
-              <p style={{ fontSize: "3rem" }}>
+              <p style={{ fontSize: "35px" }}>
                 No products found for "{searchQuery}"
               </p>
             </div>

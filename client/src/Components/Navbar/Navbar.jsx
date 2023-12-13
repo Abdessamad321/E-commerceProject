@@ -82,6 +82,7 @@ const Navbar = ({ onSearchChange }) => {
     setAnchortwoEl(event.currentTarget);
     document.body.classList.add("overflow-auto");
   };
+
   const AccountPopoverClose = () => {
     setAnchortwoEl(null);
     document.body.classList.remove("overflow-auto");
@@ -180,9 +181,9 @@ const Navbar = ({ onSearchChange }) => {
       [name]: value,
     }));
   };
-  const handleCheckout = (e) => {
-    handlePopoverClose();
-  };
+  // const handleCheckout = (e) => {
+  //   handlePopoverClose();
+  // };
 
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");

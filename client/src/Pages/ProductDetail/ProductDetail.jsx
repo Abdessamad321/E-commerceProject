@@ -1,3 +1,5 @@
+
+
 import FavoriteBorderRoundedIcon from "@mui/icons-material/FavoriteBorderRounded";
 import FavoriteRoundedIcon from "@mui/icons-material/FavoriteRounded";
 
@@ -6,8 +8,6 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './ProductDetail.css';
-import paypal from '../../assets/how-paypa.png';
-import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useCart } from '../../Components/cart/cartcontext';
 
 const ProductDetail = () => {
@@ -57,14 +57,14 @@ if (!product) {
 return <div>No product data available</div>;
 }
 
-const goBack = () => {
-navigate(`/Shop`);
-};
+// const goBack = () => {
+// navigate(/Shop);
+// };
 
 return (
 <div className='card-details'>
     <div className="shoppingcard">
-    <img style={{ height: '500px', width: '500px' }} src={product.product_image} alt={product.product_name} />
+    <img className="proImgg" src={product.product_image} alt={product.product_name} />
     <div className='shoppingcard-details'>
         <div className="nameSku">
         <h1>{product.product_name}</h1>
@@ -76,27 +76,22 @@ return (
         <p style={{ color: 'red', paddingBottom: '10px' }}>{product.options}</p>
         )}
         <p style={{ paddingBottom: '2rem' }}>{product.long_description}</p>
-        <div className='pricee' style={{ paddingBottom: '2rem' }}>
+        <div className='priceee' style={{ paddingBottom: '2rem' }}>
         <span style={{ fontSize: '2em', color: '#590404' }}>${Math.floor(product.price)}</span>
         <span style={{ fontSize: '1.5em' }}>.{Math.floor((product.price % 1) * 100)}</span>
         </div>
         <div className='payment'>
-        <p style={{ fontSize: '1rem', paddingBottom: '10px' }}>Payment Methods</p>
-        <img
-            style={{ width: '150px', background: '#f9e9c8', padding: '0 20px', borderRadius: '16px' }}
-            src={paypal}
-            alt=""
-        />
+        <p style={{ fontSize: '1rem', paddingBottom: '10px' }}>Payment on delivery</p>
         </div>
 
         <div className='cardFooter'>
         <button className='button1'>Buy Now</button>
         <button className='button2' onClick={handleFavorite}>
         {likedProducts.some((p) => p._id === product._id) ? (
-  <FavoriteRoundedIcon />
-) : (
-  <FavoriteBorderRoundedIcon />
-)}
+            <FavoriteRoundedIcon />
+            ) : (
+            <FavoriteBorderRoundedIcon />
+            )}
         </button>
         </div>
     </div>
