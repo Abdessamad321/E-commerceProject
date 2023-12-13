@@ -1,24 +1,127 @@
 
 
+// import React from 'react';
+// import { useCart } from '../../Components/cart/cartcontext';
+// import './CheckOut.css'
+// import IconButton from '@mui/material/IconButton';
+// import DeleteIcon from '@mui/icons-material/Delete';
+
+// const Checkout = () => {
+//     const { cart, dispatch  } = useCart();
+
+//     const removeFromCart = (productId) => {
+//         dispatch({ type: 'REMOVE_FROM_CART', payload: productId });
+//         };
+//     const totalSum = cart.reduce((sum, item) => sum + item.price, 0);
+
+//     const shippingPrice = 5;
+
+//     const totalPrice = totalSum + shippingPrice;
+
+
+//     return (
+//         <div className='checkout-page'>
+//             <div className="desc-product">
+//         {cart.length === 0 ? (
+//             <p>Your cart is empty.</p>
+//             ) : (
+//             <div>
+//                 <ul>
+//                 {cart.map((item) => (
+//                     <li className='checkout-products-list' key={item._id}>
+//                     <img className='product-image' src={item.product_image} alt="" />
+//                     <div className='product-details'>
+//                         <h3>{item.product_name}</h3>
+//                         <p>{item.long_description}</p>
+//                     </div>
+//                     <div className='product-price'>
+//                         ${item.price}
+//                     </div>
+//                     <div className='product-remove'>
+//                     <IconButton
+//                     onClick={() => removeFromCart(item._id)}
+//                     color="secondary"
+//                     aria-label="remove"
+//                     style={{ color: '#590404' }}
+//                     >
+//                     <DeleteIcon />
+//                     </IconButton>
+//                 </div>
+//                     </li>
+//                 ))}
+//                 </ul>
+//             </div>
+//             )}
+//             </div>
+//             <div className='checkout-summary'>
+//                 <h2>Order Summary:</h2>
+//             <div className='summary-item'>
+//                 <span>Products Total:</span>
+//                 <span>${totalSum.toFixed(2)}</span>
+//             </div>
+//             <div className='summary-item'>
+//                 <span>Shipping:</span>
+//                 <span>${shippingPrice.toFixed(2)}</span>
+//             </div>
+//             <div className='summary-item total'>
+//                 <span>Total:</span>
+//                 <span>${totalPrice.toFixed(2)}</span>
+//             </div>
+//             <div className='payment-method'>
+//                 <h2>Payment on delivery</h2>
+//             </div>
+//             <div className='payment-btn'>
+//                 <button>Pay Now</button>
+//             </div>
+//         </div>
+//         </div>
+//         )
+// };
+
+// export default Checkout;
+
+
+
+
 import React from 'react';
 import { useCart } from '../../Components/cart/cartcontext';
 import './CheckOut.css'
+import { useEffect } from 'react';
+import paypal from '../../assets/how-paypa.png';
+import axios from 'axios';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Checkout = () => {
-    const { cart, dispatch  } = useCart();
-
+    const { cart, dispatch } = useCart();
+  
     const removeFromCart = (productId) => {
-        dispatch({ type: 'REMOVE_FROM_CART', payload: productId });
-        };
+      dispatch({ type: 'REMOVE_FROM_CART', payload: productId });
+    };
+  
     const totalSum = cart.reduce((sum, item) => sum + item.price, 0);
-
     const shippingPrice = 5;
-
     const totalPrice = totalSum + shippingPrice;
-
-
+    useEffect(() => {
+        // Retrieve customer ID from local storage and store it in state
+        const customerId = localStorage.getItem('customerId');
+        // Do something with customerId if needed
+      }, []);
+    const handleCreateOrder = async () => {
+      try {
+        const response = await axios.post('http://localhost:7000/v1/orders', {
+          customerId: localStorage.getItem('customerId'),
+          orderItems: cart,
+          cartTotalPrice: totalPrice,
+        });
+        toast.success('Order placed succsesfully')
+        console.log(response.data);
+      } catch (error) {
+        console.error('Error creating order:', error.response ? error.response.data : error.message);
+      }
+    };
     return (
         <div className='checkout-page'>
             <div className="desc-product">
@@ -71,7 +174,7 @@ const Checkout = () => {
                 <h2>Payment on delivery</h2>
             </div>
             <div className='payment-btn'>
-                <button>Pay Now</button>
+                <button onClick={handleCreateOrder}>Pay Now</button>
             </div>
         </div>
         </div>

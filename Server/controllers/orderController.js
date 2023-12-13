@@ -9,39 +9,67 @@ const secretKey = process.env.TOKEN_KEY;
 const refreshKey = process.env.REFRESH_KEY;
 
 // create Order===================================
+// async function createOrder(req, res) {
+//   try {
+//     const { customerId, orderItems, cartTotalPrice } = req.body;
+//     const token = req.headers.authorization && req.headers.authorization.split(' ')[1];
+
+//     jwt.verify(token, secretKey, async (err, decoded) => {
+//       if (err) {
+//         return res.status(401).json({ error: 'Token verification failed' });
+//       }
+//       const customer = await Customer.findById(decoded.customerid);
+
+//        if (!customer) {
+//          return res.status(403).json({ error: 'Email validation required to create an order.' });
+//        }
+
+//       if (customer._id.toString() !== customerId) {
+//         return res.status(403).json({ error: 'Unauthorized: customerId does not match token.' });
+//       }
+//       const newOrder = new Order({
+//         status: 'Open',
+//         order_date: new Date(),
+//         customer_id: customerId,
+//         order_items: orderItems,
+//         cart_total_price: cartTotalPrice,
+//       });
+//       await newOrder.save();
+//       res.status(201).json({ message: 'Order created successfully.', order: newOrder });
+//     });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({error : error });
+//   }
+// };
+
+
+
 async function createOrder(req, res) {
   try {
     const { customerId, orderItems, cartTotalPrice } = req.body;
-    const token = req.headers.authorization && req.headers.authorization.split(' ')[1];
 
-    jwt.verify(token, secretKey, async (err, decoded) => {
-      if (err) {
-        return res.status(401).json({ error: 'Token verification failed' });
-      }
-      const customer = await Customer.findById(decoded.customerid);
+    const customer = await Customer.findById(customerId);
 
-       if (!customer) {
-         return res.status(403).json({ error: 'Email validation required to create an order.' });
-       }
+    if (!customer) {
+      return res.status(403).json({ error: 'Email validation required to create an order.' });
+    }
 
-      if (customer._id.toString() !== customerId) {
-        return res.status(403).json({ error: 'Unauthorized: customerId does not match token.' });
-      }
-      const newOrder = new Order({
-        status: 'Open',
-        order_date: new Date(),
-        customer_id: customerId,
-        order_items: orderItems,
-        cart_total_price: cartTotalPrice,
-      });
-      await newOrder.save();
-      res.status(201).json({ message: 'Order created successfully.', order: newOrder });
+    const newOrder = new Order({
+      status: 'Open',
+      order_date: new Date(),
+      customer_id: customerId,
+      order_items: orderItems,
+      cart_total_price: cartTotalPrice,
     });
+
+    await newOrder.save();
+    res.status(201).json({ message: 'Order created successfully.', order: newOrder });
   } catch (error) {
     console.error(error);
-    res.status(500).json({error : error });
+    res.status(500).json({ error: error });
   }
-};
+}
 
 //list and search for Order =======================================
 
