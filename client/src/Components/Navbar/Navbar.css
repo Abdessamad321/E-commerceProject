@@ -202,7 +202,7 @@ color: #000;
   display: none;
 }
 /* Mobile styles */
-@media only screen and (min-width: 601px) and (max-width: 768px) {
+@media only screen and (min-width: 601px) and (max-width: 978px) {
   .burger-menu {
     display: flex;
     align-items: center;

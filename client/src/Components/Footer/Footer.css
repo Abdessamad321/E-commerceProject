@@ -2,7 +2,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap"); */
 
 body {
-  position: relative;  
+  position: relative; 
 }
 /* WAVES ******************/
 .wavesfooter {
@@ -83,6 +83,10 @@ body {
   text-decoration: underline;
 } */
 
+/* .footery{
+  position: fixed;
+  bottom: 0;
+} */
 .footer-distributed {
   /* margin-top: 5em; */
   background: #590404;

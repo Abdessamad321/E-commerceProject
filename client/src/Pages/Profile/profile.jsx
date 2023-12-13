@@ -82,6 +82,7 @@ function Profil() {
 
   return (
     <div className="edit-profile">
+      {/* <span>Profile</span> */}
       <div className="contone">
         <div
           style={{
@@ -131,89 +132,87 @@ function Profil() {
             onChange={handleImageChange}
           />
         </div>
-
-        <div>
-          <div className="inputs">
-            <label>First Name</label>
-            <input
-              type="text"
-              value={customer.first_name}
-              onChange={(e) =>
-                setCustomer({ ...customer, first_name: e.target.value })
-              }
-            />
-          </div>
-          <div className="inputs">
-            <label>Last Name</label>
-            <input
-              type="text"
-              value={customer.last_name}
-              onChange={(e) =>
-                setCustomer({ ...customer, last_name: e.target.value })
-              }
-            />
-          </div>
-        </div>
-
-        <div>
-          <div className="inputs">
-            <label>Email</label>
-            <input
-              type="text"
-              value={customer.email}
-              onChange={(e) =>
-                setCustomer({ ...customer, email: e.target.value })
-              }
-            />
-          </div>
-          <div className="inputs">
-            <label>Password</label>
-            <input
-              type="password"
-              value={customer.password}
-              onChange={(e) =>
-                setCustomer({ ...customer, password: e.target.value })
-              }
-            />
-          </div>
-        </div>
-
-        <div>
-          <div className="inputs">
-            <label>New Password</label>
-            <input
-              type="password"
-              value={customer.new_password}
-              onChange={(e) =>
-                setCustomer({ ...customer, new_password: e.target.value })
-              }
-            />
+        <div className="labelsprofile">
+          <div className="upperlabels">
+            <div className="inputs">
+              <span>First Name</span>
+              <input
+                type="text"
+                value={customer.first_name}
+                onChange={(e) =>
+                  setCustomer({ ...customer, first_name: e.target.value })
+                }
+              />
+            </div>
+            <div className="inputs">
+              <span>Last Name</span>
+              <input
+                type="text"
+                value={customer.last_name}
+                onChange={(e) =>
+                  setCustomer({ ...customer, last_name: e.target.value })
+                }
+              />
+            </div>
+            <div className="inputs">
+              <span>Email</span>
+              <input
+                type="text"
+                value={customer.email}
+                onChange={(e) =>
+                  setCustomer({ ...customer, email: e.target.value })
+                }
+              />
+            </div>
           </div>
 
-          <div className="inputs">
-            <div className="save-button">
-              <Button
-                style={{
-                  cursor: "pointer",
-                  backgroundColor: "#590404",
-                  color: "#fff",
-                }}
-                type="submit"
-                onClick={saveChanges}
-              >
-                Save
-              </Button>
-              <Button
-                style={{
-                  cursor: "pointer",
-                  backgroundColor: "#590404",
-                  color: "#fff",
-                }}
-                // type="submit"
-                onClick={handleLogout}
-              >
-                Logout
-              </Button>
+          <div className="lowerlabels">
+            <div className="inputs">
+              <span>Password</span>
+              <input
+                type="password"
+                value={customer.password}
+                onChange={(e) =>
+                  setCustomer({ ...customer, password: e.target.value })
+                }
+              />
+            </div>
+            <div className="inputs">
+              <span>New Password</span>
+              <input
+                type="password"
+                value={customer.new_password}
+                onChange={(e) =>
+                  setCustomer({ ...customer, new_password: e.target.value })
+                }
+              />
+            </div>
+
+            <div className="inputs">
+              <div className="save-button">
+                <Button
+                  style={{
+                    cursor: "pointer",
+                    backgroundColor: "#000",
+                    color: "#fff",
+                  }}
+                  type="submit"
+                  onClick={saveChanges}
+                >
+                  Save
+                </Button>
+                <Button
+                  style={{
+                    cursor: "pointer",
+                    backgroundColor: "#590404",
+                    color: "#fff",
+                  }}
+                  // type="submit"
+                  onClick={handleLogout}
+                >
+                  Logout
+                </Button>
+              </div>
             </div>
           </div>
         </div>

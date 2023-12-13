@@ -266,6 +266,9 @@ const Navbar = ({ onSearchChange }) => {
             setError("An error occurred during login");
             toast.error("An error occurred during login");
           }
+        }finally {
+          // Close the popover after submitting the form
+          AccountPopoverClose();
         }
         // };
       } else {
@@ -311,6 +314,7 @@ const Navbar = ({ onSearchChange }) => {
         email: "",
         password: "",
       });
+      AccountPopoverClose();
     }
   };
   const [isLogin, setIsLogin] = useState(true);
@@ -415,6 +419,7 @@ const Navbar = ({ onSearchChange }) => {
             {!authCtx.token || authCtx.refToken ? (
               <>
                 <AccountCircleOutlinedIcon  />
+                
                 <Popover
             open={Accountopen}
             anchorEl={anchortwoEl}
@@ -532,6 +537,7 @@ const Navbar = ({ onSearchChange }) => {
               <>
               <AccountCircleIcon  onClick={() => {
                   navigate("/Profil");
+                  AccountPopoverClose()
                 }}/>
               </>
             )}
@@ -646,10 +652,10 @@ const Navbar = ({ onSearchChange }) => {
             </Box>
           </Popover>
         </div>
-      </div>
-    
+      </div>    
     </nav>
-      <ToastContainer/>
+    <ToastContainer />
+     
     </>
   );
 };

@@ -4,8 +4,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 // import { ClipLoader } from "react-spinners";
-// import './Login.css'
-
+import './ResetPassword.css'
+import Button from '@mui/material/Button'
 function PasswordResetProcess() {
     const { token } = useParams();
     const [newPassword, setNewPassword] = useState('');
@@ -58,7 +58,7 @@ function PasswordResetProcess() {
     };
 
     return (
-        <div className='bodys-res'>
+        <div className="resetform">
             {loading && (
                 <div className="loading-overlay">
                     <div className="loading-spinner">
@@ -67,9 +67,11 @@ function PasswordResetProcess() {
                 </div>
             )}
             <div className='formas'>
-                <h1 style={{ color: '#333' }}>Reset Password</h1>
-                <label style={{ display: 'block', margin: '10px 0', fontSize: '16px' }}>New Password:</label>
-                <input
+                <span>Reset Password</span>
+                <div>
+                    <label style={{ display: 'block', margin: '10px 0', fontSize: '16px' }}>New Password:</label>
+                
+                     <input
                     className='forminput'
                     type="password"
                     value={newPassword}
@@ -78,9 +80,12 @@ function PasswordResetProcess() {
                     style={{
                         background: 'white',
                         color: 'black',
+                        width: '20em'
                     }}
                 />
-                <label style={{ display: 'block', margin: '10px 0', fontSize: '16px' }}>Confirm New Password:</label>
+                </div>
+               <div>
+                 <label style={{ display: 'block', margin: '10px 0', fontSize: '16px' }}>Confirm New Password:</label>
                 <input
                     className='forminput'
                     type="password"
@@ -90,24 +95,32 @@ function PasswordResetProcess() {
                     style={{
                         background: 'white',
                         color: 'black',
+                        width: '20em'
                     }}
                 />
-                <button
+               
+               </div>
+               
+            </div>
+            <div 
+            className="buttonreset">
+                 <Button
                     onClick={handleResetPassword}
                     style={{
-                        backgroundColor: '#f1e496',
-                        color: '#333',
-                        marginTop: '18px',
-                        padding: '12px 20px',
-                        fontSize: '18px',
-                        border: 'none',
-                        borderRadius: '15px',
+                        backgroundColor: '#590404',
+                        color: '#fff',
+                        // marginTop: '18px',
+                        // padding: '12px 20px',
+                        // fontSize: '18px',
+                        // border: 'none',
+                        // borderRadius: '15px',
                         cursor: 'pointer',
                     }}
                 >
                     Reset Password
-                </button>
+                </Button>
             </div>
+           
             <ToastContainer />
         </div>
     );

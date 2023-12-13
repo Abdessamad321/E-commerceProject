@@ -44,6 +44,8 @@ import clocks from "../../assets/clocks.png";
 import radio from "../../assets/radio.png";
 import koora from "../../assets/koora.png";
 import dactylo from "../../assets/dactyloo.png";
+import dactyl from "../../assets/dactylo.png";
+import grp from "../../assets/bg.png";
 
 //last section *********************************************************
 
@@ -63,11 +65,11 @@ const HomePage = () => {
   let cards = [
     {
       key: 1,
-      content: <Card imagen={phone} />,
+      content: <Card imagen={dactyl} />,
     },
     {
       key: 2,
-      content: <Card imagen={radio} />,
+      content: <Card imagen={grp} />,
     },
     {
       key: 3,
@@ -186,7 +188,7 @@ const HomePage = () => {
       </div> */}
       <div className="likes-iconn" onClick={() => handleFavorite(item)}>
         {likedProductIds.includes(item._id) ? (
-          <FavoriteRoundedIcon  />
+          <FavoriteRoundedIcon />
         ) : (
           <FavoriteBorderRoundedIcon />
         )}
@@ -489,11 +491,11 @@ const HomePage = () => {
               items: 4,
             },
             tablet: {
-              breakpoint: { max: 800, min: 464 },
+              breakpoint: { max: 800, min: 600 },
               items: 2,
             },
             mobile: {
-              breakpoint: { max: 464, min: 0 },
+              breakpoint: { max: 600, min: 0 },
               items: 1,
             },
           }}
@@ -568,11 +570,11 @@ const HomePage = () => {
               items: 4,
             },
             tablet: {
-              breakpoint: { max: 800, min: 464 },
+              breakpoint: { max: 800, min: 600 },
               items: 2,
             },
             mobile: {
-              breakpoint: { max: 464, min: 0 },
+              breakpoint: { max: 600, min: 0 },
               items: 1,
             },
           }}
@@ -641,11 +643,11 @@ const HomePage = () => {
                 partialVisibilityGutter: 60,
               },
               tablet: {
-                breakpoint: { max: 800, min: 464 },
+                breakpoint: { max: 800, min: 600 },
                 items: 2,
               },
               mobile: {
-                breakpoint: { max: 464, min: 0 },
+                breakpoint: { max: 600, min: 0 },
                 items: 1,
               },
             }}
@@ -686,10 +688,7 @@ const HomePage = () => {
               </div>
               <h2>24/7 Days</h2>
               {/* </div> */}
-              <span>
-                Count on us for assistance day or night. Your satisfaction is
-                our priority.
-              </span>
+              <span>Always here for you, anytime you need assistance.</span>
             </div>
           </div>
           <div className="infos-item">
@@ -700,9 +699,7 @@ const HomePage = () => {
               </div>
               <h2>Money Return</h2>
               {/* </div> */}
-              <span>
-                Not satisfied? No worries. We provide a simple and hassle-free refund policy.
-              </span>
+              <span>Shop worry-free with our money-back guarantee.</span>
             </div>
           </div>
           <div className="infos-item">
@@ -713,10 +710,7 @@ const HomePage = () => {
               </div>
               <h2>Free Delivery</h2>
               {/* </div> */}
-              <span>
-                Enjoy luxury with complimentary shipping on all orders, adding
-                value to your purchases.
-              </span>
+              <span>Benefit from cost-free and dependable delivery.</span>
             </div>
           </div>
           <div className="infos-item">
@@ -727,10 +721,7 @@ const HomePage = () => {
               </div>
               <h2>Order Discount</h2>
               {/* </div> */}
-              <span>
-                Your loyalty is rewarded with special pricing. Dive into a world
-                of savings on every order.
-              </span>
+              <span>Unlock savings with exclusive order discounts.</span>
             </div>
           </div>
         </div>

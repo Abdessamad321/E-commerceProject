@@ -24,7 +24,7 @@ const Footer = () => {
   };
 
   return (
-    <div>
+    <div className="footery">
       <div>
         <svg
           className="wavesfooter"
